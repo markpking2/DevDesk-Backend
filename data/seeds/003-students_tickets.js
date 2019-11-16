@@ -1,9 +1,5 @@
 
 exports.seed = function(knex) {
-  // Deletes ALL existing entries
-  return knex('students_tickets').truncate()
-    .then(function () {
-      // Inserts seed entries
       return knex('students_tickets').insert([
         {
           student_id: 1,
