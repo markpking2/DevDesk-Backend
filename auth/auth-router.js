@@ -8,18 +8,13 @@ router.post('/register', async (req, res) => {
     const user = {username, password, helper, student, email, cohort} = req.body;
 
     try{
-        const taken = userDb.findBy({username});
-        if(taken){
-            res.status(422).json({message: `The username ${username} is already taken`});
-        }else{
-            const [id] = await userDb.add({...user, password: bcrypt.hashSync(password, 12)});
+        const [id] = await userDb.add({...user, password: bcrypt.hashSync(password, 12)});
 
-            const response = await db('users').select('id', 'username').where({id}).first();
+        const response = await db('users').select('id', 'username').where({id}).first();
 
-            res.status(201).json({id :response.id, username: response.username});
-        }
-        
+        res.status(201).json({id :response.id, username: response.username});
     }catch(err){
+        console.log(err);
         res.status(500).json({message: 'Server could not add user'});
     }
 });
