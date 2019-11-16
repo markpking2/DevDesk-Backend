@@ -14,5 +14,4 @@ exports.seed = function(knex) {
           ticket_id: 6
         }
       ]);
-    });
 };

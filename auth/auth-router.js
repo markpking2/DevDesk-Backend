@@ -8,7 +8,7 @@ router.post('/register', async (req, res) => {
     const user = {username, password, helper, student, email, cohort} = req.body;
 
     try{
-        const [id] = await userDb.add({...user, password: bcrypt.hashSync(password, 12)});
+        const [id] = await userDb.add({...user, password: bcrypt.hashSync(password, 8)});
 
         const response = await db('users').select('id', 'username').where({id}).first();
 

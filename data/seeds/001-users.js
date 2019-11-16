@@ -1,9 +1,10 @@
+const bcrypt = require('bcryptjs');
 
 exports.seed = function(knex) {
       return knex('users').insert([
         {
           username: 'michael',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Michael Scott',
           cohort: 'WEB23',
           helper: 0,
@@ -12,7 +13,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'dwight',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Dwight Schrute',
           cohort: 'WEB23',
           helper: 0,
@@ -21,7 +22,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'jim',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Jim Halpert',
           cohort: 'WEB23',
           helper: 0,
@@ -30,7 +31,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'creed',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Creed Bratton',
           cohort: 'WEB23',
           helper: 1,
@@ -39,7 +40,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'pam',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Pam Beesly',
           cohort: 'WEB23',
           helper: 1,
@@ -48,7 +49,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'kelly',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Kelly Kapoor',
           cohort: 'WEB23',
           helper: 1,
@@ -57,7 +58,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'darryl',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Darryl Philbin',
           cohort: 'WEB23',
           helper: 1,
@@ -66,7 +67,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'stanley',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Stanley Hudson',
           cohort: 'WEB23',
           helper: 1,
@@ -75,7 +76,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'narddog',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Andy Bernard',
           cohort: 'WEB23',
           helper: 1,
@@ -84,7 +85,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'kevin',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Kevin Malone',
           cohort: 'WEB23',
           helper: 1,
@@ -93,7 +94,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'toby',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Toby Flenderson',
           cohort: 'WEB23',
           helper: 1,
@@ -102,7 +103,7 @@ exports.seed = function(knex) {
         },
         {
           username: 'angela',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Angela Martin',
           cohort: 'WEB23',
           helper: 1,
@@ -111,14 +112,12 @@ exports.seed = function(knex) {
         },
         {
           username: 'ryan',
-          password: 'pass',
+          password: bcrypt.hashSync('pass', 8),
           name: 'Ryan Howard',
           cohort: 'WEB23',
           helper: 1,
           student: 1,
           email: 'ryan@dundermifflin.com'
         },
-        
       ]);
-    });
 };

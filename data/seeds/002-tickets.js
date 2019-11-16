@@ -52,5 +52,4 @@ exports.seed = function(knex) {
           description: "If I don't have some cake soon, I might die."
         },
       ]);
-    });
 };
