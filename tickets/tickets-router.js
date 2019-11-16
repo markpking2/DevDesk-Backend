@@ -29,7 +29,12 @@ router.get('/students/:id', async (req, res) => {
     const {id} = req.params;
     try{
         const tickets = await ticketsDb.findStudentTickets(id);
-        res.status(200).json(tickets);
+        if(tickets.length){
+            res.status(200).json(tickets);
+        }else{
+            res.status(404).json({message: `No tickets found for student with id ${id}`})
+        }
+        
     }catch(err){
         console.log(err);
         res.status(500).json({message: `Error retrieving tickets for student with id ${id}`});
@@ -40,7 +45,12 @@ router.get('/helpers/:id', async (req, res) => {
     const {id} = req.params;
     try{
         const tickets = await ticketsDb.findHelperTickets(id);
-        res.status(200).json(tickets);
+        if(tickets.length){
+            res.status(200).json(tickets);
+        }else{
+            res.status(404).json({message: `No tickets found for helper with id ${id}`});
+        }
+
     }catch(err){
         console.log(err);
         res.status(500).json({message: `Error retrieving tickets for helper with id ${id}`});
