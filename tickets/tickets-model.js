@@ -3,7 +3,8 @@ const db = require('../data/db-config');
 module.exports = {
     findOpen,
     findResolved,
-    findStudentTickets
+    findStudentTickets,
+    findHelperTickets
 };
 
 function findOpen() {
@@ -20,7 +21,14 @@ function findResolved() {
 
 function findStudentTickets(id){
     return db('students_tickets as s')
-    .where({'s.id': id})
+    .where({'s.student_id': id})
     .join('tickets as t', 's.ticket_id', 't.id')
+    .select('t.*');
+}
+
+function findHelperTickets(id){
+    return db('helpers_tickets as h')
+    .where({'h.helper_id': id})
+    .join('tickets as t', 'h.ticket_id', 't.id')
     .select('t.*');
 }

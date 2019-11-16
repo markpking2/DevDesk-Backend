@@ -32,7 +32,18 @@ router.get('/students/:id', async (req, res) => {
         res.status(200).json(tickets);
     }catch(err){
         console.log(err);
-        res.status(500).json({message: 'Error retrieving open tickets'});
+        res.status(500).json({message: `Error retrieving tickets for student with id ${id}`});
+    }
+});
+
+router.get('/helpers/:id', async (req, res) => {
+    const {id} = req.params;
+    try{
+        const tickets = await ticketsDb.findHelperTickets(id);
+        res.status(200).json(tickets);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: `Error retrieving tickets for helper with id ${id}`});
     }
 });
 
