@@ -2,7 +2,8 @@ const db = require('../data/db-config');
 
 module.exports = {
     findBy,
-    add
+    add,
+    update
 }
 
 function findBy(value){
@@ -14,4 +15,10 @@ function findBy(value){
 function add(user){
     return db('users')
     .insert(user, 'id');
+}
+
+function update(id, user){
+    return db('users')
+    .where({id})
+    .update({...user});
 }
