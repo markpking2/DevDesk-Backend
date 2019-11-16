@@ -48,7 +48,7 @@ exports.seed = function(knex) {
         {
           category: 'sentences',
           title: 'Sometimes...',
-          description: "Sometimes I'll start a sebtebce and I don't even know where it's going.  I just hope I find it along the way.",
+          description: "Sometimes I'll start a sentence and I don't even know where it's going.  I just hope I find it along the way.",
         },
         {
           category: 'food',
