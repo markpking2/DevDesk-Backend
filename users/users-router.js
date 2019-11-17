@@ -38,5 +38,15 @@ router.put('/user', async (req, res) => {
     }
 });
 
+router.get('/user', async (req, res) => {
+    try{
+        const user = await userDb.findBy({id: req.user.id})
+            .select('id', 'username', 'email', 'helper', 'student', 'cohort');
+        res.status(200).json(user)
+    }catch(err){
+        res.status(500).json({nessage: 'Error getting user information.'});
+    }
+});
+
 
 module.exports = router;
