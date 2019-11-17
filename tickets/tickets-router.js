@@ -80,4 +80,18 @@ router.post('/:id/help', async (req, res) => {
     }
 });
 
+router.delete('/:id/queue', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const returned = await ticketsDb.returnToQueue(id);
+        if(returned){
+            res.status(200).json({message: `Ticket with id ${id} returned to the queue.`});
+        }else{
+            res.status(404).json(`Ticket with id ${id} not found.`);
+        }
+    }catch(err){
+        res.status(500).json({message: 'Server could not return the ticket to the queue.'});
+    }
+});
+
 module.exports = router;

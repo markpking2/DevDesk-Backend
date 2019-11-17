@@ -6,7 +6,8 @@ module.exports = {
     findStudentTickets,
     findHelperTickets,
     openTicket,
-    assignTicket
+    assignTicket,
+    returnToQueue
 };
 
 function findOpen() {
@@ -66,4 +67,10 @@ async function assignTicket(ticket_id, helper_id){
     }catch(err){
         throw err;
     }
+}
+
+function returnToQueue(id){
+    return db('helpers_tickets')
+    .where({ticket_id: id})
+    .del();
 }
