@@ -5,7 +5,8 @@ module.exports = {
     findResolved,
     findStudentTickets,
     findHelperTickets,
-    openTicket
+    openTicket,
+    assignTicket
 };
 
 function findOpen() {
@@ -47,11 +48,22 @@ async function openTicket(ticket, student_id){
                 .insert(ticket, 'id');
 
             await trx('students_tickets').insert({student_id, ticket_id});
-            return ticket_id;
+            return findBy({id: ticket_id});
         }catch(err){
             throw err;
         }
     });
 
     return findBy({id});
+}
+
+async function assignTicket(ticket_id, helper_id){
+    try{
+        const [id] = await db('helpers_tickets')
+            .insert({ticket_id, helper_id}, 'id');
+        
+        return findBy({id: ticket_id});
+    }catch(err){
+        throw err;
+    }
 }

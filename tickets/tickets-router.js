@@ -67,7 +67,17 @@ router.post('/', async (req, res) => {
         console.log(err);
         res.status(500).json({message: 'Error opening ticket'});
     }
+});
 
+router.post('/:id/help', async (req, res) => {
+    try {
+        const ticket = await ticketsDb.assignTicket(req.params.id, req.user.id);
+        
+        res.status(201).json(ticket);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error assigning ticket'});
+    }
 });
 
 module.exports = router;
