@@ -4,7 +4,8 @@ module.exports = {
     findOpen,
     findResolved,
     findStudentTickets,
-    findHelperTickets
+    findHelperTickets,
+    openTicket
 };
 
 function findOpen() {
@@ -31,4 +32,26 @@ function findHelperTickets(id){
     .where({'h.helper_id': id})
     .join('tickets as t', 'h.ticket_id', 't.id')
     .select('t.*');
+}
+
+function findBy(value){
+    return db('tickets')
+        .where(value)
+        .first();
+}
+
+async function openTicket(ticket, student_id){
+    const id = await db.transaction(async trx => {
+        try{
+            const [ticket_id] = await trx('tickets')
+                .insert(ticket, 'id');
+
+            await trx('students_tickets').insert({student_id, ticket_id});
+            return ticket_id;
+        }catch(err){
+            throw err;
+        }
+    });
+
+    return findBy({id});
 }

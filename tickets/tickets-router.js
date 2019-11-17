@@ -57,4 +57,17 @@ router.get('/helpers/:id', async (req, res) => {
     }
 });
 
+router.post('/', async (req, res) => {
+    try {
+        const {category, title, description} = req.body;
+        const ticket = await ticketsDb.openTicket({category, title, description}, req.user.id);
+        
+        res.status(201).json(ticket);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error opening ticket'});
+    }
+
+});
+
 module.exports = router;
