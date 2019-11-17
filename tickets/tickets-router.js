@@ -94,4 +94,39 @@ router.delete('/:id/queue', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const {id} = req.params;
+    try{
+        const result = await db('students_tickets as s')
+            .where({'s.ticket_id': id})
+            .select('s.student_id');
+        
+        if(result.length){
+            const [{student_id}] = result;
+            if(student_id === req.user.id){
+                const {category, title, description} = req.body;
+                const ticket = {category, title, description};
+                Object.keys(ticket).forEach(key => ticket[key] === undefined && delete ticket[key])
+                const updated = await ticketsDb.update(id, ticket);
+                
+                if(updated){
+                    const ticket = await db('tickets')
+                        .where({id})
+                        .first();
+                    res.status(200).json(ticket);
+                }else{
+                    throw 'Ticket could not be updated.'
+                }
+            }else{
+                res.status(403).json({message: `You are not the author of the ticket with id ${id}`});
+            }
+        }else{
+            res.status(404).json({message: `Ticket with id ${id} not found.`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error updating ticket.'});
+    }
+});
+
 module.exports = router;

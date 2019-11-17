@@ -7,7 +7,8 @@ module.exports = {
     findHelperTickets,
     openTicket,
     assignTicket,
-    returnToQueue
+    returnToQueue,
+    update
 };
 
 function findOpen() {
@@ -73,4 +74,10 @@ function returnToQueue(id){
     return db('helpers_tickets')
     .where({ticket_id: id})
     .del();
+}
+
+function update(id, ticket){
+    return db('tickets')
+    .where({id})
+    .update({...ticket});
 }
