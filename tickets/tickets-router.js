@@ -121,7 +121,7 @@ router.put('/:id', async (req, res) => {
                 res.status(403).json({message: `You are not the author of the ticket with id ${id}`});
             }
         }else{
-            res.status(404).json({message: `Ticket with id ${id} not found.`});
+            throw 'Empty result'
         }
     }catch(err){
         console.log(err);
@@ -139,6 +139,7 @@ router.delete('/:id', async (req, res) => {
             res.status(404).json({message: `Ticket with id ${id} not found.`});
         }
     }catch(err){
+        console.log(err);
         res.status(500).json({message: `Error deleting ticket with id ${id}`});
     }
 });
@@ -154,6 +155,24 @@ router.post('/:id/resolve', async (req, res) => {
             res.status(403).json({message: `Error resolving ticket with id ${id}. If you are a student you did not open this ticket. If you are a helper you are not assigned to it.`});
         }else{
             res.status(500).json({message: `Error resolving ticket with id ${id}`});
+        }
+    }
+});
+
+router.put('/resolved/:id', async (req, res) => {
+    const {id} = req.params;
+    const {solution} = req.body;
+    try{
+        const ticket = await ticketsDb.updateSolution(id, req.user.id, solution);
+        res.status(200).json({ticket});
+    }catch(err){
+        if(err === 1){
+            res.status(403).json({message: `Error resolving ticket with id ${id}. If you are a student you did not open this ticket. If you are a helper you are not assigned to it.`});
+        }else if(err === 2){
+            res.status(404).json({message: `There are no resolved tickets with id ${id}.`});
+        }else{
+            console.log(err);
+            res.status(500).json({message: `Error updating solution for ticket with id ${id}`});
         }
     }
 });

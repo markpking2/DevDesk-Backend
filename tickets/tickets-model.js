@@ -10,7 +10,8 @@ module.exports = {
     returnToQueue,
     update,
     remove,
-    resolve
+    resolve,
+    updateSolution
 };
 
 function findOpen() {
@@ -83,10 +84,30 @@ function update(id, ticket){
     .update({...ticket});
 }
 
-function remove(id){
-    return db('tickets')
-    .where({id})
-    .del();
+async function remove(id){
+    return await db.transaction(async trx => {
+        try{
+            const ticketsDeleted = await trx('tickets')
+            .where({id})
+            .del();
+            
+            if(!ticketsDeleted){
+                throw 'Error removing ticket from tickets'
+            }
+
+            const resolvedDeleted = await trx('resolved_tickets')
+            .where({ticket_id: id})
+            .del();
+
+            if(!resolvedDeleted){
+                throw 'Error removing ticket from resolved_tickets'
+            }
+
+            return true;
+        }catch(err){
+            throw err;
+        }
+    });
 }
 
 async function resolve(ticket_id, user_id, solution){
@@ -106,6 +127,8 @@ async function resolve(ticket_id, user_id, solution){
 
         const helper_id = helper && helper.helper_id;
         const student_id = student && student.student_id;
+
+        console.log('ticket id', ticket_id, 'helper', helper, 'student', student);
         
         if((user.helper && user.id === helper_id) || (user.student && user.id === student_id)){
             const values = {student_id, helper_id, ticket_id, solution};
@@ -130,9 +153,37 @@ async function resolve(ticket_id, user_id, solution){
     }
 }
 
-// function findStudentTickets(id){
-//     return db('students_tickets as s')
-//     .where({'s.student_id': id})
-//     .join('tickets as t', 's.ticket_id', 't.id')
-//     .select('t.*');
-// }
+async function updateSolution(ticket_id, user_id, solution){
+    try{
+        const found = await db('resolved_tickets')
+        .where({ticket_id})
+        .first();
+        
+        if(!found){
+            throw 2;
+        }
+        
+        const {student_id, helper_id} = found;
+        const [user] = await db('users')
+        .where({id: user_id});
+
+        if((user.helper && user.id === helper_id) || (user.student && user.id === student_id)){
+            const updated = await db('resolved_tickets')
+            .where({ticket_id})
+            .update({solution});
+
+            if(updated){
+                return await db('tickets as t')
+                .where({'t.id': ticket_id})
+                .join('resolved_tickets as r', 't.id', 'r.ticket_id')
+                .select('t.*', 'r.resolved_at', 'r.solution');
+            }else{
+                throw 'Error updating solution.'
+            }
+        }else{
+            throw 1;
+        }
+    }catch(err){
+        throw err;
+    }
+}
