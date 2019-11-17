@@ -48,10 +48,10 @@ async function openTicket(ticket, student_id){
     const id = await db.transaction(async trx => {
         try{
             const [ticket_id] = await trx('tickets')
-                .insert({...ticket}, 'id');
+                .insert(ticket, 'id');
             console.log(ticket_id);
             await trx('students_tickets').insert({student_id, ticket_id}, 'id');
-            return findBy({id: ticket_id});
+            return ticket_id;
         }catch(err){
             throw err;
         }
