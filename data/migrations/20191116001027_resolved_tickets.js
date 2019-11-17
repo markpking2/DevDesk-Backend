@@ -26,6 +26,8 @@ exports.up = function(knex) {
         tbl.timestamp('resolved_at')
             .notNullable()
             .defaultTo(knex.fn.now());
+        tbl.string('solution', 2000)
+            .notNullable();
         tbl.unique(['helper_id', 'student_id']);
     });
 };

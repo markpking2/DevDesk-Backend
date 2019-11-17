@@ -8,7 +8,8 @@ module.exports = {
     openTicket,
     assignTicket,
     returnToQueue,
-    update
+    update,
+    remove
 };
 
 function findOpen() {
@@ -80,4 +81,10 @@ function update(id, ticket){
     return db('tickets')
     .where({id})
     .update({...ticket});
+}
+
+function remove(id){
+    return db('tickets')
+    .where({id})
+    .del();
 }
