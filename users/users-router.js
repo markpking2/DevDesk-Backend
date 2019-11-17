@@ -48,5 +48,15 @@ router.get('/user', async (req, res) => {
     }
 });
 
+router.delete('/user', async (req, res) => {
+    try{
+        await userDb.remove(req.user.id);
+        res.status(200).json({message: 'User successfully deleted'});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting user.'});
+    }
+})
+
 
 module.exports = router;
