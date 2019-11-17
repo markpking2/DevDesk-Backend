@@ -9,7 +9,8 @@ module.exports = {
     assignTicket,
     returnToQueue,
     update,
-    remove
+    remove,
+    resolve
 };
 
 function findOpen() {
@@ -49,7 +50,6 @@ async function openTicket(ticket, student_id){
         try{
             const [ticket_id] = await trx('tickets')
                 .insert(ticket, 'id');
-            console.log(ticket_id);
             await trx('students_tickets').insert({student_id, ticket_id}, 'id');
             return ticket_id;
         }catch(err){
@@ -88,3 +88,51 @@ function remove(id){
     .where({id})
     .del();
 }
+
+async function resolve(ticket_id, user_id, solution){
+    try {
+        const [user] = await db('users')
+        .where({id: user_id});
+
+        const student = await db('students_tickets')
+        .where({ticket_id})
+        .first()
+        .select('student_id');
+
+        const helper = await db('helpers_tickets')
+        .where({ticket_id})
+        .first()
+        .select('helper_id');
+
+        const helper_id = helper && helper.helper_id;
+        const student_id = student && student.student_id;
+        
+        if((user.helper && user.id === helper_id) || (user.student && user.id === student_id)){
+            const values = {student_id, helper_id, ticket_id, solution};
+            Object.keys(values).forEach(key => values[key] === undefined && delete values[key]);
+            const resolved = await db('resolved_tickets').insert(values);
+            
+            if(resolved){
+                const resolvedTicket = await db('tickets as t')
+                .where({'t.id': ticket_id})
+                .join('resolved_tickets as r', 't.id', 'r.ticket_id')
+                .select('t.*', 'r.resolved_at', 'r.solution');
+
+                return resolvedTicket;
+            }else{
+                throw 'Error inserting into resolved_tickets';
+            }
+        }else{
+            throw 1
+        }
+    }catch(err){
+        throw err;
+    }
+}
+
+// function findStudentTickets(id){
+//     return db('students_tickets as s')
+//     .where({'s.student_id': id})
+//     .join('tickets as t', 's.ticket_id', 't.id')
+//     .select('t.*');
+// }

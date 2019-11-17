@@ -61,6 +61,7 @@ router.post('/', async (req, res) => {
     try {
         const {category, title, description} = req.body;
         const ticket = await ticketsDb.openTicket({category, title, description}, req.user.id);
+
         res.status(201).json(ticket);
     }catch(err){
         console.log(err);
@@ -139,6 +140,21 @@ router.delete('/:id', async (req, res) => {
         }
     }catch(err){
         res.status(500).json({message: `Error deleting ticket with id ${id}`});
+    }
+});
+
+router.post('/:id/resolve', async (req, res) => {
+    const {id} = req.params;
+    const {solution} = req.body;
+    try{
+    const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution);
+    res.status(201).json(ticket);
+    }catch(err){
+        if(err === 1){
+            res.status(403).json({message: `Error resolving ticket with id ${id}. If you are a student you did not open this ticket. If you are a helper you are not assigned to it.`});
+        }else{
+            res.status(500).json({message: `Error resolving ticket with id ${id}`});
+        }
     }
 });
 
