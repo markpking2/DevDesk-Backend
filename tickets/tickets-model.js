@@ -49,8 +49,8 @@ async function openTicket(ticket, student_id){
         try{
             const [ticket_id] = await trx('tickets')
                 .insert(ticket, 'id');
-
-            await trx('students_tickets').insert({student_id, ticket_id});
+            console.log(ticket_id);
+            await trx('students_tickets').insert({student_id, ticket_id}, 'id');
             return findBy({id: ticket_id});
         }catch(err){
             throw err;
