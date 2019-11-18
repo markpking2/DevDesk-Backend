@@ -82,7 +82,12 @@ router.get('/user', async (req, res) => {
     try{
         const user = await userDb.findBy({id: req.user.id})
             .select('id', 'username', 'name', 'email', 'helper', 'student', 'cohort');
-        res.status(200).json(user)
+        if(user){
+            res.status(200).json(user)
+        }else{
+            res.status(404).json({message: `User with id ${req.user.id} not found.`});
+        }
+        
     }catch(err){
         res.status(500).json({nessage: 'Error getting user information.'});
     }
