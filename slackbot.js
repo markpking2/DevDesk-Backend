@@ -6,11 +6,12 @@ const request = require('request');
 
 
 router.post('/', (req, res) => {
+    const {message} = req.body;
     console.log('hi');
     var data = {form: {
           token: process.env.SLACK_AUTH_TOKEN,
           channel: "#general",
-          text: "Hi! :wave: \n I am here to destroy all humans. Thank you for creating me."
+          text: message
         }};
     request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {
           // Sends welcome message
