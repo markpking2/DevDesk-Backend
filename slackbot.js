@@ -1,9 +1,12 @@
+// require('dotenv').config();
 const router = require('express').Router();
 const axios = require('axios');
 const request = require('request');
 
 
+
 router.post('/', (req, res) => {
+    console.log('hi');
     var data = {form: {
           token: process.env.SLACK_AUTH_TOKEN,
           channel: "#general",
