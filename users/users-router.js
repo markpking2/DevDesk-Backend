@@ -119,7 +119,6 @@ router.delete('/user', async (req, res) => {
         }
         res.status(500).json({message: 'Error deleting user.'});
     }
-})
-
+});
 
 module.exports = router;
