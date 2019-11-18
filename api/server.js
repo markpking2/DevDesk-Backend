@@ -12,9 +12,16 @@ const utilRouter = require('../util/util-router');
 
 const server = express();
 
+const corsConfig = {
+    origin: 'http://localhost:4000',
+    credentials: true,
+}
+
+
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
+server.use(cors(corsConfig));
 
 server.use('/api/auth', authRouter);
 server.use('/api/tickets', authenticate, ticketsRouter);

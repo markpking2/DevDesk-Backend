@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const userDb = require('../users/users-model');
 
+//check if username is available
 router.get('/username', async (req, res) => {
     const {username} = req.body;
     const available = await userDb.findBy({username});
