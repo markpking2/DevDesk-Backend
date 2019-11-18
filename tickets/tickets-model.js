@@ -95,17 +95,21 @@ async function remove(id){
                 throw 'Error removing ticket from tickets'
             }
 
+            const resolvedFound = await trx('resolved_tickets')
+            .where({ticket_id: id})
+            .first();
+
             const resolvedDeleted = await trx('resolved_tickets')
             .where({ticket_id: id})
             .del();
 
-            if(!resolvedDeleted){
+            if(resolvedFound && !resolvedDeleted){
                 throw 'Error removing ticket from resolved_tickets'
             }
 
             return true;
         }catch(err){
-            throw err;
+            return false;
         }
     });
 }

@@ -71,7 +71,7 @@ router.put('/user', async (req, res) => {
                 res.status(422).json({message: `There is already an account associated with that email`});
                 break;                
             case 4: 
-                res.status(400).json({message: 'Invalid credentials.'});
+                res.status(403).json({message: 'Invalid credentials.'});
                 break;
             default:  res.status(500).json({message: 'Error updating user.'});
         }
@@ -89,11 +89,29 @@ router.get('/user', async (req, res) => {
 });
 
 router.delete('/user', async (req, res) => {
+    const {password} = req.body;
+
     try{
-        await userDb.remove(req.user.id);
-        res.status(200).json({message: 'User successfully deleted'});
+        if(password){
+            const user = await db('users')
+            .where({id: req.user.id})
+            .first();
+
+            if(user && bcrypt.compareSync(password, user.password)){
+                await userDb.remove(req.user.id);
+                res.status(200).json({message: 'User successfully deleted'});
+            }else{
+                throw 1
+            }
+        }else{
+            throw 2
+        }
     }catch(err){
-        console.log(err);
+        if(err === 1){
+            res.status(403).json({message: 'Invalid credentials.'});
+        }else if(err === 2){
+            res.status(400).json({message: 'Please provide password.'});
+        }
         res.status(500).json({message: 'Error deleting user.'});
     }
 })

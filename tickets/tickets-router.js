@@ -132,14 +132,34 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const {id} = req.params;
     try{
-        const deleted = await ticketsDb.remove(id);
-        if(deleted){
-            res.status(200).json({message: `Ticket with id ${id} successfully deleted.`});
+        const found = await db('tickets')
+        .where({id})
+        .first();
+
+        const  open = await db('students_tickets')
+        .where({ticket_id: id})
+        .first()
+        .select('student_id');
+
+        const  resolved = await db('resolved_tickets')
+        .where({ticket_id: id})
+        .first()
+        .select('student_id');
+        
+        if(found){
+            if((open && open.student_id === req.user.id) || (resolved && resolved.student_id === req.user.id)){
+                const deleted = await ticketsDb.remove(id);
+                if(deleted){
+                    res.status(200).json({message: `Ticket with id ${id} successfully deleted.`});
+                }
+            }else{
+                res.status(403).json({message: `You are not the author of the ticket with id ${id}`});
+            }
         }else{
             res.status(404).json({message: `Ticket with id ${id} not found.`});
         }
+        
     }catch(err){
-        console.log(err);
         res.status(500).json({message: `Error deleting ticket with id ${id}`});
     }
 });
