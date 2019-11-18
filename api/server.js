@@ -16,7 +16,6 @@ const server = express();
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
-server.use(cors(corsConfig));
 
 server.use('/api/auth', authRouter);
 server.use('/api/tickets', authenticate, ticketsRouter);
