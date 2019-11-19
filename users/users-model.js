@@ -4,7 +4,8 @@ module.exports = {
     findBy,
     add,
     update,
-    remove
+    remove,
+    addProfilePic
 }
 
 function findBy(value){
@@ -53,4 +54,9 @@ async function remove(id){
             throw err;
         }
     });
+}
+
+function addProfilePic(image){
+    return db('profile_pictures')
+        .insert(image);
 }

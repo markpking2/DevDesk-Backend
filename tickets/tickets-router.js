@@ -95,7 +95,7 @@ router.post('/', async (req, res) => {
                     },
                     "accessory": {
                         "type": "image",
-                        "image_url": "https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png",
+                        "image_url": "https://res.cloudinary.com/duoz4fpzs/image/upload/v1574148471/ssetylq8etg7svhvnulq.png",
                         "alt_text": "computer thumbnail"
                     }
                 },

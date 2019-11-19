@@ -17,7 +17,8 @@ module.exports = {
 function findOpen() {
     return db('students_tickets as s')
     .join('tickets as t', 's.ticket_id', 't.id')
-    .select('t.*');
+    .join('users as u', 's.student_id', 'u.id')
+    .select('t.*', 'u.name');
 }
 
 function findResolved() {
@@ -27,6 +28,7 @@ function findResolved() {
     .leftJoin('users as s', 's.id', 'r.student_id')
     .select('t.*', 'h.name as helper_name', 's.name as student_name', 'r.resolved_at');
 }
+
 
 function findStudentTickets(id){
     return db('students_tickets as s')

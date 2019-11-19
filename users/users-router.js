@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const userDb = require('./users-model');
+const cloudinary = require('cloudinary').v2;
 
 const db = require('../data/db-config');
 
@@ -120,5 +121,31 @@ router.delete('/user', async (req, res) => {
         res.status(500).json({message: 'Error deleting user.'});
     }
 });
+
+// //upload profile picture to cloudinary
+// cloudinary.config({
+//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//     api_key: process.env.CLOUDINARY_API_KEY,
+//     api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
+
+// router.post('/user/picture', (req, res) => {
+//     console.log(req.files.image);
+//     const file = req.files.image;
+//     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+//         try{
+//             const image = await userDb.addProfilePic({url: result.url, user_id: req.user.id});
+//             if(image){
+//                 res.status(201).json(image);
+//             }else{
+//                 throw 'Image not added'
+//             }
+//         }catch(err){
+//             res.status(500).json({message: 'Error adding image'});
+//         }
+
+//         res.status(201).json(result);
+//     });
+// });
 
 module.exports = router;
