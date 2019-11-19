@@ -51,5 +51,55 @@ exports.seed = function(knex) {
           title: 'Cake',
           description: "If I don't have some cake soon, I might die."
         },
+        {
+          category: 'resolved1',
+          title: 'resolved1',
+          description: "resolved1"
+        },
+        {
+          category: 'resolved2',
+          title: 'resolved2',
+          description: "resolved2"
+        },
+        {
+          category: 'resolved3',
+          title: 'resolved3',
+          description: "resolved3"
+        },
+        {
+          category: 'resolved4',
+          title: 'resolved4',
+          description: "resolved4"
+        },
+        {
+          category: 'resolved5',
+          title: 'resolved5',
+          description: "resolved5"
+        },
+        {
+          category: 'resolved6',
+          title: 'resolved6',
+          description: "resolved6"
+        },
+        {
+          category: 'resolved7',
+          title: 'resolved7',
+          description: "resolved7"
+        },
+        {
+          category: 'resolved8',
+          title: 'resolved8',
+          description: "resolved8"
+        },
+        {
+          category: 'resolved9',
+          title: 'resolved9',
+          description: "resolved9"
+        },
+        {
+          category: 'resolved10',
+          title: 'resolved10',
+          description: "resolved10"
+        },
       ]);
 };

@@ -17,14 +17,15 @@ module.exports = {
 function findOpen() {
     return db('students_tickets as s')
     .join('tickets as t', 's.ticket_id', 't.id')
-    .join('users as u', 's.student_id', 'u.id')
-    .select('t.*', 'u.name');
+    .select('t.*');
 }
 
 function findResolved() {
-    return db('resolved_tickets as r')
-    .join('tickets as t', 'r.ticket_id', 't.id')
-    .select('t.*', 'r.resolved_at');
+    return db('tickets as t')
+    .join('resolved_tickets as r', 't.id', 'r.ticket_id')
+    .leftJoin('users as h', 'h.id', 'r.helper_id')
+    .leftJoin('users as s', 's.id', 'r.student_id')
+    .select('t.*', 'h.name as helper_name', 's.name as student_name', 'r.resolved_at');
 }
 
 function findStudentTickets(id){
