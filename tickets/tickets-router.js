@@ -27,19 +27,35 @@ router.get('/resolved', async (req, res) => {
     }
 });
 
-router.get('/students/:id', async (req, res) => {
-    const {id} = req.params;
+router.get('/students/student/open', async (req, res) => {
+    const {id} = req.user;
     try{
-        const tickets = await ticketsDb.findStudentTickets(id);
+        const tickets = await ticketsDb.findStudentOpenTickets(id);
         if(tickets.length){
             res.status(200).json(tickets);
         }else{
-            res.status(404).json({message: `No tickets found for student with id ${id}`})
+            res.status(404).json({message: `No open tickets found for student with id ${id}`})
         }
         
     }catch(err){
         console.log(err);
-        res.status(500).json({message: `Error retrieving tickets for student with id ${id}`});
+        res.status(500).json({message: `Error retrieving open tickets for student with id ${id}`});
+    }
+});
+
+router.get('/students/student/resolved', async (req, res) => {
+    const {id} = req.user;
+    try{
+        const tickets = await ticketsDb.findStudentResolvedTickets(id);
+        if(tickets.length){
+            res.status(200).json(tickets);
+        }else{
+            res.status(404).json({message: `No resolved tickets found for student with id ${id}`})
+        }
+        
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: `Error retrieving resolved tickets for student with id ${id}`});
     }
 });
 
