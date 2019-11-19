@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const request = require('request');
 const axios = require('axios');
+const knex = require('knex');
 
 const ticketsDb = require('./tickets-model');
 
@@ -42,6 +43,45 @@ router.get('/students/student/open', async (req, res) => {
         res.status(500).json({message: `Error retrieving open tickets for student with id ${id}`});
     }
 });
+
+router.get('/:id', async (req, res) => {
+    const {id} = req.params;
+    try{
+        const ticket = await db('tickets as t')
+            .where({'t.id': id})
+            .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
+            .leftJoin('helpers_tickets as ht', 't.id', 'ht.ticket_id')
+            .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
+            .leftJoin('users as su', 'st.student_id', 'su.id')
+            .leftJoin('users as hu', 'ht.helper_id', 'hu.id')
+            .leftJoin('users as rsu', 'rt.student_id', 'rsu.id')
+            .leftJoin('users as rhu', 'rt.helper_id', 'rhu.id')
+            .select('t.*',
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.name
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
+                ELSE NULL 
+                END AS student_name`),
+            db.raw(`CASE 
+                WHEN hu.name IS NOT NULL THEN hu.name
+                WHEN hu.name IS NULL AND rhu.name IS NOT NULL THEN rhu.name
+                ELSE NULL 
+                END AS helper_name`),
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL AND hu.name IS NULL THEN 'open' 
+                WHEN su.name IS NOT NULL AND hu.name IS NOT NULL THEN 'assigned'
+                ELSE 'resolved'
+                END AS status`),
+            db.raw(`CASE
+                WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
+                END as resolved_at`));
+
+        res.status(200).json(ticket);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({messae: 'Error retrieving ticket information.'});
+    }
+})
 
 router.get('/students/student/resolved', async (req, res) => {
     const {id} = req.user;

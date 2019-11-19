@@ -68,7 +68,7 @@ exports.seed = function(knex) {
           solution: 'resolved'
         },
         {
-          student_id: 12,
+          student_id: null,
           helper_id: null,
           ticket_id: 20,
           solution: 'resolved'

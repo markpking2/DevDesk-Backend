@@ -81,8 +81,11 @@ router.put('/user', async (req, res) => {
 
 router.get('/user', async (req, res) => {
     try{
-        const user = await userDb.findBy({id: req.user.id})
-            .select('id', 'username', 'name', 'email', 'helper', 'student', 'cohort');
+        const user = await db('users as u')
+            .where({'u.id': req.user.id})
+            .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
+            .select('u.id', 'u.username', 'u.email', 'u.cohort', 'u.helper', 'u.student', 'p.url as profile_picture')
+            .first();
         if(user){
             res.status(200).json(user)
         }else{
@@ -90,6 +93,7 @@ router.get('/user', async (req, res) => {
         }
         
     }catch(err){
+        console.log(err);
         res.status(500).json({nessage: 'Error getting user information.'});
     }
 });
