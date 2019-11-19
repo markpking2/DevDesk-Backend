@@ -126,7 +126,7 @@ router.delete('/user', async (req, res) => {
     }
 });
 
-//upload profile picture to cloudinary
+//upload profile pictures to cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -134,20 +134,53 @@ cloudinary.config({
 });
 
 router.post('/user/picture', (req, res) => {
-    console.log(req.files.image);
     const file = req.files.image;
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         try{
             const image = await userDb.addProfilePic({url: result.url, user_id: req.user.id});
             if(image){
-                res.status(201).json(image);
+                res.status(201).json({url: result.url});
             }else{
-                throw 'Image not added'
+                throw 'Image could not added'
             }
         }catch(err){
             res.status(500).json({message: 'Error adding image'});
         }
     });
+});
+
+router.put('/user/picture', (req, res) => {
+    const file = req.files.image;
+    cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+        try{
+            const image = await userDb.updateProfilePic({url: result.url, user_id: req.user.id});
+            if(image){
+                res.status(201).json({url: result.url});
+            }else{
+                throw 'Image could not be updated'
+            }
+        }catch(err){
+            console.log(err);
+            res.status(500).json({message: 'Error adding image'});
+        }
+    });
+});
+
+router.delete('/user/picture', async (req, res) => {
+    try{
+        const deleted = await db('profile_pictures')
+        .where({user_id: req.user.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Profile picture for user id ${req.user.id} successfully deleted`});
+        }else{
+            res.status(404).json({message: `No profile picture exists for user with id ${req.user.id}`})
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting profile picture.'})
+    }
 });
 
 module.exports = router;

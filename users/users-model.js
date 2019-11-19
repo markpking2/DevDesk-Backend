@@ -5,7 +5,8 @@ module.exports = {
     add,
     update,
     remove,
-    addProfilePic
+    addProfilePic,
+    updateProfilePic
 }
 
 function findBy(value){
@@ -59,4 +60,24 @@ async function remove(id){
 function addProfilePic(image){
     return db('profile_pictures')
         .insert(image);
+}
+
+function updateProfilePic(image){
+    return db.transaction(async trx => {
+        try{
+            const deleted = await trx('profile_pictures')
+            .where({user_id: image.user_id})
+            .del()
+
+            if(deleted){
+                await trx('profile_pictures')
+                    .insert(image);
+                return 'success';
+            }else{
+                throw 'Profile picture could not be deleted'
+            }
+        }catch(err){
+            throw err
+        }
+    })
 }
