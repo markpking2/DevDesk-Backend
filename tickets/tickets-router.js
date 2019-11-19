@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const request = require('request');
+const axios = require('axios');
 
 const ticketsDb = require('./tickets-model');
 
@@ -62,6 +64,72 @@ router.post('/', async (req, res) => {
         const {category, title, description} = req.body;
         const ticket = await ticketsDb.openTicket({category, title, description}, req.user.id);
 
+        const message = `Hey! \nA user just opened a ticket in category ${ticket.category}\nTicket title: ${ticket.title}\nDescription: ${ticket.description} \n :hotdog:\n`
+
+        var data = {form: {
+            token: process.env.SLACK_AUTH_TOKEN,
+            channel: "#generall",
+            text: message,
+            blocks: JSON.stringify([
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": `Ticket id: ${ticket.id}`
+                        }
+                    ]
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "A new ticket has been opened:\n <https://lambdadevdesk.now.sh/|Click here to view.>"
+                    }
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": `*Category:*\n${ticket.category}\n*Title:*\n${ticket.title}\n*Description:*\n${ticket.description}`
+                    },
+                    "accessory": {
+                        "type": "image",
+                        "image_url": "https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png",
+                        "alt_text": "computer thumbnail"
+                    }
+                },
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": `Ticket created on: ${ticket.created_at}`
+                        }
+                    ]
+                },
+                {
+                    "type": "actions",
+                    "elements": [
+                        {
+                            "type": "button",
+                            "text": {
+                                "type": "plain_text",
+                                "emoji": true,
+                                "text": "Help Student"
+                            },
+                            "action_id": "assign_ticket",
+                            "style": "primary",
+                            "value": "click_me_123"
+                        },
+                    ]
+                }
+            ])
+          }};
+  
+        request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+        
+
         res.status(201).json(ticket);
     }catch(err){
         console.log(err);
@@ -70,9 +138,28 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/:id/help', async (req, res) => {
+    const {slack, user_id} = req.body;
     try {
         const ticket = await ticketsDb.assignTicket(req.params.id, req.user.id);
-        
+        if(slack && user_id){
+            var data = {form: {
+                token: process.env.SLACK_AUTH_TOKEN,
+                user: user_id
+                }
+            };
+            
+            const id = await request.post('https://slack.com/api/im.open', data, async function (error, response, body) {
+                const {id} = (JSON.parse(body).channel);
+                data = {form: {
+                    token: process.env.SLACK_AUTH_TOKEN,
+                    channel: id,
+                    text: `You have successfully been assigned to ticket with id ${req.params.id}`
+                    }
+                }
+    
+                await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+            });
+        }
         res.status(201).json(ticket);
     }catch(err){
         console.log(err);
