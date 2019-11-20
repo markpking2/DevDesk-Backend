@@ -35,7 +35,7 @@ router.get('/students/student/open', async (req, res) => {
         if(tickets.length){
             res.status(200).json(tickets);
         }else{
-            res.status(404).json({message: `No open tickets found for student with id ${id}`})
+            res.send(`No open tickets found for student with id ${id}`);
         }
         
     }catch(err){
@@ -48,7 +48,7 @@ router.get('/:id', async (req, res) => {
     const {id} = req.params;
     try{
         const ticket = await db('tickets as t')
-            .where({'t.id': id})
+            // .where({'t.id': id})
             .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
             .leftJoin('helpers_tickets as ht', 't.id', 'ht.ticket_id')
             .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
@@ -79,7 +79,7 @@ router.get('/:id', async (req, res) => {
                 END as resolved_at`));
         
         const open_pictures = await db('description_pictures').where({ticket_id: id}).select('url');
-        const resolved_pictures = await db('solutions_pictures').where({ticket_id: id}).select('url');
+        const resolved_pictures = await db('solution_pictures').where({ticket_id: id}).select('url');
 
         res.status(200).json({...ticket, open_pictures, resolved_pictures});
     }catch(err){
@@ -95,7 +95,7 @@ router.get('/students/student/resolved', async (req, res) => {
         if(tickets.length){
             res.status(200).json(tickets);
         }else{
-            res.status(404).json({message: `No resolved tickets found for student with id ${id}`})
+            res.send(`No resolved tickets found for student with id ${id}`)
         }
         
     }catch(err){
@@ -104,19 +104,34 @@ router.get('/students/student/resolved', async (req, res) => {
     }
 });
 
-router.get('/helpers/:id', async (req, res) => {
-    const {id} = req.params;
+router.get('/helpers/open', async (req, res) => {
+    const {id} = req.user;
     try{
         const tickets = await ticketsDb.findHelperTickets(id);
         if(tickets.length){
             res.status(200).json(tickets);
         }else{
-            res.status(404).json({message: `No tickets found for helper with id ${id}`});
+            res.send(`No open tickets found for helper with id ${id}`);
         }
 
     }catch(err){
         console.log(err);
-        res.status(500).json({message: `Error retrieving tickets for helper with id ${id}`});
+        res.status(500).json({message: `Error retrieving open tickets for helper with id ${id}`});
+    }
+});
+
+router.get('/helpers/resolved', async (req, res) => {
+    const {id} = req.user;
+    try{
+        const tickets = await ticketsDb.findHelperResolvedTickets(id);
+        if(tickets.length){
+            res.status(200).json(tickets);
+        }else{
+            res.send(`No resolved tickets found for helper with id ${id}`);
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: `Error retrieving resolved tickets for helper with id ${id}`});
     }
 });
 
@@ -235,7 +250,7 @@ router.delete('/:id/queue', async (req, res) => {
         if(returned){
             res.status(200).json({message: `Ticket with id ${id} returned to the queue.`});
         }else{
-            res.status(404).json(`Ticket with id ${id} not found.`);
+            res.send(`Ticket with id ${id} not found.`);
         }
     }catch(err){
         res.status(500).json({message: 'Server could not return the ticket to the queue.'});

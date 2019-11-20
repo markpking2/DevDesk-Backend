@@ -12,7 +12,8 @@ module.exports = {
     update,
     remove,
     resolve,
-    updateSolution
+    updateSolution,
+    findHelperResolvedTickets
 };
 
 function findOpen() {
@@ -56,6 +57,15 @@ function findHelperTickets(id){
     .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
     .leftJoin('users as us', 'st.student_id', 'us.id')
     .select('t.*', 'uh.name as helper_name', 'us.name as student_name', db.raw('? as status', ['assigned']));
+}
+
+function findHelperResolvedTickets(id){
+    return db('resolved_tickets as rt')
+    .where({'rt.helper_id': id})
+    .join('tickets as t', 'rt.ticket_id', 't.id')
+    .join('users as uh', 'rt.helper_id', 'uh.id')
+    .leftJoin('users as us', 'rt.student_id', 'us.id')
+    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', db.raw('? as status', ['assigned']), 'rt.resolved_at');
 }
 
 function findBy(value){

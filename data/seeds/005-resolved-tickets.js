@@ -73,5 +73,12 @@ exports.seed = function(knex) {
           ticket_id: 20,
           solution: 'resolved'
         },
+        {
+          student_id: null,
+          helper_id: 4,
+          ticket_id: 21,
+          solution: 'resolved'
+        },
+
       ]);
 };

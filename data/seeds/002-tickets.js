@@ -101,5 +101,10 @@ exports.seed = function(knex) {
           title: 'resolved10',
           description: "resolved10"
         },
+        {
+          category: 'resolveasdsaddd10',
+          title: 'resolvsadadaaed10',
+          description: "resodadalved10"
+        },
       ]);
 };
