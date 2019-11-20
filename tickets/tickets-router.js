@@ -56,7 +56,9 @@ router.get('/:id', async (req, res) => {
             .leftJoin('users as hu', 'ht.helper_id', 'hu.id')
             .leftJoin('users as rsu', 'rt.student_id', 'rsu.id')
             .leftJoin('users as rhu', 'rt.helper_id', 'rhu.id')
-            .select('t.*',
+            .leftJoin('description_videos as dv', 't.id', 'dv.ticket_id')
+            .leftJoin('solution_videos as sv', 't.id', 'sv.ticket_id')
+            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video',
             db.raw(`CASE 
                 WHEN su.name IS NOT NULL THEN su.name
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
@@ -75,11 +77,14 @@ router.get('/:id', async (req, res) => {
             db.raw(`CASE
                 WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
                 END as resolved_at`));
+        
+        const open_pictures = await db('description_pictures').where({ticket_id: id}).select('url');
+        const resolved_pictures = await db('solutions_pictures').where({ticket_id: id}).select('url');
 
-        res.status(200).json(ticket);
+        res.status(200).json({...ticket, open_pictures, resolved_pictures});
     }catch(err){
         console.log(err);
-        res.status(500).json({messae: 'Error retrieving ticket information.'});
+        res.status(500).json({message: 'Error retrieving ticket information.'});
     }
 })
 
@@ -341,21 +346,65 @@ router.put('/resolved/:id', async (req, res) => {
 });
 
 //ticket pictures
-// router.post('/:id/pictures', async (req, res) => {
-//     const {id} = req.params;
-//     const images = req.files;
-//     const promises = [];
+router.post('/:id/pictures', async (req, res) => {
+    const {id} = req.params;
+    const {open} = req.body;
+    const images = req.files;
+    const uploads = [];
+    try{
+        for(let key in images){
+            const file = images[key];
+            uploads.push(cloudinary.uploader.upload(file.tempFilePath, (err, result) => {}));
+        }
+        const results = await axios.all(uploads)
+        // console.log(results);
+        const urls = results.map(result => result.url);
+        const inserts = [];
+        
+        for(url of urls){
+            if(open){
+                inserts.push(    
+                    db('description_pictures')
+                    .insert({ticket_id: id, url})
+                )
+            }else{
+                inserts.push(    
+                    db('solution_pictures')
+                    .insert({ticket_id: id, url})
+                )
+            }
+        }
+        await Promise.all(inserts);
+        res.status(200).json(urls);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding images'});
+    }
+});
 
-//     for(let key in images){
-//         const file = images[key];
-//         promises.push(cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {}));
-//     }
-//     const results = await axios.all(promises)
-//     // console.log(results);
-//     const urls = results.map(result => result.url);
-//     console.log(urls);
-
-//     res.status(200).send('success');
-// });
+router.post('/:id/video', async (req, res) => {
+    const {id} = req.params;
+    const {open} = req.body;
+    const {video} = req.files;
+    try{
+        await uploads.push(cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
+            if(open){
+                inserts.push(    
+                    await db('description_videos')
+                        .insert({ticket_id: id, url: result.url})
+                )
+            }else{
+                inserts.push(    
+                    await db('solution_videos')
+                        .insert({ticket_id: id, url: result.url})
+                )
+            }
+            res.status(200).json(result.url);
+        }));
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding video.'});
+    }
+});
 
 module.exports = router;

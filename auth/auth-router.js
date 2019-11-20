@@ -62,7 +62,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const {username, password} = req.body;
     if(username && password){
-        const user = await userDb.findBy({username: username.toLowerCase()});
+        const user = await db('users as u').where({'u.username': username.toLowerCase()})
+            .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
+            .select('u.id', 'u.username', 'u.name', 'u.email', 'u.helper', 'u.student', 'u.cohort', 'p.url')
+            .first();
         if(user && bcrypt.compareSync(password, user.password)){
             const token = generateToken(user);
             res.status(200).json({message: `Welcome ${username.toLowerCase()}`, token, user: {...user, password: undefined}});

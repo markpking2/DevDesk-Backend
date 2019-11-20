@@ -1,11 +1,12 @@
 exports.up = function(knex) {
-    return knex.schema.createTable('solution_pictures', tbl => {
+    return knex.schema.createTable('description_videos', tbl => {
         tbl.increments();
         tbl.integer('ticket_id')
             .notNullable()
             .unsigned()
+            .unique()
             .references('id')
-            .inTable('resolved_tickets')
+            .inTable('tickets')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
         tbl.varchar('url', 255)
@@ -15,5 +16,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTableIfExists('solution_pictures');
+    return knex.schema.dropTableIfExists('description_videos');
 };
