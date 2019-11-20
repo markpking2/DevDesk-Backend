@@ -45,7 +45,7 @@ router.get('/students/student/open', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const {id} = req.params;
     try{
-        const ticket = await db('tickets as t')
+        const [ticket] = await db('tickets as t')
             .where({'t.id': id})
             .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
             .leftJoin('helpers_tickets as ht', 't.id', 'ht.ticket_id')
@@ -76,10 +76,16 @@ router.get('/:id', async (req, res) => {
                 WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
                 END as resolved_at`));
         
-        const open_pictures = await db('description_pictures').where({ticket_id: id}).select('url');
-        const resolved_pictures = await db('solution_pictures').where({ticket_id: id}).select('url');
+        if(ticket){
+            const open_pictures = await db('description_pictures').where({ticket_id: id}).select('url');
+            const resolved_pictures = await db('solution_pictures').where({ticket_id: id}).select('url');
+            res.status(200).json({ticket_details: ticket, open_pictures, resolved_pictures});
+        }else{
+            res.status(404).json({message: `No tickets found with id ${id}`})
+        }
+        
 
-        res.status(200).json({ticket_details: [...ticket], open_pictures, resolved_pictures});
+        
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error retrieving ticket information.'});
