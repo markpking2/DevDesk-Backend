@@ -7,7 +7,7 @@ exports.seed = function(knex) {
           password: bcrypt.hashSync('pass', 8),
           name: 'Michael Scott',
           cohort: 'WEB23',
-          helper: 0,
+          helper: 1,
           student: 1,
           email: 'michael@dundermifflin.com'
         },

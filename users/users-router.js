@@ -6,8 +6,8 @@ const cloudinary = require('cloudinary').v2;
 const db = require('../data/db-config');
 
 router.put('/user', async (req, res) => {
-    const {username, email, cohort} = req.body;
-    const newValues = {username, email, cohort};
+    const {username, email, cohort, name} = req.body;
+    const newValues = {username, email, cohort, name};
     Object.keys(newValues).forEach(key => newValues[key] === undefined && delete newValues[key])
     
     for(let val in newValues){
@@ -16,7 +16,8 @@ router.put('/user', async (req, res) => {
         } 
     };
 
-    const {password} = req.body;
+    let {password} = req.body;
+    const {newPassword} = req.body;
 
     try{
         if(username){
@@ -47,7 +48,10 @@ router.put('/user', async (req, res) => {
             .first();
 
         if(user && bcrypt.compareSync(password, user.password)){
-            const updated = await userDb.update(req.user.id, {...newValues});
+            if(newPassword){
+                password = bcrypt.hashSync(newPassword, 8);
+            }
+            const updated = await userDb.update(req.user.id, newPassword ? {...newValues, password} : {...newValues});
             if(updated){
                 const updatedUser = await userDb
                 .findBy({id: req.user.id})
@@ -61,6 +65,7 @@ router.put('/user', async (req, res) => {
             throw 4
         }
     }catch(err){
+        console.log(err);
         switch(err){
             case 1:
                 res.status(400).json({message: 'Username must only contain characters A-Z, _, and 0-9. Username must start with a letter.'});
