@@ -7,8 +7,6 @@ const ticketsDb = require('./tickets-model');
 
 const db = require('../data/db-config');
 
-
-
 router.get('/open', async (req, res) => {
     try{
         const tickets = await ticketsDb.findOpen();
@@ -361,9 +359,9 @@ router.put('/resolved/:id', async (req, res) => {
 });
 
 //ticket pictures
-router.post('/:id/pictures', async (req, res) => {
+router.post('/:id/pictures/open', async (req, res) => {
     const {id} = req.params;
-    const {open} = req.body;
+    console.log(req.files);
     const images = req.files;
     const uploads = [];
     try{
@@ -372,22 +370,15 @@ router.post('/:id/pictures', async (req, res) => {
             uploads.push(cloudinary.uploader.upload(file.tempFilePath, (err, result) => {}));
         }
         const results = await axios.all(uploads)
-        // console.log(results);
+
         const urls = results.map(result => result.url);
         const inserts = [];
         
         for(url of urls){
-            if(open){
-                inserts.push(    
-                    db('description_pictures')
-                    .insert({ticket_id: id, url})
-                )
-            }else{
-                inserts.push(    
-                    db('solution_pictures')
-                    .insert({ticket_id: id, url})
-                )
-            }
+            inserts.push(    
+                db('description_pictures')
+                .insert({ticket_id: id, url})
+            )
         }
         await Promise.all(inserts);
         res.status(200).json(urls);
@@ -397,25 +388,67 @@ router.post('/:id/pictures', async (req, res) => {
     }
 });
 
-router.post('/:id/video', async (req, res) => {
+router.post('/:id/pictures/resolved', async (req, res) => {
     const {id} = req.params;
-    const {open} = req.body;
+    console.log(req.files);
+    const images = req.files;
+    const uploads = [];
+    try{
+        for(let key in images){
+            const file = images[key];
+            uploads.push(cloudinary.uploader.upload(file.tempFilePath, (err, result) => {}));
+        }
+        const results = await axios.all(uploads)
+
+        const urls = results.map(result => result.url);
+        const inserts = [];
+        
+        for(url of urls){    
+            inserts.push(    
+                db('solution_pictures')
+                .insert({ticket_id: id, url})
+            )
+        }
+        await Promise.all(inserts);
+        res.status(200).json(urls);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding images'});
+    }
+});
+
+router.post('/:id/video/open', async (req, res) => {
+    const {id} = req.params;
+    
     const {video} = req.files;
     try{
-        await uploads.push(cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
-            if(open){
-                inserts.push(    
-                    await db('description_videos')
-                        .insert({ticket_id: id, url: result.url})
-                )
-            }else{
-                inserts.push(    
-                    await db('solution_videos')
-                        .insert({ticket_id: id, url: result.url})
-                )
-            }
+        await cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
+           
+             
+                await db('description_videos')
+                    .insert({ticket_id: id, url: result.url})
+            
+          
             res.status(200).json(result.url);
-        }));
+        });
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding video.'});
+    }
+});
+
+router.post('/:id/video/resolved', async (req, res) => {
+    const {id} = req.params;
+
+    const {video} = req.files;
+    try{
+        await cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
+             
+                await db('solution_video')
+                    .insert({ticket_id: id, url: result.url})
+            
+            res.status(200).json(result.url);
+        });
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
