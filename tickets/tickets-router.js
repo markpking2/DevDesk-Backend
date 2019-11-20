@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const request = require('request');
 const axios = require('axios');
-const knex = require('knex');
+const cloudinary = require('cloudinary').v2;
 
 const ticketsDb = require('./tickets-model');
 
@@ -339,5 +339,23 @@ router.put('/resolved/:id', async (req, res) => {
         }
     }
 });
+
+//ticket pictures
+// router.post('/:id/pictures', async (req, res) => {
+//     const {id} = req.params;
+//     const images = req.files;
+//     const promises = [];
+
+//     for(let key in images){
+//         const file = images[key];
+//         promises.push(cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {}));
+//     }
+//     const results = await axios.all(promises)
+//     // console.log(results);
+//     const urls = results.map(result => result.url);
+//     console.log(urls);
+
+//     res.status(200).send('success');
+// });
 
 module.exports = router;

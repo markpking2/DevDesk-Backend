@@ -84,7 +84,7 @@ router.get('/user', async (req, res) => {
         const user = await db('users as u')
             .where({'u.id': req.user.id})
             .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
-            .select('u.id', 'u.username', 'u.email', 'u.cohort', 'u.helper', 'u.student', 'p.url as profile_picture')
+            .select('u.id', 'u.username', 'u.name', 'u.email', 'u.cohort', 'u.helper', 'u.student', 'p.url as profile_picture')
             .first();
         if(user){
             res.status(200).json(user)
@@ -135,6 +135,7 @@ cloudinary.config({
 
 router.post('/user/picture', (req, res) => {
     const file = req.files.image;
+    
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         try{
             const image = await userDb.addProfilePic({url: result.url, user_id: req.user.id});
@@ -151,6 +152,7 @@ router.post('/user/picture', (req, res) => {
 
 router.put('/user/picture', (req, res) => {
     const file = req.files.image;
+    
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         try{
             const image = await userDb.updateProfilePic({url: result.url, user_id: req.user.id});
@@ -172,10 +174,8 @@ router.delete('/user/picture', async (req, res) => {
         .where({user_id: req.user.id})
         .del();
 
-        if(deleted){
+        if(!deleted){
             res.status(200).json({message: `Profile picture for user id ${req.user.id} successfully deleted`});
-        }else{
-            res.status(404).json({message: `No profile picture exists for user with id ${req.user.id}`})
         }
     }catch(err){
         console.log(err);
