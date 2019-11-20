@@ -46,7 +46,7 @@ router.get('/:id', async (req, res) => {
     const {id} = req.params;
     try{
         const ticket = await db('tickets as t')
-            // .where({'t.id': id})
+            .where({'t.id': id})
             .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
             .leftJoin('helpers_tickets as ht', 't.id', 'ht.ticket_id')
             .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
