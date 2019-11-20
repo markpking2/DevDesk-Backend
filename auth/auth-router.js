@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
     if(username && password){
         const user = await db('users as u').where({'u.username': username.toLowerCase()})
             .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
-            .select('u.id', 'u.username', 'u.name', 'u.email', 'u.helper', 'u.student', 'u.cohort', 'p.url')
+            .select('u.*', 'p.url')
             .first();
         if(user && bcrypt.compareSync(password, user.password)){
             const token = generateToken(user);
