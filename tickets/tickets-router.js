@@ -83,9 +83,6 @@ router.get('/:id', async (req, res) => {
         }else{
             res.status(404).json({message: `No tickets found with id ${id}`})
         }
-        
-
-        
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error retrieving ticket information.'});
