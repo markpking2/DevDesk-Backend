@@ -20,6 +20,9 @@ function findOpen() {
     return db('students_tickets as s')
     .join('tickets as t', 's.ticket_id', 't.id')
     .join('users as u', 's.student_id', 'u.id')
+    .whereNotExists(function () {
+        this.select('*').from('helpers_tickets as h').whereRaw('s.ticket_id = h.ticket_id');
+    })
     .select('t.*', 'u.name as student_name', db.raw('? as status', ['open']));
 }
 
@@ -76,12 +79,14 @@ function findBy(value){
 
 async function openTicket(ticket, student_id){
     const id = await db.transaction(async trx => {
+        console.log('ticket', ticket, 'id', student_id)
         try{
             const [ticket_id] = await trx('tickets')
                 .insert(ticket, 'id');
             await trx('students_tickets').insert({student_id, ticket_id}, 'id');
             return ticket_id;
         }catch(err){
+            
             throw err;
         }
     });

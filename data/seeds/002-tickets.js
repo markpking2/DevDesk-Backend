@@ -121,17 +121,6 @@ exports.seed = function(knex) {
           title: 'resolved10',
           description: "resolved10"
         },
-        {
-          id: 21,
-          category: 'resolveasdsaddd10',
-          title: 'resolvsadadaaed10',
-          description: "resodadalved10"
-        },
-        {
-          id: 22,
-          category: 'sdfkjfhdskjhds',
-          title: 'dfdffdfsdfsdsdf',
-          description: 'sdkjfhdskjshfskjhfdskf'
-        }
+        
       ]);
 };

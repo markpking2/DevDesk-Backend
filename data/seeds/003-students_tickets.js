@@ -25,13 +25,7 @@ exports.seed = function(knex) {
           student_id: 1,
           ticket_id: 6
         },
-        {
-          student_id: 3,
-          ticket_id: 7
-        },
-        {
-          student_id: 8,
-          ticket_id: 8
-        },
+        
+        
       ]);
 };

@@ -12,6 +12,7 @@ router.get('/open', async (req, res) => {
         const tickets = await ticketsDb.findOpen();
         res.status(200).json(tickets);
     }catch(err){
+        console.log(err);
         res.status(500).json({message: 'Error retrieving open tickets'});
     }
 });
@@ -140,7 +141,7 @@ router.post('/', async (req, res) => {
     try {
         const {category, title, description} = req.body;
         const ticket = await ticketsDb.openTicket({category, title, description}, req.user.id);
-
+        
         const message = `Hey! \nA user just opened a ticket in category ${ticket.category}\nTicket title: ${ticket.title}\nDescription: ${ticket.description} \n :hotdog:\n`
 
         var data = {form: {
@@ -216,6 +217,7 @@ router.post('/', async (req, res) => {
 
 router.post('/:id/help', async (req, res) => {
     const {slack, user_id} = req.body;
+    
     try {
         const ticket = await ticketsDb.assignTicket(req.params.id, req.user.id);
         if(slack && user_id){
