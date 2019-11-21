@@ -18,7 +18,6 @@
 #### This API connects to the Dev Desk Queue front end as well as a Dev Desk Queue Slack Bot.
 
 - Web App: <https://front-end-q1yrowlhd.now.sh/>
-- API: <https://ddq.herokuapp.com>
 - Slack Bot: <https://github.com/BuildWeek-Devdesk-Queue/Slackbot>
 
 ### Tech Stack
