@@ -139,6 +139,7 @@ cloudinary.config({
 });
 
 router.post('/user/picture', (req, res) => {
+    console.log(req.files);
     const file = req.files.image;
     
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {

@@ -23,7 +23,7 @@ function findOpen() {
     .whereNotExists(function () {
         this.select('*').from('helpers_tickets as h').whereRaw('s.ticket_id = h.ticket_id');
     })
-    .select('t.*', 'u.name as student_name', db.raw('? as status', ['open']));
+    .select('t.*', 'u.name as student_name', 's.student_id', db.raw('? as status', ['open']));
 }
 
 function findResolved() {
@@ -31,7 +31,7 @@ function findResolved() {
     .join('resolved_tickets as r', 't.id', 'r.ticket_id')
     .leftJoin('users as h', 'h.id', 'r.helper_id')
     .leftJoin('users as s', 's.id', 'r.student_id')
-    .select('t.*', 'h.name as helper_name', 's.name as student_name', 'r.resolved_at', db.raw('? as status', ['resolved']));
+    .select('t.*', 'h.name as helper_name', 's.name as student_name', 'r.helper_id', 'r.student_id', 'r.resolved_at', db.raw('? as status', ['resolved']));
 }
 
 
@@ -40,7 +40,7 @@ function findStudentOpenTickets(id){
     .where({'s.student_id': id})
     .join('tickets as t', 's.ticket_id', 't.id')
     .leftJoin('users as u', 's.student_id', 'u.id')
-    .select('t.*', 'u.name as student_name', db.raw('? as status', ['open']));
+    .select('t.*', 'u.name as student_name', 's.student_id', db.raw('? as status', ['open']));
 }
 
 function findStudentResolvedTickets(id){
@@ -49,7 +49,7 @@ function findStudentResolvedTickets(id){
     .join('tickets as t', 'r.ticket_id', 't.id')
     .leftJoin('users as u', 'r.student_id', 'u.id')
     .leftJoin('users as h', 'h.id', 'r.helper_id')
-    .select('t.*', 'r.resolved_at', 'u.name as student_name', 'h.name as helper_name', db.raw('? as status', ['resolved']));
+    .select('t.*', 'r.resolved_at', 'u.name as student_name', 'h.name as helper_name', 'r.helper_id', 'r.student_id', db.raw('? as status', ['resolved']));
 }
 
 function findHelperTickets(id){
@@ -59,7 +59,7 @@ function findHelperTickets(id){
     .leftJoin('users as uh', 'h.helper_id', 'uh.id')
     .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
     .leftJoin('users as us', 'st.student_id', 'us.id')
-    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', db.raw('? as status', ['assigned']));
+    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']));
 }
 
 function findHelperResolvedTickets(id){
@@ -68,7 +68,7 @@ function findHelperResolvedTickets(id){
     .join('tickets as t', 'rt.ticket_id', 't.id')
     .join('users as uh', 'rt.helper_id', 'uh.id')
     .leftJoin('users as us', 'rt.student_id', 'us.id')
-    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', db.raw('? as status', ['assigned']), 'rt.resolved_at');
+    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']), 'rt.resolved_at');
 }
 
 function findBy(value){
