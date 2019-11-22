@@ -46,38 +46,7 @@ router.get('/students/student/open', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const {id} = req.params;
     try{
-        const [ticket] = await db('tickets as t')
-            .where({'t.id': id})
-            .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
-            .leftJoin('helpers_tickets as ht', 't.id', 'ht.ticket_id')
-            .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
-            .leftJoin('users as su', 'st.student_id', 'su.id')
-            .leftJoin('users as hu', 'ht.helper_id', 'hu.id')
-            .leftJoin('users as rsu', 'rt.student_id', 'rsu.id')
-            .leftJoin('users as rhu', 'rt.helper_id', 'rhu.id')
-            .leftJoin('profile_pictures as hp', 'rt.helper_id', 'hp.user_id')
-            .leftJoin('profile_pictures as sp', 'rt.student_id', 'sp.user_id')
-            .leftJoin('description_videos as dv', 't.id', 'dv.ticket_id')
-            .leftJoin('solution_videos as sv', 't.id', 'sv.ticket_id')
-            .select('t.*', 'dv.url as open_video', 'sp.url as student_image', 'hp.url as helper_image', 'sv.url as resolved_video', 'rt.solution as solution',
-            db.raw(`CASE 
-                WHEN su.name IS NOT NULL THEN su.name
-                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
-                ELSE NULL 
-                END AS student_name`),
-            db.raw(`CASE 
-                WHEN hu.name IS NOT NULL THEN hu.name
-                WHEN hu.name IS NULL AND rhu.name IS NOT NULL THEN rhu.name
-                ELSE NULL 
-                END AS helper_name`),
-            db.raw(`CASE 
-                WHEN su.name IS NOT NULL AND hu.name IS NULL THEN 'open' 
-                WHEN su.name IS NOT NULL AND hu.name IS NOT NULL THEN 'assigned'
-                ELSE 'resolved'
-                END AS status`),
-            db.raw(`CASE
-                WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
-                END as resolved_at`));
+        const [ticket] = await ticketsDb.findById(id);
         
         if(ticket){
             const open_pictures = await db('description_pictures').where({ticket_id: id}).select('url');

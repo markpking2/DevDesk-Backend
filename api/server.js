@@ -29,24 +29,4 @@ server.get('/', (req, res) => {
     res.send('<h1>Hello From  The Dev-Desk Queue Buildweek API');
 });
 
-server.get('/test/users', (req, res) => {
-    db('users')
-    .then(users => {
-        res.status(200).json(users);
-    })
-    .catch(err => {
-        res.status(500).json({message: 'error getting users'});
-    })
-});
-
-server.get('/test/tickets', (req, res) => {
-    db('tickets')
-    .then(tickets => {
-        res.status(200).json(tickets);
-    })
-    .catch(err => {
-        res.status(500).json({message: 'error getting users'});
-    })
-});
-
 module.exports = server;
