@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 exports.seed = function(knex) {
       return knex('users').insert([
         {
-          id: 1,
           username: 'kevinafable',
           password: bcrypt.hashSync('pass', 8),
           name: 'Kevin Afable',
@@ -13,7 +12,6 @@ exports.seed = function(knex) {
           email: 'kevinafable@fake.com'
         },
         {
-          id: 2,
           username: 'justinbrandley',
           password: bcrypt.hashSync('pass', 8),
           name: 'Justin Brandley',
@@ -23,7 +21,6 @@ exports.seed = function(knex) {
           email: 'justinbrandley@fake.com'
         },
         {
-          id: 3,
           username: 'nolanallen',
           password: bcrypt.hashSync('pass', 8),
           name: 'Nolan Allen',
@@ -33,7 +30,6 @@ exports.seed = function(knex) {
           email: 'nolanallen@fake.com'
         },
         {
-          id: 4,
           username: 'joshuaholtsclaw',
           password: bcrypt.hashSync('pass', 8),
           name: 'Joshua Holtsclaw',
@@ -43,7 +39,6 @@ exports.seed = function(knex) {
           email: 'joshuaholtsclaw@fake.com'
         },
         {
-          id: 5,
           username: 'vanesaflores',
           password: bcrypt.hashSync('pass', 8),
           name: 'Vanesa Flores',
@@ -53,7 +48,6 @@ exports.seed = function(knex) {
           email: 'vanesflores@fake.com'
         },
         {
-          id: 6,
           username: 'dalepancho',
           password: bcrypt.hashSync('pass', 8),
           name: 'Dale Pancho',
@@ -63,7 +57,6 @@ exports.seed = function(knex) {
           email: 'dalepancho@fake.com'
         },
         {
-          id: 7,
           username: 'brittanymoyers',
           password: bcrypt.hashSync('pass', 8),
           name: 'Brittany Moyers',
@@ -73,7 +66,6 @@ exports.seed = function(knex) {
           email: 'brittanymoyers@fake.com'
         },
         {
-          id: 8,
           username: 'coristernberg',
           password: bcrypt.hashSync('pass', 8),
           name: 'Cori Sternberg',
@@ -83,7 +75,6 @@ exports.seed = function(knex) {
           email: 'coristernberg@fake.com'
         },
         {
-          id: 9,
           username: 'leonardwinkler',
           password: bcrypt.hashSync('pass', 8),
           name: 'Leonard Winkler',
@@ -93,7 +84,6 @@ exports.seed = function(knex) {
           email: 'leonardwinkler@fake.com'
         },
         {
-          id: 10,
           username: 'louisgelinas',
           password: bcrypt.hashSync('pass', 8),
           name: 'Louis Gelinas',
@@ -103,7 +93,6 @@ exports.seed = function(knex) {
           email: 'louisgelinas@fake.com'
         },
         {
-          id: 11,
           username: 'justinnichols',
           password: bcrypt.hashSync('pass', 8),
           name: 'Justin Nichols',
@@ -113,7 +102,6 @@ exports.seed = function(knex) {
           email: '@fake.com'
         },
        {
-        id: 12,
         username: 'jmiller',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jordan Miller',
@@ -123,7 +111,6 @@ exports.seed = function(knex) {
         email: 'jMiller@fakeemail.com',
        },
        {
-        id: 13,
         username: 'mdegregori',
         password: bcrypt.hashSync('pass', 8),
         name: 'Mauricio Degregori',
@@ -133,7 +120,6 @@ exports.seed = function(knex) {
         email: 'mDegregori@fakeemail.com',
        },
        {
-        id: 14,
         username: 'cwetzel',
         password: bcrypt.hashSync('pass', 8),
         name: 'Chelsea Wetzel',
@@ -143,7 +129,6 @@ exports.seed = function(knex) {
         email: 'cWetzel@fakeemail.com',
        },
        {
-        id: 15,
         username: 'rrenteria',
         password: bcrypt.hashSync('pass', 8),
         name: 'Ryan Renteria',
@@ -153,7 +138,6 @@ exports.seed = function(knex) {
         email: 'rRenteria@fakeemail.com',
        },
        {
-        id: 16,
         username: 'sallen',
         password: bcrypt.hashSync('pass', 8),
         name: 'Sam Allen',
@@ -163,7 +147,6 @@ exports.seed = function(knex) {
         email: 'sAllen@fakeemail.com',
        },
        {
-        id: 17,
         username: 'jcooper',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jessica G Cooper',
@@ -173,7 +156,6 @@ exports.seed = function(knex) {
         email: 'jCooper@fakeemail.com',
        },
        {
-        id: 18,
         username: 'jogles',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jackson Ogles',
@@ -183,7 +165,6 @@ exports.seed = function(knex) {
         email: 'jOgles@fakeemail.com',
        },
        {
-        id: 19,
         username: 'aclements',
         password: bcrypt.hashSync('pass', 8),
         name: 'April M. Clements',
@@ -193,7 +174,6 @@ exports.seed = function(knex) {
         email: 'aClements@fakeemail.com',
        },
        {
-        id: 20,
         username: 'nolanpicini',
         password: bcrypt.hashSync('pass', 8),
         name: 'Nolan Picini',
@@ -203,7 +183,6 @@ exports.seed = function(knex) {
         email: 'nolanpic@gmail.com',
        },
        {
-        id: 21,
         username: 'jadonguzman',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jadon Guzman',
@@ -213,7 +192,6 @@ exports.seed = function(knex) {
         email: 'jguzman@fakeemail.com',
        },
        {
-        id: 22,
         username: 'matthewbedard',
         password: bcrypt.hashSync('pass', 8),
         name: 'Matthew Bedard',
@@ -223,7 +201,6 @@ exports.seed = function(knex) {
         email: 'mbedard@fakeemail.com',
        },
        {
-        id: 23,
         username: 'dessagoodlet',
         password: bcrypt.hashSync('pass', 8),
         name: 'Dessa Goodlett',
@@ -233,7 +210,6 @@ exports.seed = function(knex) {
         email: 'dgoodlett@fakeemail.com',
        },
        {
-        id: 24,
         username: 'lydiecherilus',
         password: bcrypt.hashSync('pass', 8),
         name: 'Lydie Cherilus',
@@ -243,7 +219,6 @@ exports.seed = function(knex) {
         email: 'lcherilus@fakeemail.com',
       },
       {
-         id: 25,
          username: 'chrisengel',
          password: bcrypt.hashSync('pass', 8),
          name: 'Chris Engel',
@@ -253,7 +228,6 @@ exports.seed = function(knex) {
          email: 'cengel@fakeemail.com',
       },
       {
-        id: 26,
          username: 'wwsulinski',
          password: bcrypt.hashSync('pass', 8),
          name: 'William Sulinski',
@@ -263,7 +237,6 @@ exports.seed = function(knex) {
          email: 'w@williamsulinski.com',
       },
       {
-        id: 27,
         username: 'jcochran',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jevon Cochran',
@@ -273,7 +246,6 @@ exports.seed = function(knex) {
         email: 'jcochran@fakeemail.com'
       },
       {
-        id: 28,
         username: 'crussell',
         password: bcrypt.hashSync('pass', 8),
         name: 'Cody Russell',
@@ -283,7 +255,6 @@ exports.seed = function(knex) {
         email: 'crussell@fakeemail.com',
       },
       {
-        id: 29,
         username: 'mweidner',
         password: bcrypt.hashSync('pass', 8),
         name: 'Matthew Weidner ',
@@ -293,7 +264,6 @@ exports.seed = function(knex) {
         email: 'mweidner@fakeemail.com',
       },
       {
-        id: 30,
         username: 'smcguire',
         password: bcrypt.hashSync('pass', 8),
         name: 'Spencer McGuire',
@@ -303,7 +273,6 @@ exports.seed = function(knex) {
         email: 'smcguire@fakeemail.com',
       },
       {
-        id: 31,
         username: 'alynes',
         password: bcrypt.hashSync('pass', 8),
         name: 'Austin Lynes',
