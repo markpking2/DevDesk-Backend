@@ -190,7 +190,8 @@ router.post('/:id/help', async (req, res) => {
     const {slack, user_id} = req.body;
     
     try {
-        const ticket = await ticketsDb.assignTicket(req.params.id, req.user.id);
+        const [ticket] = await ticketsDb.assignTicket(req.params.id, req.user.id);
+        
         if(slack && user_id){
             var data = {form: {
                 token: process.env.SLACK_AUTH_TOKEN,
@@ -210,7 +211,13 @@ router.post('/:id/help', async (req, res) => {
                 await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
             });
         }
-        res.status(201).json(ticket);
+        if(ticket){
+            const open_pictures = await db('description_pictures').where({ticket_id: id}).select('url');
+            const resolved_pictures = await db('solution_pictures').where({ticket_id: id}).select('url');
+            res.status(200).json({ticket_details: ticket, open_pictures, resolved_pictures});
+        }else{
+            res.status(404).json({message: `No tickets found with id ${id}`})
+        }
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error assigning ticket'});
