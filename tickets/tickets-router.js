@@ -318,6 +318,7 @@ router.post('/:id/resolve', async (req, res) => {
         if(err === 1){
             res.status(403).json({message: `Error resolving ticket with id ${id}. If you are a student you did not open this ticket. If you are a helper you are not assigned to it.`});
         }else{
+            console.log(err);
             res.status(500).json({message: `Error resolving ticket with id ${id}`});
         }
     }
