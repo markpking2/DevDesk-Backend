@@ -312,5 +312,5 @@ exports.seed = function(knex) {
         student: 1,
         email: 'alynes@fakeemail.com',
       },        
-      ]);
+      ], 'id');
 };

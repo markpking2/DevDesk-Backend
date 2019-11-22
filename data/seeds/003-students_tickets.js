@@ -75,5 +75,5 @@ exports.seed = function(knex) {
         },
         
         
-      ]);
+      ], 'id');
 };

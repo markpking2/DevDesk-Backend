@@ -13,5 +13,5 @@ exports.seed = function(knex) {
           helper_id: 6,
           ticket_id: 6
         }
-      ]);
+      ], 'id');
 };

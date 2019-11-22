@@ -122,5 +122,5 @@ exports.seed = function(knex) {
           title: 'React - changing an uncontrolled input',
           description: 'For an input to be controlled, its value must correspond to that of a state variable. What does that mean?'
         },
-      ]);
+      ], 'id');
 };
