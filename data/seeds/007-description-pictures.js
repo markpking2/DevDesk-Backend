@@ -1,6 +1,6 @@
 
 exports.seed = function(knex) {
-      return knex('solution_pictures').insert([
+      return knex('description_pictures').insert([
         {
           id: 1,
           ticket_id: 11,
