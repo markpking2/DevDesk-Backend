@@ -188,7 +188,7 @@ router.post('/', async (req, res) => {
 
 router.post('/:id/help', async (req, res) => {
     const {slack, user_id} = req.body;
-    
+    const {id} = req.params;
     try {
         const [ticket] = await ticketsDb.assignTicket(req.params.id, req.user.id);
         
