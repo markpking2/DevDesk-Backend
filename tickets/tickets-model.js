@@ -20,10 +20,11 @@ function findOpen() {
     return db('students_tickets as s')
     .join('tickets as t', 's.ticket_id', 't.id')
     .join('users as u', 's.student_id', 'u.id')
+    .leftJoin('profile_pictures as p', 's.student_id', 'p.user_id')
     .whereNotExists(function () {
         this.select('*').from('helpers_tickets as h').whereRaw('s.ticket_id = h.ticket_id');
     })
-    .select('t.*', 'u.name as student_name', 's.student_id', db.raw('? as status', ['open']));
+    .select('t.*', 'u.name as student_name', 's.student_id', 'p.url as student_image', db.raw('? as status', ['open']), 'p.url as student_image');
 }
 
 function findResolved() {
@@ -31,7 +32,9 @@ function findResolved() {
     .join('resolved_tickets as r', 't.id', 'r.ticket_id')
     .leftJoin('users as h', 'h.id', 'r.helper_id')
     .leftJoin('users as s', 's.id', 'r.student_id')
-    .select('t.*', 'h.name as helper_name', 's.name as student_name', 'r.helper_id', 'r.student_id', 'r.resolved_at', db.raw('? as status', ['resolved']));
+    .leftJoin('profile_pictures as hp', 'h.id', 'hp.user_id')
+    .leftJoin('profile_pictures as sp', 's.id', 'sp.user_id')
+    .select('t.*', 'h.name as helper_name', 's.name as student_name', 'hp.url as helper_image', 'sp.url as student_image','r.helper_id', 'r.student_id', 'r.resolved_at', db.raw('? as status', ['resolved']));
 }
 
 
@@ -40,7 +43,8 @@ function findStudentOpenTickets(id){
     .where({'s.student_id': id})
     .join('tickets as t', 's.ticket_id', 't.id')
     .leftJoin('users as u', 's.student_id', 'u.id')
-    .select('t.*', 'u.name as student_name', 's.student_id', db.raw('? as status', ['open']));
+    .leftJoin('profile_pictures as p', 's.student_id', 'p.user_id')
+    .select('t.*', 'u.name as student_name', 's.student_id', 'p.url as student_image', db.raw('? as status', ['open']));
 }
 
 function findStudentResolvedTickets(id){
@@ -49,7 +53,9 @@ function findStudentResolvedTickets(id){
     .join('tickets as t', 'r.ticket_id', 't.id')
     .leftJoin('users as u', 'r.student_id', 'u.id')
     .leftJoin('users as h', 'h.id', 'r.helper_id')
-    .select('t.*', 'r.resolved_at', 'u.name as student_name', 'h.name as helper_name', 'r.helper_id', 'r.student_id', db.raw('? as status', ['resolved']));
+    .leftJoin('profile_pictures as hp', 'r.helper_id', 'hp.user_id')
+    .leftJoin('profile_pictures as sp', 'r.student_id', 'sp.user_id')
+    .select('t.*', 'r.resolved_at', 'u.name as student_name', 'hp.url as helper_image', 'sp.url as student_image', 'h.name as helper_name', 'r.helper_id', 'r.student_id', db.raw('? as status', ['resolved']));
 }
 
 function findHelperTickets(id){
@@ -59,7 +65,9 @@ function findHelperTickets(id){
     .leftJoin('users as uh', 'h.helper_id', 'uh.id')
     .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
     .leftJoin('users as us', 'st.student_id', 'us.id')
-    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']));
+    .leftJoin('profile_pictures as hp', 'h.helper_id', 'hp.user_id')
+    .leftJoin('profile_pictures as sp', 'st.student_id', 'sp.user_id')
+    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'hp.url as helper_image', 'sp.url as student_image', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']));
 }
 
 function findHelperResolvedTickets(id){
@@ -68,7 +76,9 @@ function findHelperResolvedTickets(id){
     .join('tickets as t', 'rt.ticket_id', 't.id')
     .join('users as uh', 'rt.helper_id', 'uh.id')
     .leftJoin('users as us', 'rt.student_id', 'us.id')
-    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']), 'rt.resolved_at');
+    .leftJoin('profile_pictures as hp', 'rt.helper_id', 'hp.user_id')
+    .leftJoin('profile_pictures as sp', 'rt.student_id', 'sp.user_id')
+    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'hp.url as helper_image', 'sp.url as student_image', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']), 'rt.resolved_at');
 }
 
 function findBy(value){

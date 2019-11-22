@@ -55,9 +55,11 @@ router.get('/:id', async (req, res) => {
             .leftJoin('users as hu', 'ht.helper_id', 'hu.id')
             .leftJoin('users as rsu', 'rt.student_id', 'rsu.id')
             .leftJoin('users as rhu', 'rt.helper_id', 'rhu.id')
+            .leftJoin('profile_pictures as hp', 'rt.helper_id', 'hp.user_id')
+            .leftJoin('profile_pictures as sp', 'rt.student_id', 'sp.user_id')
             .leftJoin('description_videos as dv', 't.id', 'dv.ticket_id')
             .leftJoin('solution_videos as sv', 't.id', 'sv.ticket_id')
-            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution',
+            .select('t.*', 'dv.url as open_video', 'sp.url as student_image', 'hp.url as helper_image', 'sv.url as resolved_video', 'rt.solution as solution',
             db.raw(`CASE 
                 WHEN su.name IS NOT NULL THEN su.name
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
