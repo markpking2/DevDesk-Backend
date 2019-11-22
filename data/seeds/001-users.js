@@ -114,7 +114,7 @@ exports.seed = function(knex) {
         },
        {
         id: 12,
-        username: 'jMiller',
+        username: 'jmiller',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jordan Miller',
         cohort: 'Web24',
@@ -124,7 +124,7 @@ exports.seed = function(knex) {
        },
        {
         id: 13,
-        username: 'mDegregori',
+        username: 'mdegregori',
         password: bcrypt.hashSync('pass', 8),
         name: 'Mauricio Degregori',
         cohort: 'Web24',
@@ -134,7 +134,7 @@ exports.seed = function(knex) {
        },
        {
         id: 14,
-        username: 'cWetzel',
+        username: 'cwetzel',
         password: bcrypt.hashSync('pass', 8),
         name: 'Chelsea Wetzel',
         cohort: 'Web24',
@@ -144,7 +144,7 @@ exports.seed = function(knex) {
        },
        {
         id: 15,
-        username: 'rRenteria',
+        username: 'rrenteria',
         password: bcrypt.hashSync('pass', 8),
         name: 'Ryan Renteria',
         cohort: 'Web24',
@@ -154,7 +154,7 @@ exports.seed = function(knex) {
        },
        {
         id: 16,
-        username: 'sAllen',
+        username: 'sallen',
         password: bcrypt.hashSync('pass', 8),
         name: 'Sam Allen',
         cohort: 'Web24',
@@ -164,7 +164,7 @@ exports.seed = function(knex) {
        },
        {
         id: 17,
-        username: 'jCooper',
+        username: 'jcooper',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jessica G Cooper',
         cohort: 'Web24',
@@ -174,7 +174,7 @@ exports.seed = function(knex) {
        },
        {
         id: 18,
-        username: 'jOgles',
+        username: 'jogles',
         password: bcrypt.hashSync('pass', 8),
         name: 'Jackson Ogles',
         cohort: 'Web24',
@@ -184,7 +184,7 @@ exports.seed = function(knex) {
        },
        {
         id: 19,
-        username: 'aClements',
+        username: 'aclements',
         password: bcrypt.hashSync('pass', 8),
         name: 'April M. Clements',
         cohort: 'Web24',
