@@ -6,7 +6,7 @@ exports.up = function(knex) {
             .notNullable();
         tbl.string('category', 255)
             .notNullable();
-        tbl.string('description', 255)
+        tbl.string('description', 1000)
             .notNullable();
         tbl.timestamp('created_at')
             .notNullable()

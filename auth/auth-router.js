@@ -53,6 +53,7 @@ router.post('/register', async (req, res) => {
             res.status(422).json({message: `There is already an account associated with that email`});
         }else{
             console.log(err);
+            console.log(err);
             res.status(500).json({message: 'Server could not add user'});
         }
         
