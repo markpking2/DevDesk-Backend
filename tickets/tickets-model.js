@@ -110,7 +110,7 @@ async function assignTicket(ticket_id, helper_id){
         const [id] = await db('helpers_tickets')
             .insert({ticket_id, helper_id}, 'id');
         
-        return findByID({id: ticket_id});
+        return findById({id: ticket_id});
     }catch(err){
         throw err;
     }
