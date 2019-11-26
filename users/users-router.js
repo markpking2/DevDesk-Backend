@@ -5,25 +5,6 @@ const cloudinary = require('cloudinary').v2;
 
 const db = require('../data/db-config');
 
-router.get('/:id', async (req, res) => {
-    try{
-        const user = await userDb.findById(req.params.id);
-        if(user){
-            res.status(200).json(user);
-        }else{
-            throw 404;
-        }
-    }catch(err){
-        console.log(err);
-        switch(err){
-            case 404: res.status(404).json({message: 'User with specified ID not found'});
-                break;
-            default: res.status(500).json({message: 'Error getting user information'});
-                break;
-        }
-    }
-})
-
 router.put('/user', async (req, res) => {
     const {username, email, cohort, name} = req.body;
     const newValues = {username, email, cohort, name};
@@ -205,6 +186,25 @@ router.delete('/user/picture', async (req, res) => {
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error deleting profile picture.'})
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try{
+        const user = await userDb.findById(req.params.id);
+        if(user){
+            res.status(200).json(user);
+        }else{
+            throw 404;
+        }
+    }catch(err){
+        console.log(err);
+        switch(err){
+            case 404: res.status(404).json({message: 'User with specified ID not found'});
+                break;
+            default: res.status(500).json({message: 'Error getting user information'});
+                break;
+        }
     }
 });
 
