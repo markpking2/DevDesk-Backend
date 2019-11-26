@@ -2,6 +2,7 @@ const db = require('../data/db-config');
 
 module.exports = {
     findBy,
+    findById,
     add,
     update,
     remove,
@@ -18,6 +19,14 @@ function findBy(value){
 function add(user){
     return db('users')
     .insert(user, 'id');
+}
+
+function findById(id){
+    return db('users as u')
+    .where({'u.id': id})
+    .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
+    .select('u.id', 'u.username', 'u.name', 'u.email', 'u.cohort', 'u.helper', 'u.student', 'p.url as profile_picture')
+    .first();
 }
 
 function update(id, user){

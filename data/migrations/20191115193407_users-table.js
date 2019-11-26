@@ -15,7 +15,7 @@ exports.up = function(knex) {
         tbl.boolean('helper')
             .notNullable();
         tbl.boolean('student')
-            .notNullable();
+            .notNullable();         
     })
 };
 
