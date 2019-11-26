@@ -207,6 +207,6 @@ router.get('/:id', async (req, res) => {
                 break;
         }
     }
-})
+});
 
 module.exports = router;
