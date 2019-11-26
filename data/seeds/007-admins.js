@@ -5,7 +5,7 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('admins').insert([
-        {user_id: 1}
+        {user_id: 32}
       ]);
     });
 };

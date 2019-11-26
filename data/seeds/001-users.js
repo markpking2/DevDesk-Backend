@@ -3,15 +3,6 @@ const bcrypt = require('bcryptjs');
 exports.seed = function(knex) {
       return knex('users').insert([
         {
-          username: 'admin',
-          password: bcrypt.hashSync('pass', 8),
-          name: 'jordan',
-          cohort: 'WEB24',
-          helper: 1,
-          student: 1,
-          email: 'admin@lambdadevdesk.now.sh',
-        }, 
-        {
           username: 'kevinafable',
           password: bcrypt.hashSync('pass', 8),
           name: 'Kevin Afable',
@@ -289,6 +280,15 @@ exports.seed = function(knex) {
         helper: 1,
         student: 1,
         email: 'alynes@fakeemail.com',
-      },       
+      },
+      {
+        username: 'admin',
+        password: bcrypt.hashSync('pass', 8),
+        name: 'jordan',
+        cohort: 'WEB24',
+        helper: 1,
+        student: 1,
+        email: 'admin@lambdadevdesk.now.sh',
+      },     
       ], 'id');
 };
