@@ -18,45 +18,45 @@ module.exports = {
 };
 
 function findOpen() {
-    return db('students_tickets as s')
+    return db('authors_tickets as s')
     .join('tickets as t', 's.ticket_id', 't.id')
-    .join('users as u', 's.student_id', 'u.id')
-    .leftJoin('profile_pictures as p', 's.student_id', 'p.user_id')
+    .join('users as u', 's.author_id', 'u.id')
+    .leftJoin('profile_pictures as p', 's.author_id', 'p.user_id')
     .whereNotExists(function () {
         this.select('*').from('helpers_tickets as h').whereRaw('s.ticket_id = h.ticket_id');
     })
-    .select('t.*', 'u.name as student_name', 's.student_id', 'p.url as student_image', db.raw('? as status', ['open']), 'p.url as student_image');
+    .select('t.*', 'u.name as author_name', 's.author_id', 'p.url as student_image', db.raw('? as status', ['open']), 'p.url as student_image');
 }
 
 function findResolved() {
     return db('tickets as t')
     .join('resolved_tickets as r', 't.id', 'r.ticket_id')
     .leftJoin('users as h', 'h.id', 'r.helper_id')
-    .leftJoin('users as s', 's.id', 'r.student_id')
+    .leftJoin('users as s', 's.id', 'r.author_id')
     .leftJoin('profile_pictures as hp', 'h.id', 'hp.user_id')
     .leftJoin('profile_pictures as sp', 's.id', 'sp.user_id')
-    .select('t.*', 'h.name as helper_name', 's.name as student_name', 'hp.url as helper_image', 'sp.url as student_image','r.helper_id', 'r.student_id', 'r.resolved_at', db.raw('? as status', ['resolved']));
+    .select('t.*', 'h.name as helper_name', 's.name as author_name', 'hp.url as helper_image', 'sp.url as student_image','r.helper_id', 'r.author_id', 'r.resolved_at', db.raw('? as status', ['resolved']));
 }
 
 
 function findStudentOpenTickets(id){
-    return db('students_tickets as s')
-    .where({'s.student_id': id})
+    return db('authors_tickets as s')
+    .where({'s.author_id': id})
     .join('tickets as t', 's.ticket_id', 't.id')
-    .leftJoin('users as u', 's.student_id', 'u.id')
-    .leftJoin('profile_pictures as p', 's.student_id', 'p.user_id')
-    .select('t.*', 'u.name as student_name', 's.student_id', 'p.url as student_image', db.raw('? as status', ['open']));
+    .leftJoin('users as u', 's.author_id', 'u.id')
+    .leftJoin('profile_pictures as p', 's.author_id', 'p.user_id')
+    .select('t.*', 'u.name as author_name', 's.author_id', 'p.url as student_image', db.raw('? as status', ['open']));
 }
 
 function findStudentResolvedTickets(id){
     return db('resolved_tickets as r')
-    .where({'r.student_id': id})
+    .where({'r.author_id': id})
     .join('tickets as t', 'r.ticket_id', 't.id')
-    .leftJoin('users as u', 'r.student_id', 'u.id')
+    .leftJoin('users as u', 'r.author_id', 'u.id')
     .leftJoin('users as h', 'h.id', 'r.helper_id')
     .leftJoin('profile_pictures as hp', 'r.helper_id', 'hp.user_id')
-    .leftJoin('profile_pictures as sp', 'r.student_id', 'sp.user_id')
-    .select('t.*', 'r.resolved_at', 'u.name as student_name', 'hp.url as helper_image', 'sp.url as student_image', 'h.name as helper_name', 'r.helper_id', 'r.student_id', db.raw('? as status', ['resolved']));
+    .leftJoin('profile_pictures as sp', 'r.author_id', 'sp.user_id')
+    .select('t.*', 'r.resolved_at', 'u.name as author_name', 'hp.url as helper_image', 'sp.url as student_image', 'h.name as helper_name', 'r.helper_id', 'r.author_id', db.raw('? as status', ['resolved']));
 }
 
 function findHelperTickets(id){
@@ -64,11 +64,11 @@ function findHelperTickets(id){
     .where({'h.helper_id': id})
     .join('tickets as t', 'h.ticket_id', 't.id')
     .leftJoin('users as uh', 'h.helper_id', 'uh.id')
-    .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
-    .leftJoin('users as us', 'st.student_id', 'us.id')
+    .leftJoin('authors_tickets as st', 't.id', 'st.ticket_id')
+    .leftJoin('users as us', 'st.author_id', 'us.id')
     .leftJoin('profile_pictures as hp', 'h.helper_id', 'hp.user_id')
-    .leftJoin('profile_pictures as sp', 'st.student_id', 'sp.user_id')
-    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'hp.url as helper_image', 'sp.url as student_image', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']));
+    .leftJoin('profile_pictures as sp', 'st.author_id', 'sp.user_id')
+    .select('t.*', 'uh.name as helper_name', 'us.name as author_name', 'hp.url as helper_image', 'sp.url as student_image', 'uh.id as helper_id', 'us.id as author_id', db.raw('? as status', ['assigned']));
 }
 
 function findHelperResolvedTickets(id){
@@ -76,10 +76,10 @@ function findHelperResolvedTickets(id){
     .where({'rt.helper_id': id})
     .join('tickets as t', 'rt.ticket_id', 't.id')
     .join('users as uh', 'rt.helper_id', 'uh.id')
-    .leftJoin('users as us', 'rt.student_id', 'us.id')
+    .leftJoin('users as us', 'rt.author_id', 'us.id')
     .leftJoin('profile_pictures as hp', 'rt.helper_id', 'hp.user_id')
-    .leftJoin('profile_pictures as sp', 'rt.student_id', 'sp.user_id')
-    .select('t.*', 'uh.name as helper_name', 'us.name as student_name', 'hp.url as helper_image', 'sp.url as student_image', 'uh.id as helper_id', 'us.id as student_id', db.raw('? as status', ['assigned']), 'rt.resolved_at');
+    .leftJoin('profile_pictures as sp', 'rt.author_id', 'sp.user_id')
+    .select('t.*', 'uh.name as helper_name', 'us.name as author_name', 'hp.url as helper_image', 'sp.url as student_image', 'uh.id as helper_id', 'us.id as author_id', db.raw('? as status', ['assigned']), 'rt.resolved_at');
 }
 
 function findBy(value){
@@ -88,13 +88,13 @@ function findBy(value){
         .first();
 }
 
-async function openTicket(ticket, student_id){
+async function openTicket(ticket, author_id){
     const id = await db.transaction(async trx => {
-        console.log('ticket', ticket, 'id', student_id)
+        console.log('ticket', ticket, 'id', author_id)
         try{
             const [ticket_id] = await trx('tickets')
                 .insert(ticket, 'id');
-            await trx('students_tickets').insert({student_id, ticket_id}, 'id');
+            await trx('authors_tickets').insert({author_id, ticket_id}, 'id');
             return ticket_id;
         }catch(err){
             
@@ -131,22 +131,22 @@ function update(id, ticket){
 async function findById(id) {
     return await db('tickets as t')
             .where({'t.id': id})
-            .leftJoin('students_tickets as st', 't.id', 'st.ticket_id')
+            .leftJoin('authors_tickets as st', 't.id', 'st.ticket_id')
             .leftJoin('helpers_tickets as ht', 't.id', 'ht.ticket_id')
             .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
-            .leftJoin('users as su', 'st.student_id', 'su.id')
+            .leftJoin('users as su', 'st.author_id', 'su.id')
             .leftJoin('users as hu', 'ht.helper_id', 'hu.id')
-            .leftJoin('users as rsu', 'rt.student_id', 'rsu.id')
+            .leftJoin('users as rsu', 'rt.author_id', 'rsu.id')
             .leftJoin('users as rhu', 'rt.helper_id', 'rhu.id')
             .leftJoin('profile_pictures as hp', 'ht.helper_id', 'hp.user_id')
-            .leftJoin('profile_pictures as sp', 'st.student_id', 'sp.user_id')
+            .leftJoin('profile_pictures as sp', 'st.author_id', 'sp.user_id')
             .leftJoin('profile_pictures as rhp', 'rt.helper_id', 'hp.user_id')
-            .leftJoin('profile_pictures as rsp', 'rt.student_id', 'sp.user_id')
+            .leftJoin('profile_pictures as rsp', 'rt.author_id', 'sp.user_id')
             .leftJoin('description_videos as dv', 't.id', 'dv.ticket_id')
             .leftJoin('solution_videos as sv', 't.id', 'sv.ticket_id')
             .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution',
             db.raw(`CASE 
-                WHEN st.student_id IS NOT NULL THEN sp.url
+                WHEN st.author_id IS NOT NULL THEN sp.url
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
                 ELSE NULL 
                 END AS student_image`),
@@ -159,7 +159,7 @@ async function findById(id) {
                 WHEN su.name IS NOT NULL THEN su.name
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
                 ELSE NULL 
-                END AS student_name`),
+                END AS author_name`),
             db.raw(`CASE 
                 WHEN su.name IS NOT NULL THEN su.id
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.id
@@ -215,10 +215,10 @@ async function resolve(ticket_id, user_id, solution){
         const [user] = await db('users')
         .where({id: user_id});
 
-        const student = await db('students_tickets')
+        const student = await db('authors_tickets')
         .where({ticket_id})
         .first()
-        .select('student_id');
+        .select('author_id');
 
         const helper = await db('helpers_tickets')
         .where({ticket_id})
@@ -226,12 +226,12 @@ async function resolve(ticket_id, user_id, solution){
         .select('helper_id');
 
         const helper_id = helper && helper.helper_id;
-        const student_id = student && student.student_id;
+        const author_id = student && student.author_id;
 
         console.log('ticket id', ticket_id, 'helper', helper, 'student', student);
         
-        if((user.helper && user.id === helper_id) || (user.student && user.id === student_id)){
-            const values = {student_id, helper_id, ticket_id, solution};
+        if((user.helper && user.id === helper_id) || (user.student && user.id === author_id)){
+            const values = {author_id, helper_id, ticket_id, solution};
             Object.keys(values).forEach(key => values[key] === undefined && delete values[key]);
             const resolved = await db('resolved_tickets').insert(values);
             
@@ -263,11 +263,11 @@ async function updateSolution(ticket_id, user_id, solution){
             throw 2;
         }
         
-        const {student_id, helper_id} = found;
+        const {author_id, helper_id} = found;
         const [user] = await db('users')
         .where({id: user_id});
 
-        if((user.helper && user.id === helper_id) || (user.student && user.id === student_id)){
+        if((user.helper && user.id === helper_id) || (user.student && user.id === author_id)){
             const updated = await db('resolved_tickets')
             .where({ticket_id})
             .update({solution});

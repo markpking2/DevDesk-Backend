@@ -1,4 +1,3 @@
-
 exports.up = function(knex) {
     return knex.schema.createTable('helpers_tickets', tbl => {
         tbl.increments();

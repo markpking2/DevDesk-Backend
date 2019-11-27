@@ -55,8 +55,8 @@ async function remove(id){
             }
             if(user.student){
                 await trx('resolved_tickets')
-                .where({student_id: id})
-                .update({student_id: null});
+                .where({author_id: id})
+                .update({author_id: null});
             }
 
             return true;

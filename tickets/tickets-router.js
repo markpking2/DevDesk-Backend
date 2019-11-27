@@ -241,13 +241,13 @@ router.delete('/:id/queue', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const {id} = req.params;
     try{
-        const result = await db('students_tickets as s')
+        const result = await db('authors_tickets as s')
             .where({'s.ticket_id': id})
-            .select('s.student_id');
+            .select('s.author_id');
         
         if(result.length){
-            const [{student_id}] = result;
-            if(student_id === req.user.id){
+            const [{author_id}] = result;
+            if(author_id === req.user.id){
                 const {category, title, description} = req.body;
                 const ticket = {category, title, description};
                 Object.keys(ticket).forEach(key => ticket[key] === undefined && delete ticket[key])
@@ -280,18 +280,18 @@ router.delete('/:id', async (req, res) => {
         .where({id})
         .first();
 
-        const  open = await db('students_tickets')
+        const  open = await db('authors_tickets')
         .where({ticket_id: id})
         .first()
-        .select('student_id');
+        .select('author_id');
 
         const  resolved = await db('resolved_tickets')
         .where({ticket_id: id})
         .first()
-        .select('student_id');
+        .select('author_id');
         
         if(found){
-            if((open && open.student_id === req.user.id) || (resolved && resolved.student_id === req.user.id)){
+            if((open && open.author_id === req.user.id) || (resolved && resolved.author_id === req.user.id)){
                 const deleted = await ticketsDb.remove(id);
                 if(deleted){
                     res.status(200).json({message: `Ticket with id ${id} successfully deleted.`});

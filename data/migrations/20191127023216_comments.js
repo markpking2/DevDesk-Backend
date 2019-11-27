@@ -1,19 +1,14 @@
-
 exports.up = function(knex) {
-    return knex.schema.createTable('tickets', tbl => {
+    return knex.schema.createTable('comments', tbl => {
         tbl.increments();
-        tbl.string('title', 255)
-            .notNullable();
-        tbl.string('category', 255)
-            .notNullable();
         tbl.string('description', 1000)
             .notNullable();
         tbl.timestamp('created_at')
             .notNullable()
             .defaultTo(knex.fn.now());
-    });
+    })
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTableIfExists('tickets');
+    return knex.schema.dropTableIfExists('comments');
 };
