@@ -159,7 +159,12 @@ async function findById(id) {
                 WHEN su.name IS NOT NULL THEN su.name
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
                 ELSE NULL 
-                END AS student_name`),                
+                END AS student_name`),
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.id
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.id
+                ELSE NULL 
+                END AS author_id`),                
             db.raw(`CASE 
                 WHEN hu.name IS NOT NULL THEN hu.name
                 WHEN hu.name IS NULL AND rhu.name IS NOT NULL THEN rhu.name
