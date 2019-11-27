@@ -1,6 +1,5 @@
-
 exports.up = function(knex) {
-    return knex.schema.createTable('admins', tbl => {
+    return knex.schema.createTable('mods', tbl => {
         tbl.increments();
         tbl.integer('user_id')
             .unique()
@@ -13,5 +12,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTableIfExists('admins');
+    return knex.schema.dropTableIfExists('mods');
 };

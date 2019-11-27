@@ -1,19 +1,18 @@
 exports.up = function(knex) {
-    return knex.schema.createTable('description_pictures', tbl => {
+    return knex.schema.createTable('comments_replies_pictures', tbl => {
         tbl.increments();
-        tbl.integer('ticket_id')
+        tbl.integer('reply_id')
             .notNullable()
             .unsigned()
             .references('id')
-            .inTable('tickets')
+            .inTable('comments_replies')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
         tbl.varchar('url', 255)
-            .notNullable()
-            .unique();
-    });
+            .notNullable();
+    })
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTableIfExists('description_pictures');
+    return knex.schema.dropTableIfExists('comments_replies_pictures');
 };

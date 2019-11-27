@@ -1,6 +1,6 @@
 
 exports.seed = function(knex) {
-      return knex('description_pictures').insert([
+      return knex('tickets_pictures').insert([
         {
           ticket_id: 11,
           url: 'https://files.slack.com/files-pri/T4JUEB3ME-FQGLQ3VU3/annotation_2019-11-21_104719.png'
