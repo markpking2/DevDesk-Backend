@@ -47,11 +47,12 @@ router.get('/:id', async (req, res) => {
     const {id} = req.params;
     try{
         const [ticket] = await ticketsDb.findById(id);
+        const ticket_comments = await ticketsDb.findTicketComments(id);
         
         if(ticket){
-            const open_pictures = await db('description_pictures').where({ticket_id: id}).select('url');
-            const resolved_pictures = await db('solution_pictures').where({ticket_id: id}).select('url');
-            res.status(200).json({ticket_details: ticket, open_pictures, resolved_pictures});
+            const open_pictures = await db('tickets_pictures').where({ticket_id: id}).select('url');
+            const resolved_pictures = await db('tickets_solutions_pictures').where({ticket_id: id}).select('url');
+            res.status(200).json({ticket_details: ticket, ticket_comments, open_pictures, resolved_pictures});
         }else{
             res.status(404).json({message: `No tickets found with id ${id}`})
         }
@@ -342,11 +343,70 @@ router.put('/resolved/:id', async (req, res) => {
     }
 });
 
-//ticket pictures
-router.post('/:id/pictures/open', async (req, res) => {
+//comments
+router.post('/:id/comments', async (req, res) => {
     const {id} = req.params;
-    console.log(req.files);
-    const images = req.files;
+    const {description} = req.body;
+    try{
+        const comment_id = await ticketsDb.addComment(id, description);
+        res.status(201).json(comment_id);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding comment'});
+    }
+});
+
+
+router.delete('/comments/:id', async (req, res) => {
+    const {id} = req.params;
+    try{
+        const deleted = await ticketsDb.deleteComment(id);
+        if(deleted){
+            res.status(200).json({message: `Comment with id ${id} successfully deleted.`});
+        }else{
+            throw 'Comment was not deleted';
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting comment.'});
+    }
+});
+
+//replies
+router.post('/comments/:id/replies', async (req, res) => {
+    const {id} = req.params;
+    const {description} = req.body;
+    try{
+        const reply_id = await ticketsDb.addReply(id, description);
+        res.status(201).json(reply_id);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding reply.'});
+    }
+});
+
+
+router.delete('/comments/replies/:id', async (req, res) => {
+    const {id} = req.params;
+    try{
+        const deleted = await ticketsDb.deleteReply(id);
+        if(deleted){
+            res.status(200).json({message: `Reply with id ${id} successfully deleted.`});
+        }else{
+            throw 'Reply was not deleted';
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting reply.'});
+    }
+});
+
+
+//replies
+
+//add pictures
+
+async function addPictures(tableName, images, insert){
     const uploads = [];
     try{
         for(let key in images){
@@ -355,16 +415,27 @@ router.post('/:id/pictures/open', async (req, res) => {
         }
         const results = await axios.all(uploads)
 
-        const urls = results.map(result => result.url);
+        const urls = results.map(result => result.secure_url);
         const inserts = [];
         
         for(url of urls){
             inserts.push(    
-                db('description_pictures')
-                .insert({ticket_id: id, url})
+                db(tableName)
+                .insert({...insert, url})
             )
         }
         await Promise.all(inserts);
+        return urls;
+    }catch(err){
+        throw err;
+    }
+}
+
+router.post('/:id/pictures/open', async (req, res) => {
+    const {id} = req.params;
+    const images = req.files;
+    try{
+        const urls = await addPictures('tickets_pictures', images, {ticket_id: id});
         res.status(200).json(urls);
     }catch(err){
         console.log(err);
@@ -374,26 +445,9 @@ router.post('/:id/pictures/open', async (req, res) => {
 
 router.post('/:id/pictures/resolved', async (req, res) => {
     const {id} = req.params;
-    console.log(req.files);
     const images = req.files;
-    const uploads = [];
     try{
-        for(let key in images){
-            const file = images[key];
-            uploads.push(cloudinary.uploader.upload(file.tempFilePath, (err, result) => {}));
-        }
-        const results = await axios.all(uploads)
-
-        const urls = results.map(result => result.url);
-        const inserts = [];
-        
-        for(url of urls){    
-            inserts.push(    
-                db('solution_pictures')
-                .insert({ticket_id: id, url})
-            )
-        }
-        await Promise.all(inserts);
+        const urls = await addPictures('tickets_solutions_pictures', images, {ticket_id: id});
         res.status(200).json(urls);
     }catch(err){
         console.log(err);
@@ -401,20 +455,49 @@ router.post('/:id/pictures/resolved', async (req, res) => {
     }
 });
 
+router.post('/comments/:id/pictures', async (req, res) => {
+    const {id} = req.params;
+    const images = req.files;
+    try{
+        const urls = await addPictures('comments_pictures', images, {comment_id: id});
+        res.status(200).json(urls);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding images'});
+    }
+});
+
+router.post('/comments/replies/:id/pictures', async (req, res) => {
+    const {id} = req.params;
+    const images = req.files;
+    try{
+        const urls = await addPictures('comments_replies_pictures', images, {reply_id: id});
+        res.status(200).json(urls);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding images'});
+    }
+});
+
+//add videos
+
+async function addVideo(tableName, video, insert){
+    try{
+        return await cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
+            await db(tableName)
+                .insert({...insert, url: result.url});
+        });
+    }catch(err){
+        throw err;
+    }
+}
+
 router.post('/:id/video/open', async (req, res) => {
     const {id} = req.params;
-    
     const {video} = req.files;
     try{
-        await cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
-           
-             
-                await db('description_videos')
-                    .insert({ticket_id: id, url: result.url})
-            
-          
-            res.status(200).json(result.url);
-        });
+        const response = await addVideo('tickets_videos', video, {ticket_id: id});
+        res.status(200).json(response.secure_url);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
@@ -423,16 +506,34 @@ router.post('/:id/video/open', async (req, res) => {
 
 router.post('/:id/video/resolved', async (req, res) => {
     const {id} = req.params;
-
     const {video} = req.files;
     try{
-        await cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
-             
-                await db('solution_video')
-                    .insert({ticket_id: id, url: result.url})
-            
-            res.status(200).json(result.url);
-        });
+        const response = await addVideo('tickets_solutions_videos', video, {ticket_id: id});
+        res.status(200).json(response.secure_url);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding video.'});
+    }
+});
+
+router.post('/comments/:id/video', async (req, res) => {
+    const {id} = req.params;
+    const {video} = req.files;
+    try{
+        const response = await addVideo('comments_videos', video, {comment_id: id});
+        res.status(200).json(response.secure_url);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error adding video.'});
+    }
+});
+
+router.post('/comments/replies/:id/video', async (req, res) => {
+    const {id} = req.params;
+    const {video} = req.files;
+    try{
+        const response = await addVideo('comments_replies_videos', video, {reply_id: id});
+        res.status(200).json(response.secure_url);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
