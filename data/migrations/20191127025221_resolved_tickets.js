@@ -1,11 +1,8 @@
-
 exports.up = function(knex) {
     return knex.schema.createTable('resolved_tickets', tbl => {
         tbl.increments();
-        tbl.integer('student_id')
-            .unsigned()
-        tbl.integer('helper_id')
-            .unsigned()
+        tbl.integer('author_id')
+            .unsigned();
         tbl.integer('ticket_id')
             .unsigned()
             .notNullable()
@@ -13,9 +10,8 @@ exports.up = function(knex) {
         tbl.timestamp('resolved_at')
             .notNullable()
             .defaultTo(knex.fn.now());
-        tbl.string('solution', 255)
+        tbl.string('solution', 1000)
             .notNullable();
-        tbl.unique(['helper_id', 'student_id']);
     });
 };
 

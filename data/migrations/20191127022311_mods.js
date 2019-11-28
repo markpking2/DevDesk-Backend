@@ -1,21 +1,16 @@
-
 exports.up = function(knex) {
-    return knex.schema.createTable('profile_pictures', tbl => {
+    return knex.schema.createTable('mods', tbl => {
         tbl.increments();
         tbl.integer('user_id')
-            .notNullable()
-            .unsigned()
             .unique()
+            .unsigned()
             .references('id')
             .inTable('users')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
-        tbl.varchar('url', 255)
-            .notNullable()
-            .unique();
     });
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTableIfExists('profile_pictures');
+    return knex.schema.dropTableIfExists('mods');
 };

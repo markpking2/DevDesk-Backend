@@ -55,7 +55,7 @@ router.put('/user', async (req, res) => {
             if(updated){
                 const updatedUser = await userDb
                 .findBy({id: req.user.id})
-                .select('id', 'username', 'email', 'helper', 'student', 'cohort');
+                .select('id', 'username', 'email', 'name', 'cohort');
                 
                 res.status(200).json({...updatedUser});
             }else{
@@ -89,11 +89,12 @@ router.get('/user', async (req, res) => {
         const user = await db('users as u')
             .where({'u.id': req.user.id})
             .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
-            .select('u.id', 'u.username', 'u.name', 'u.email', 'u.cohort', 'u.helper', 'u.student', 'p.url as profile_picture')
+            .select('u.id', 'u.username', 'u.name', 'u.email', 'u.cohort', 'p.url as profile_picture')
             .first();
         if(user){
             res.status(200).json(user)
         }else{
+            console.log('hmmm', user);
             res.status(404).json({message: `User with id ${req.user.id} not found.`});
         }
         
@@ -186,6 +187,25 @@ router.delete('/user/picture', async (req, res) => {
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error deleting profile picture.'})
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try{
+        const user = await userDb.findById(req.params.id);
+        if(user){
+            res.status(200).json(user);
+        }else{
+            throw 404;
+        }
+    }catch(err){
+        console.log(err);
+        switch(err){
+            case 404: res.status(404).json({message: 'User with specified ID not found'});
+                break;
+            default: res.status(500).json({message: 'Error getting user information'});
+                break;
+        }
     }
 });
 

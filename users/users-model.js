@@ -2,6 +2,7 @@ const db = require('../data/db-config');
 
 module.exports = {
     findBy,
+    findById,
     add,
     update,
     remove,
@@ -20,6 +21,14 @@ function add(user){
     .insert(user, 'id');
 }
 
+function findById(id){
+    return db('users as u')
+    .where({'u.id': id})
+    .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
+    .select('u.id', 'u.username', 'u.name', 'u.email', 'u.cohort', 'p.url as profile_picture')
+    .first();
+}
+
 function update(id, user){
     return db('users')
     .where({id})
@@ -29,7 +38,7 @@ function update(id, user){
 async function remove(id){
     await db.transaction(async trx => {
         try{
-            const [user] = await trx('users')
+            await trx('users')
             .where({id});
 
             const userDeleted = await trx('users')
@@ -39,16 +48,10 @@ async function remove(id){
             if(!userDeleted){
                 throw 'Error deleting user'
             }
-            if(user.helper){
-                await trx('resolved_tickets')
-                .where({helper_id: id})
-                .update({helper_id: null});
-            }
-            if(user.student){
-                await trx('resolved_tickets')
-                .where({student_id: id})
-                .update({student_id: null});
-            }
+            
+            await trx('resolved_tickets')
+            .where({author_id: id})
+            .update({author_id: null});
 
             return true;
         }catch(err){

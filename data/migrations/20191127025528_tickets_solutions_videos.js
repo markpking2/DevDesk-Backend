@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-    return knex.schema.createTable('solution_videos', tbl => {
+    return knex.schema.createTable('tickets_solutions_videos', tbl => {
         tbl.increments();
         tbl.integer('ticket_id')
             .notNullable()
@@ -16,5 +16,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTableIfExists('solution_videos');
+    return knex.schema.dropTableIfExists('tickets_solutions_videos');
 };

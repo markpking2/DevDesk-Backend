@@ -5,7 +5,7 @@ const userDb = require('../users/users-model');
 const {generateToken} = require('./token.js');
 
 router.post('/register', async (req, res) => {
-    const user = {username, password, helper, student, email, cohort} = req.body;
+    const user = {username, password, email, cohort} = req.body;
     for(let val in user){
         if(typeof user[val] === 'string'){
             user[val] = user[val].toLowerCase();
@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
     };
    
     try{
-        if(!(username && password && (helper || student))){
+        if(!(username && password)){
             throw 1
         }else if(!(/^[a-z][a-z0-9_]*$/i.test(username))){
             throw 2
@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
         res.status(201).json({id :response.id, username: response.username});
     }catch(err){
         if(err === 1){
-            res.status(400).json({message: `Username, password, and at least one of helper/student is required.`});
+            res.status(400).json({message: `Username and password is required.`});
         }else if(err === 2){
             res.status(400).json({message: 'Username must only contain characters A-Z, _, and 0-9. Username must start with a letter.'});
         }else if(err === 3){
@@ -68,7 +68,7 @@ router.post('/login', async (req, res) => {
             .select('u.*', 'p.url')
             .first();
         if(user && bcrypt.compareSync(password, user.password)){
-            const token = generateToken(user);
+            const token = await generateToken(user);
             res.status(200).json({message: `Welcome ${username.toLowerCase()}`, token, user: {...user, password: undefined}});
         }else{
             res.status(403).json({message: 'Invalid username or password'});

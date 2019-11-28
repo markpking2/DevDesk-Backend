@@ -1,8 +1,7 @@
-
 exports.up = function(knex) {
-    return knex.schema.createTable('helpers_tickets', tbl => {
+    return knex.schema.createTable('authors_tickets', tbl => {
         tbl.increments();
-        tbl.integer('helper_id')
+        tbl.integer('author_id')
             .unsigned()
             .notNullable()
             .references('id')
@@ -21,5 +20,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTableIfExists('helpers_tickets');
+    return knex.schema.dropTableIfExists('authors_tickets');
 };
