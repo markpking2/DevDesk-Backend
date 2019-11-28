@@ -8,11 +8,11 @@ async function generateToken(user){
         subject: user.id,
     };
 
-    const admin = db('users as u')
+    const admin = await db('users as u')
         .where({username: user.username})
         .join('admins as a', 'u.id', 'a.user_id')
         .first();
-
+    console.log(admin);
     if(admin){
         payload['admin'] = true;
     }

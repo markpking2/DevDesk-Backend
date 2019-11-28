@@ -10,11 +10,7 @@ exports.up = function(knex) {
             .notNullable();
         tbl.string('email', 255)
             .unique();
-        tbl.string('cohort', 255);
-        tbl.boolean('helper')
-            .notNullable();
-        tbl.boolean('student')
-            .notNullable();         
+        tbl.string('cohort', 255);      
     })
 };
 

@@ -55,7 +55,7 @@ router.put('/user', async (req, res) => {
             if(updated){
                 const updatedUser = await userDb
                 .findBy({id: req.user.id})
-                .select('id', 'username', 'email', 'helper', 'name', 'student', 'cohort');
+                .select('id', 'username', 'email', 'name', 'cohort');
                 
                 res.status(200).json({...updatedUser});
             }else{
@@ -89,7 +89,7 @@ router.get('/user', async (req, res) => {
         const user = await db('users as u')
             .where({'u.id': req.user.id})
             .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
-            .select('u.id', 'u.username', 'u.name', 'u.email', 'u.cohort', 'u.helper', 'u.student', 'p.url as profile_picture')
+            .select('u.id', 'u.username', 'u.name', 'u.email', 'u.cohort', 'p.url as profile_picture')
             .first();
         if(user){
             res.status(200).json(user)

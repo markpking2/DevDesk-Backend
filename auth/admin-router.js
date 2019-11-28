@@ -5,8 +5,8 @@ const db = require('../data/db-config');
 
 router.put('/users/:id', async (req, res) => {
     const {id} = req.params;
-    const {username, email, cohort, name, helper, student} = req.body;
-    const newValues = {username, email, cohort, name, helper, student};
+    const {username, email, cohort, name} = req.body;
+    const newValues = {username, email, cohort, name};
     Object.keys(newValues).forEach(key => newValues[key] === undefined && delete newValues[key])
     
     for(let val in newValues){
@@ -39,13 +39,6 @@ router.put('/users/:id', async (req, res) => {
             }
         }
 
-        if(newValues.helper){
-            newValues.helper = ~~newValues.helper;
-        }
-        if(newValues.student){
-            newValues.student = ~~newValues.student;
-        }
-
         const user = await db('users')
             .where({id: req.user.id})
             .first();
@@ -54,7 +47,7 @@ router.put('/users/:id', async (req, res) => {
         if(updated){
             const updatedUser = await userDb
             .findBy({id})
-            .select('id', 'username', 'email', 'name', 'helper', 'student', 'cohort');
+            .select('id', 'username', 'email', 'name', 'cohort');
             
             res.status(200).json({...updatedUser});
         }else{
