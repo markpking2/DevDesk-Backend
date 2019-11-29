@@ -15,7 +15,9 @@ module.exports = {
     addComment,
     deleteComment,
     addReply,
-    deleteReply
+    deleteReply,
+    updateComment,
+    updateReply
 };
 
 function findOpen() {
@@ -221,7 +223,8 @@ async function findTicketComments(ticket_id){
         .where({ticket_id})
         .join('comments as c', 'tc.comment_id', 'c.id')
         .join('users as u', 'c.author_id', 'u.id')
-        .select('c.*', 'u.id as author_id', 'u.name as author_name');
+        .join('profile_pictrues as p', 'p.user_id', 'u.id')
+        .select('c.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture');
     
    return Promise.all(comments.map(async comment => {
         return {...comment,
@@ -277,6 +280,12 @@ async function addComment(author_id, ticket_id, description){
     });
 }
 
+async function updateComment(id, description){
+    return db('comments')
+        .where({id})
+        .update({description});
+}
+
 function deleteComment(id){
     return db('comments')
         .where({id})
@@ -287,6 +296,12 @@ function deleteComment(id){
 async function addReply(author_id, comment_id, description){
     return await db('comments_replies')
         .insert({author_id, comment_id, description}, 'id');
+}
+
+async function updateReply(id, description){
+    return db('comments_replies')
+        .where({id})
+        .update({description});
 }
 
 function deleteReply(id){

@@ -270,6 +270,18 @@ router.post('/:id/comments', async (req, res) => {
     }
 });
 
+router.put('/comments/:id', async (req, res) => {
+    const {id} = req.params;
+    const {description} = req.body;
+    try{
+        const reply_id = await ticketsDb.updateComment(id, description);
+        res.status(200).json(reply_id);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error updating comment.'});
+    }
+});
+
 
 router.delete('/comments/:id', async (req, res) => {
     const {id} = req.params;
@@ -296,6 +308,18 @@ router.post('/comments/:id/replies', async (req, res) => {
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding reply.'});
+    }
+});
+
+router.put('/comments/replies/:id', async (req, res) => {
+    const {id} = req.params;
+    const {description} = req.body;
+    try{
+        const reply_id = await ticketsDb.updateReply(id, description);
+        res.status(200).json(reply_id);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error updating reply.'});
     }
 });
 
