@@ -239,7 +239,7 @@ async function findCommentReplies(comment_id){
         .where({comment_id})
         .join('users as u', 'cr.author_id', 'u.id')
         .join('profile_pictures as p', 'p.user_id', 'u.id')
-        .select('cr.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture', db.raw("true as 'collapsed'"));
+        .select('cr.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture');
 
     return Promise.all(replies.map(async reply => {
         return {...reply,
