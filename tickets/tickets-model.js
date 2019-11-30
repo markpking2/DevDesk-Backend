@@ -224,7 +224,7 @@ async function findTicketComments(ticket_id){
         .join('comments as c', 'tc.comment_id', 'c.id')
         .join('users as u', 'c.author_id', 'u.id')
         .join('profile_pictures as p', 'p.user_id', 'u.id')
-        .select('c.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture', db.raw("true as 'collapsed'"));
+        .select('c.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture', db.raw("TRUE as 'collapsed'"));
     
    return Promise.all(comments.map(async comment => {
         return {...comment,
