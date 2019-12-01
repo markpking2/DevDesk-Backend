@@ -159,7 +159,7 @@ async function resolve(ticket_id, user_id, solution){
 
         const author_id = author && author.author_id;
         
-        if((user.student && user.id === author_id)){
+        if((user.id === author_id)){
             const values = {author_id, ticket_id, solution};
             Object.keys(values).forEach(key => values[key] === undefined && delete values[key]);
             const resolved = await db('resolved_tickets').insert(values);
