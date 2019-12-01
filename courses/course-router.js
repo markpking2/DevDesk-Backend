@@ -87,7 +87,7 @@ router.get('/', async (req, res) => {
         }
     }catch(err){
         if(err === 'No course found'){
-            res.status(404).json({message: `No course found with name '${course}'` });
+            res.status(404).json({message: `No result found using specified query parameters` });
         }else if(err === 'No course query string provided'){
             res.status(400).json({message: err});
         }else if(err === 'Invalid unit, week, or day'){
