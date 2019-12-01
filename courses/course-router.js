@@ -43,9 +43,9 @@ const newCourse = new Course({
 
 router.get('/', async (req, res) => {
     const {course, unit, week, day} = req.query;
-    
+
     try{
-        if(!course && unit || week || day){
+        if(!course && (unit || week || day)){
             throw 'No course query string provided'
         }else if((unit && isNaN(unit)) || (week && isNaN(week)) || (day && isNaN(day))){
             throw 'Invalid unit, week, or day';
