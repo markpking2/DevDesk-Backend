@@ -19,7 +19,8 @@ module.exports = {
     updateComment,
     updateReply,
     findCommentById,
-    findReplyById
+    findReplyById,
+    reopenTicket
 };
 
 function findOpen() {
@@ -76,6 +77,31 @@ async function openTicket(ticket, author_id){
     });
 
     return findBy({id});
+}
+
+async function reopenTicket(id){
+    try{
+        return await db.transaction(async trx => {
+            const {author_id} = await trx('resolved_tickets')
+                .where({'ticket_id': id})
+                .first();
+            if(!author_id) throw 'author_id undefined'                
+            const deleted = await trx('resolved_tickets')
+                .where({'ticket_id': id})
+                .del();
+            if(deleted){
+                const inserted = await trx('authors_tickets')
+                    .insert({'ticket_id': id, author_id});
+                if(inserted){
+                    return true;
+                }                    
+            }else{
+                throw 'Ticket could not be removed from resolved tickets'
+            }
+        });
+    }catch(err){
+        throw err;
+    }
 }
 
 function update(id, ticket){

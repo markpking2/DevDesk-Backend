@@ -241,6 +241,17 @@ router.post('/:id/resolve', async (req, res) => {
     }
 });
 
+router.post('/:id/reopen', async (req, res) => {
+    const {id} = req.params;
+    const reopened = await ticketsDb.reopenTicket(id);
+    if(reopened){
+        res.status(200).json({message: `Ticket with id ${id} successfully reopened`});
+    }else{
+        res.status(500).json({message: 'Error reopening ticket'});
+    }
+
+});
+
 router.put('/resolved/:id', async (req, res) => {
     const {id} = req.params;
     const {solution, comment_id, reply_id} = req.body;
