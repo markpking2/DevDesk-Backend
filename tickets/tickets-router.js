@@ -275,9 +275,14 @@ router.put('/comments/:id', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
     try{
-        const comment_id = await ticketsDb.updateComment(id, description);
-        const comment = await ticketsDb.findCommentById(comment_id);
-        res.status(200).json(comment);
+        const updated = await ticketsDb.updateComment(id, description);
+        if(updated){
+            const comment = await ticketsDb.findCommentById(id);
+            res.status(200).json(comment);
+        }else{
+            throw 'Comment was not updated.'
+        }
+        
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error updating comment.'});
@@ -305,10 +310,13 @@ router.post('/comments/:id/replies', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
     try{
-        const reply_id = await ticketsDb.addReply(req.user.id, id, description);
-        const reply = await ticketsDb.findReplyById(reply_id);
-        console.log(reply_id);
-        res.status(201).json(reply);
+        const updated = await ticketsDb.addReply(req.user.id, id, description);
+        if(updated){
+            const reply = await ticketsDb.findReplyById(id);
+            res.status(201).json(reply);
+        }else{
+            throw 'Reply was not updated'
+        }
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding reply.'});
