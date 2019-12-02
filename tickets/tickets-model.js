@@ -348,6 +348,7 @@ async function findReplyById(id){
     const reply = await db('comments_replies')
         .where({id})
         .first();
+        console.log('reply:', reply);
     
     return {...reply, 
             reply_pictures: await findReplyPictures(id),
