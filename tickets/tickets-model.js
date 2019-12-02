@@ -148,6 +148,18 @@ async function remove(id){
         }
     });
 }
+// async function addComment(author_id, ticket_id, description){
+//     return await db.transaction(async trx => {
+//         try{
+//             const [comment_id] = await trx('comments')
+//                 .insert({author_id, description}, 'id');
+//             await trx('tickets_comments').insert({ticket_id, comment_id}, 'id');
+//             return comment_id;
+//         }catch(err){
+//             throw err;
+//         }
+//     });
+// }
 
 async function resolve(ticket_id, user_id, solution){
     try {
@@ -159,25 +171,41 @@ async function resolve(ticket_id, user_id, solution){
         .first()
         .select('author_id');
 
-        const author_id = author && author.author_id;
         
-        if((user.id === author_id)){
-            const values = {author_id, ticket_id, solution};
-            Object.keys(values).forEach(key => values[key] === undefined && delete values[key]);
-            const resolved = await db('resolved_tickets').insert(values);
-            
-            if(resolved){
-                const resolvedTicket = await db('tickets as t')
-                .where({'t.id': ticket_id})
-                .join('resolved_tickets as r', 't.id', 'r.ticket_id')
-                .select('t.*', 'r.resolved_at', 'r.solution');
-
-                return resolvedTicket;
+        const author_id = author && author.author_id;
+        if(author_id){
+            if((user.id === author_id)){
+                const values = {author_id, ticket_id, solution};
+                Object.keys(values).forEach(key => values[key] === undefined && delete values[key]);
+                
+                return await db.transaction(async trx => {
+                    try{
+                        const resolved = await trx('resolved_tickets').insert(values);
+                        if(resolved){
+                            const deleted = await trx('authors_tickets')
+                                .where({ticket_id})
+                                .del();
+                            if(deleted){
+                                const resolvedTicket = await trx('tickets as t')
+                                    .where({'t.id': ticket_id})
+                                    .join('resolved_tickets as r', 't.id', 'r.ticket_id')
+                                    .select('t.*', 'r.resolved_at', 'r.solution');
+                                return resolvedTicket;
+                            }else{
+                                throw "Ticket was not removed from open queue";
+                            }                     
+                        }else{
+                            throw "Ticket was not resolved";
+                        }
+                    }catch(err){
+                        throw err;
+                    }
+                });
             }else{
-                throw 'Error inserting into resolved_tickets';
+                throw 1
             }
         }else{
-            throw 1
+            throw 2
         }
     }catch(err){
         throw err;

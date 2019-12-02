@@ -232,6 +232,8 @@ router.post('/:id/resolve', async (req, res) => {
     }catch(err){
         if(err === 1){
             res.status(403).json({message: `Error resolving ticket with id ${id}. You did not create this ticket.`});
+        }if(err === 2){
+            res.status(404).json({message: `No open ticket with id ${id}.`});
         }else{
             console.log(err);
             res.status(500).json({message: `Error resolving ticket with id ${id}`});
