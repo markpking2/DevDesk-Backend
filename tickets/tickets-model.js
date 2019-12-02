@@ -288,16 +288,6 @@ function findCommentVideos(comment_id){
         .where({comment_id});
 }
 
-function findReplyPictures(reply_id){
-    return db('comments_replies_pictures')
-        .where({reply_id});
-}
-
-function findReplyVideos(reply_id){
-    return db('comments_replies_videos')
-        .where({reply_id});
-}
-
 async function addComment(author_id, ticket_id, description){
     return await db.transaction(async trx => {
         try{
@@ -323,11 +313,14 @@ function deleteComment(id){
         .del();
 }
 
-function findCommentById(id){
-    console.log(id)
-    return db('comments')
+async function findCommentById(id){
+    const comment = await db('comments')
         .where({id})
         .first();
+    return {...comment,
+            comment_pictures: await findCommentPictures(id),
+            comment_videos: await findCommentVideos(id),
+            comment_replies: await findCommentReplies(id)};
 }
 
 
@@ -351,9 +344,22 @@ function deleteReply(id){
         .del();
 }
 
-function findReplyById(id){
-    console.log(id)
-    return db('comments_replies')
+async function findReplyById(id){
+    const reply = await db('comments_replies')
         .where({id})
         .first();
+    
+    return {...reply, 
+            reply_pictures: await findReplyPictures(id),
+            reply_videos: await findReplyVideos(id)};
+}
+
+function findReplyPictures(reply_id){
+    return db('comments_replies_pictures')
+        .where({reply_id});
+}
+
+function findReplyVideos(reply_id){
+    return db('comments_replies_videos')
+        .where({reply_id});
 }
