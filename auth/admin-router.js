@@ -87,4 +87,42 @@ router.delete('/users/:id', async (req, res) => {
     }
 });
 
+//update/deltete user profile pictures
+router.put('/user/:id/picture', (req, res) => {
+    const {id} = req.params;
+
+    const file = req.files.image;
+    
+    cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+        try{
+            const image = await userDb.updateProfilePic({url: result.url, user_id: id});
+            if(image){
+                res.status(201).json({url: result.url});
+            }else{
+                throw 'Image could not be updated'
+            }
+        }catch(err){
+            console.log(err);
+            res.status(500).json({message: 'Error updating profile picture'});
+        }
+    });
+});
+
+router.delete('/user/:id/picture', async (req, res) => {
+    const {id} = req.params;
+
+    try{
+        const deleted = await db('profile_pictures')
+        .where({user_id: id})
+        .del();
+
+        if(!deleted){
+            res.status(200).json({message: `Profile picture for user id ${id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting profile picture.'})
+    }
+});
+
 module.exports = router;
