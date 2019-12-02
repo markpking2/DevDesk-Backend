@@ -17,7 +17,9 @@ module.exports = {
     addReply,
     deleteReply,
     updateComment,
-    updateReply
+    updateReply,
+    findCommentById,
+    findReplyById
 };
 
 function findOpen() {
@@ -281,7 +283,7 @@ async function addComment(author_id, ticket_id, description){
     });
 }
 
-async function updateComment(id, description){
+function updateComment(id, description){
     return db('comments')
         .where({id})
         .update({description});
@@ -293,10 +295,20 @@ function deleteComment(id){
         .del();
 }
 
+function findCommentById(id){
+    console.log(id)
+    return db('comments')
+        .where({id})
+        .first();
+}
+
+
+
 //replies
 async function addReply(author_id, comment_id, description){
-    return await db('comments_replies')
+    const [reply_id] = await db('comments_replies')
         .insert({author_id, comment_id, description}, 'id');
+    return reply_id;        
 }
 
 async function updateReply(id, description){
@@ -309,4 +321,11 @@ function deleteReply(id){
     return db('comments_replies')
         .where({id})
         .del();
+}
+
+function findReplyById(id){
+    console.log(id)
+    return db('comments_replies')
+        .where({id})
+        .first();
 }

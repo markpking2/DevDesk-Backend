@@ -263,7 +263,8 @@ router.post('/:id/comments', async (req, res) => {
     const {description} = req.body;
     try{
         const comment_id = await ticketsDb.addComment(req.user.id, id, description);
-        res.status(201).json(comment_id);
+        const comment = await ticketsDb.findCommentById(comment_id);
+        res.status(201).json(comment);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding comment'});
@@ -274,8 +275,9 @@ router.put('/comments/:id', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
     try{
-        const reply_id = await ticketsDb.updateComment(id, description);
-        res.status(200).json(reply_id);
+        const comment_id = await ticketsDb.updateComment(id, description);
+        const comment = await ticketsDb.findCommentById(comment_id);
+        res.status(200).json(comment);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error updating comment.'});
@@ -304,7 +306,9 @@ router.post('/comments/:id/replies', async (req, res) => {
     const {description} = req.body;
     try{
         const reply_id = await ticketsDb.addReply(req.user.id, id, description);
-        res.status(201).json(reply_id);
+        const reply = await ticketsDb.findReplyById(reply_id);
+        console.log(reply_id);
+        res.status(201).json(reply);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding reply.'});
@@ -316,7 +320,8 @@ router.put('/comments/replies/:id', async (req, res) => {
     const {description} = req.body;
     try{
         const reply_id = await ticketsDb.updateReply(id, description);
-        res.status(200).json(reply_id);
+        const reply = await ticketsDb.findReplyById(reply_id);
+        res.status(200).json(reply);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error updating reply.'});
