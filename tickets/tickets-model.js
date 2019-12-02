@@ -314,9 +314,14 @@ function deleteComment(id){
 }
 
 async function findCommentById(id){
-    const comment = await db('comments')
-        .where({id})
+    console.log(id);
+    const comment = await db('comments as c')
+        .where({'c.id': id})
+        .join('users as u', 'c.author_id', 'u.id')
+        .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
+        .select('c.*', 'p.url as author_image', 'u.name as author_name')
         .first();
+        
     return {...comment,
             comment_pictures: await findCommentPictures(id),
             comment_videos: await findCommentVideos(id),
@@ -345,8 +350,11 @@ function deleteReply(id){
 }
 
 async function findReplyById(id){
-    const reply = await db('comments_replies')
-        .where({id})
+    const reply = await db('comments_replies as cr')
+        .where({'cr.id': id})
+        .join('users as u', 'cr.author_id', 'u.id')
+        .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
+        .select('cr.*', 'p.url as author_image', 'u.name as author_name')
         .first();
         console.log('reply:', reply);
     

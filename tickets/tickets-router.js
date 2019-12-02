@@ -266,7 +266,7 @@ router.post('/:id/comments', async (req, res) => {
     try{
         const comment_id = await ticketsDb.addComment(req.user.id, id, description);
         const comment = await ticketsDb.findCommentById(comment_id);
-        res.status(201).json(comment);
+        res.status(201).json({...comment, collapsed: true});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding comment'});
@@ -275,12 +275,12 @@ router.post('/:id/comments', async (req, res) => {
 
 router.put('/comments/:id', async (req, res) => {
     const {id} = req.params;
-    const {description} = req.body;
+    const {description, collapsed} = req.body;
     try{
         const updated = await ticketsDb.updateComment(id, description);
         if(updated){
             const comment = await ticketsDb.findCommentById(id);
-            res.status(200).json(comment);
+            res.status(200).json({...comment, collapsed: typeof collapsed !== 'undefined' ? collapsed : true});
         }else{
             throw 'Comment was not updated.'
         }
@@ -312,13 +312,9 @@ router.post('/comments/:id/replies', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
     try{
-        const updated = await ticketsDb.addReply(req.user.id, id, description);
-        if(updated){
-            const reply = await ticketsDb.findReplyById(id);
-            res.status(201).json(reply);
-        }else{
-            throw 'Reply was not updated'
-        }
+        const reply_id = await ticketsDb.addReply(req.user.id, id, description);
+        const reply = await ticketsDb.findReplyById(reply_id);
+        res.status(201).json(reply);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding reply.'});
