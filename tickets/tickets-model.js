@@ -35,7 +35,7 @@ function findResolved() {
     .join('resolved_tickets as r', 't.id', 'r.ticket_id')
     .leftJoin('users as s', 's.id', 'r.author_id')
     .leftJoin('profile_pictures as sp', 's.id', 'sp.user_id')
-    .select('t.*', 's.name as author_name', 'sp.url as author_image', 'r.author_id', 'r.resolved_at', db.raw('? as status', ['resolved']));
+    .select('t.*', 's.name as author_name', 'sp.url as author_image', 'r.author_id', 'r.resolved_at', db.raw('? as status', ['resolved'], 'r.solution_comment_id', 'r.solution_reply_id'));
 }
 
 
@@ -54,7 +54,7 @@ function findStudentResolvedTickets(id){
     .join('tickets as t', 'r.ticket_id', 't.id')
     .leftJoin('users as u', 'r.author_id', 'u.id')
     .leftJoin('profile_pictures as sp', 'r.author_id', 'sp.user_id')
-    .select('t.*', 'r.resolved_at', 'u.name as author_name', 'sp.url as author_image', 'r.author_id', db.raw('? as status', ['resolved']));
+    .select('t.*', 'r.resolved_at', 'u.name as author_name', 'sp.url as author_image', 'r.author_id', db.raw('? as status', ['resolved'], 'r.solution_comment_id', 'r.solution_reply_id'));
 }
 
 function findBy(value){
@@ -95,7 +95,7 @@ async function findById(id) {
             .leftJoin('profile_pictures as rsp', 'rt.author_id', 'sp.user_id')
             .leftJoin('tickets_videos as dv', 't.id', 'dv.ticket_id')
             .leftJoin('tickets_solutions_videos as sv', 't.id', 'sv.ticket_id')
-            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution',
+            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
             db.raw(`CASE 
                 WHEN st.author_id IS NOT NULL THEN sp.url
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
@@ -148,20 +148,8 @@ async function remove(id){
         }
     });
 }
-// async function addComment(author_id, ticket_id, description){
-//     return await db.transaction(async trx => {
-//         try{
-//             const [comment_id] = await trx('comments')
-//                 .insert({author_id, description}, 'id');
-//             await trx('tickets_comments').insert({ticket_id, comment_id}, 'id');
-//             return comment_id;
-//         }catch(err){
-//             throw err;
-//         }
-//     });
-// }
 
-async function resolve(ticket_id, user_id, solution){
+async function resolve(ticket_id, user_id, solution, comment_id, reply_id){
     try {
         const [user] = await db('users')
         .where({id: user_id});
@@ -180,6 +168,27 @@ async function resolve(ticket_id, user_id, solution){
                 
                 return await db.transaction(async trx => {
                     try{
+                        if(reply_id){
+                            const {description} = await trx('comments_replies')
+                                .where({id: reply_id})
+                                .first();
+                            if(description){
+                                values.solution = description;
+                                values['solution_reply_id'] = reply_id;
+                            }else{
+                                throw "Reply description not found";
+                            }
+                        }else if(comment_id){
+                            const {description} = await trx('comments')
+                                .where({id: comment_id})
+                                .first();
+                            if(description){
+                                values.solution = description;
+                                values['solution_comment_id'] = comment_id;
+                            }else{
+                                throw "Comment description not found";
+                            }
+                        }
                         const resolved = await trx('resolved_tickets').insert(values);
                         if(resolved){
                             const deleted = await trx('authors_tickets')
@@ -189,7 +198,7 @@ async function resolve(ticket_id, user_id, solution){
                                 const resolvedTicket = await trx('tickets as t')
                                     .where({'t.id': ticket_id})
                                     .join('resolved_tickets as r', 't.id', 'r.ticket_id')
-                                    .select('t.*', 'r.resolved_at', 'r.solution');
+                                    .select('t.*', 'r.resolved_at', 'r.solution', 'r.solution_comment_id', 'r.solution_reply_id');
                                 return resolvedTicket;
                             }else{
                                 throw "Ticket was not removed from open queue";
@@ -212,8 +221,9 @@ async function resolve(ticket_id, user_id, solution){
     }
 }
 
-async function updateSolution(ticket_id, user_id, solution){
+async function updateSolution(ticket_id, user_id, solution, comment_id, reply_id){
     try{
+        const values = {solution};
         const found = await db('resolved_tickets')
         .where({ticket_id})
         .first();
@@ -226,16 +236,43 @@ async function updateSolution(ticket_id, user_id, solution){
         const [user] = await db('users')
         .where({id: user_id});
 
-        if((user.student && user.id === author_id)){
+        if(reply_id){
+            const {description} = await db('comments_replies')
+                .where({id: reply_id})
+                .first();
+            if(description){
+                solution = description;
+                values['solution_reply_id'] = reply_id;
+                values['solution_comment_id'] = null;
+            }else{
+                throw "Reply description not found";
+            }   
+        }else if(comment_id){
+            const {description} = await db('comments')
+                .where({id: comment_id})
+                .first();
+            if(description){
+                solution = description;
+                values['solution_comment_id'] = comment_id;
+                values['solution_reply_id'] = null;
+            }else{
+                throw "Comment description not found";
+            }
+        }else{
+            values['solution_comment_id'] = null;
+            values['solution_reply_id'] = null;
+        }
+
+        if((user.id === author_id)){
             const updated = await db('resolved_tickets')
             .where({ticket_id})
-            .update({solution});
+            .update({...values});
 
             if(updated){
                 return await db('tickets as t')
                 .where({'t.id': ticket_id})
                 .join('resolved_tickets as r', 't.id', 'r.ticket_id')
-                .select('t.*', 'r.resolved_at', 'r.solution');
+                .select('t.*', 'r.resolved_at', 'r.solution', 'r.solution_comment_id', 'r.solution_reply_id');
             }else{
                 throw 'Error updating solution.'
             }
@@ -254,7 +291,8 @@ async function findTicketComments(ticket_id){
         .join('comments as c', 'tc.comment_id', 'c.id')
         .join('users as u', 'c.author_id', 'u.id')
         .join('profile_pictures as p', 'p.user_id', 'u.id')
-        .select('c.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture', db.raw("TRUE as collapsed"));
+        .select('c.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture', db.raw("TRUE as collapsed"))
+        .orderBy('tc.id', 'asc');
     
    return Promise.all(comments.map(async comment => {
         return {...comment,
@@ -269,7 +307,8 @@ async function findCommentReplies(comment_id){
         .where({comment_id})
         .join('users as u', 'cr.author_id', 'u.id')
         .join('profile_pictures as p', 'p.user_id', 'u.id')
-        .select('cr.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture');
+        .select('cr.*', 'u.id as author_id', 'u.name as author_name', 'p.url as author_picture')
+        .orderBy('cr.id', 'asc');
 
     return Promise.all(replies.map(async reply => {
         return {...reply,

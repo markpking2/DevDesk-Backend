@@ -12,6 +12,10 @@ exports.up = function(knex) {
             .defaultTo(knex.fn.now());
         tbl.string('solution', 1000)
             .notNullable();
+        tbl.integer('solution_comment_id')
+            .unsigned();
+        tbl.integer('solution_reply_id')
+            .unsigned();            
     });
 };
 

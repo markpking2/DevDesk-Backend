@@ -225,10 +225,10 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/:id/resolve', async (req, res) => {
     const {id} = req.params;
-    const {solution} = req.body;
+    const {solution, comment_id, reply_id} = req.body;
     try{
-    const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution);
-    res.status(201).json(ticket);
+        const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution, comment_id, reply_id);
+        res.status(201).json(ticket);
     }catch(err){
         if(err === 1){
             res.status(403).json({message: `Error resolving ticket with id ${id}. You did not create this ticket.`});
@@ -243,9 +243,9 @@ router.post('/:id/resolve', async (req, res) => {
 
 router.put('/resolved/:id', async (req, res) => {
     const {id} = req.params;
-    const {solution} = req.body;
+    const {solution, comment_id, reply_id} = req.body;
     try{
-        const ticket = await ticketsDb.updateSolution(id, req.user.id, solution);
+        const ticket = await ticketsDb.updateSolution(id, req.user.id, solution, comment_id, reply_id);
         res.status(200).json({ticket});
     }catch(err){
         if(err === 1){
