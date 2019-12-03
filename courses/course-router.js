@@ -123,6 +123,7 @@ router.get('/today', async (req, res) => {
                 }
     
                 await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+                res.status(200).json(now);
             });
         }
     }catch(err){
@@ -152,6 +153,7 @@ router.get('/yesterday', async (req, res) => {
                 }
     
                 await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+                res.status(200).json(now);
             });
         }
     }catch(err){
@@ -181,6 +183,7 @@ router.get('/tomorrow', async (req, res) => {
                 }
     
                 await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+                res.status(200).json(now);
             });
         }
     }catch(err){
