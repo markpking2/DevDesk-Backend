@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Course = require('../data/mongo/courseModel');
+const request = require('request');
+const moment = require('moment');
 
 const newCourse = new Course({
     name: 'Full Stack Web',
@@ -96,8 +98,94 @@ router.get('/', async (req, res) => {
             console.log(err);
             res.status(500).json({message: 'Error retrieving course information'});
         }
-        
     }
 });
+
+router.get('/today', async (req, res) => {
+    const {slack, user_id} = req.body;
+
+    try{
+        if(slack && user_id){
+            var data = {form: {
+                token: process.env.SLACK_AUTH_TOKEN,
+                user: user_id
+                }
+            };
+            
+            await request.post('https://slack.com/api/im.open', data, async function (error, response, body) {
+                const {id} = (JSON.parse(body).channel);
+                const now = moment().format('YYY/MM/D');
+                data = {form: {
+                    token: process.env.SLACK_AUTH_TOKEN,
+                    channel: id,
+                    text: `Today is ${now}.`
+                    }
+                }
+    
+                await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+            });
+        }
+    }catch(err){
+        res.status(500).json({message: 'Error retrieving today\'s course information'});
+    }
+})
+
+router.get('/yesterday', async (req, res) => {
+    const {slack, user_id} = req.body;
+
+    try{
+        if(slack && user_id){
+            var data = {form: {
+                token: process.env.SLACK_AUTH_TOKEN,
+                user: user_id
+                }
+            };
+            
+            await request.post('https://slack.com/api/im.open', data, async function (error, response, body) {
+                const {id} = (JSON.parse(body).channel);
+                const now = moment().subtract(1, 'day').format('YYY/MM/D');
+                data = {form: {
+                    token: process.env.SLACK_AUTH_TOKEN,
+                    channel: id,
+                    text: `Today is ${now}.`
+                    }
+                }
+    
+                await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+            });
+        }
+    }catch(err){
+        res.status(500).json({message: 'Error retrieving today\'s course information'});
+    }
+})
+
+router.get('/tomorrow', async (req, res) => {
+    const {slack, user_id} = req.body;
+
+    try{
+        if(slack && user_id){
+            var data = {form: {
+                token: process.env.SLACK_AUTH_TOKEN,
+                user: user_id
+                }
+            };
+            
+            await request.post('https://slack.com/api/im.open', data, async function (error, response, body) {
+                const {id} = (JSON.parse(body).channel);
+                const now = moment().add(1, 'day').format('YYY/MM/D');
+                data = {form: {
+                    token: process.env.SLACK_AUTH_TOKEN,
+                    channel: id,
+                    text: `Today is ${now}.`
+                    }
+                }
+    
+                await request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+            });
+        }
+    }catch(err){
+        res.status(500).json({message: 'Error retrieving today\'s course information'});
+    }
+})
 
 module.exports = router;

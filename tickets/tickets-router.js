@@ -142,9 +142,9 @@ router.post('/', async (req, res) => {
                             "text": {
                                 "type": "plain_text",
                                 "emoji": true,
-                                "text": "Help Student"
+                                "text": "Resolve"
                             },
-                            "action_id": "assign_ticket",
+                            "action_id": "resolve_ticket",
                             "style": "primary",
                             "value": "click_me_123"
                         },
