@@ -36,7 +36,7 @@ server.use('/api/auth', authRouter);
 server.use('/api/tickets', authenticate, ticketsRouter);
 server.use('/api/users', authenticate, usersRouter);
 server.use('/api/util', utilRouter);
-server.use('/api/courses', courseRouter)
+server.use('/api/courses', authenticate, courseRouter)
 server.use('/admin', adminMiddleware, adminRouter);
 
 server.get('/', (req, res) => {

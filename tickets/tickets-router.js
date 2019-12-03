@@ -40,6 +40,16 @@ router.get('/authors/author/open', async (req, res) => {
     }
 });
 
+router.get('/mine', async (req, res) => {
+    try{
+        const tickets = await ticketsDb.findMine(req.user.id);
+        res.status(200).json(tickets);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: `Error retrieving tickets associated with user id ${req.user.id}`})
+    }
+});
+
 router.get('/:id', async (req, res) => {
     const {id} = req.params;
     try{

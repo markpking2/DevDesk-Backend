@@ -20,7 +20,8 @@ module.exports = {
     updateReply,
     findCommentById,
     findReplyById,
-    reopenTicket
+    reopenTicket,
+    findMine
 };
 
 function findOpen() {
@@ -108,6 +109,118 @@ function update(id, ticket){
     return db('tickets')
     .where({id})
     .update({...ticket});
+}
+
+async function findMine(id){
+    const result = await Promise.all([
+        db('authors_tickets as a')
+            .where({'author_id': id})
+            .join('tickets as t', 't.id', 'a.ticket_id')
+            .join('users as u', 'u.id', 'a.author_id')
+            .leftJoin('profile_pictures as p', 'p.user_id', 'u.id')
+            .leftJoin('tickets_videos as tv', 't.id', 'tv.ticket_id')
+            .select('t.*', 'tv.url as open_video', 'p.url as author_image', 'u.name as author_name', 'u.id as author_id', db.raw('? as status', ['open'])),
+
+        db('resolved_tickets as r')
+            .where({'author_id': id})
+            .join('tickets as t', 't.id', 'r.ticket_id')
+            .join('users as u', 'u.id', 'r.author_id')
+            .leftJoin('profile_pictures as p', 'p.user_id', 'u.id')
+            .leftJoin('tickets_videos as tv', 't.id', 'tv.ticket_id')
+            .leftJoin('tickets_solutions_videos as sv', 't.id', 'sv.ticket_id')
+            .select('t.*', 'tv.url as open_video', 'sv.url as resolved_video', 'p.url as author_image', 'u.name as author_name', 'u.id as author_id', db.raw('? as status',
+            ['resolved']), 'r.resolved_at', 'r.solution_comment_id', 'r.solution_reply_id', 'r.solution'),
+        
+        db('comments as c')
+            .where({'c.author_id': id})
+            .join('tickets_comments as tc', 'c.id', 'tc.comment_id')
+            .join('tickets as t', 'tc.ticket_id', 't.id')
+            .leftJoin('authors_tickets as st', 't.id', 'st.ticket_id')
+            .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
+            .leftJoin('users as su', 'st.author_id', 'su.id')
+            .leftJoin('users as rsu', 'rt.author_id', 'rsu.id')
+            .leftJoin('profile_pictures as sp', 'st.author_id', 'sp.user_id')
+            .leftJoin('profile_pictures as rsp', 'rt.author_id', 'sp.user_id')
+            .leftJoin('tickets_videos as dv', 't.id', 'dv.ticket_id')
+            .leftJoin('tickets_solutions_videos as sv', 't.id', 'sv.ticket_id')
+            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
+            db.raw(`CASE 
+                WHEN st.author_id IS NOT NULL THEN sp.url
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
+                ELSE NULL 
+                END AS author_image`),              
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.name
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
+                ELSE NULL 
+                END AS author_name`),
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.id
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.id
+                ELSE NULL 
+                END AS author_id`),                
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN 'open' 
+                ELSE 'resolved'
+                END AS status`),
+            db.raw(`CASE
+                WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
+                END as resolved_at`)),
+        
+        db('comments_replies as cr')
+            .where({'cr.author_id': id})
+            .join('tickets_comments as tc', 'cr.comment_id', 'tc.comment_id')
+            .join('tickets as t', 'tc.ticket_id', 't.id')
+            .leftJoin('authors_tickets as st', 't.id', 'st.ticket_id')
+            .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
+            .leftJoin('users as su', 'st.author_id', 'su.id')
+            .leftJoin('users as rsu', 'rt.author_id', 'rsu.id')
+            .leftJoin('profile_pictures as sp', 'st.author_id', 'sp.user_id')
+            .leftJoin('profile_pictures as rsp', 'rt.author_id', 'sp.user_id')
+            .leftJoin('tickets_videos as dv', 't.id', 'dv.ticket_id')
+            .leftJoin('tickets_solutions_videos as sv', 't.id', 'sv.ticket_id')
+            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
+            db.raw(`CASE 
+                WHEN st.author_id IS NOT NULL THEN sp.url
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
+                ELSE NULL 
+                END AS author_image`),              
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.name
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
+                ELSE NULL 
+                END AS author_name`),
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.id
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.id
+                ELSE NULL 
+                END AS author_id`),                
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN 'open' 
+                ELSE 'resolved'
+                END AS status`),
+            db.raw(`CASE
+                WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
+                END as resolved_at`))
+    ]);
+
+    for(let i = 0; i < result.length; i++){
+        console.log(result[i]);
+        result[i] = await Promise.all(result[i].map(async ticket => {
+            const newTicket = {
+                ...ticket, 
+                open_pictures: await db('tickets_pictures').where({ticket_id: ticket.id}).select('url'),
+                ticket_comments: await findTicketComments(ticket.id)
+            };
+            if(ticket.status === 'resolved'){
+                newTicket['resolved_pictures'] = await db('tickets_solutions_pictures').where({ticket_id: ticket.id}).select('url');
+            }
+            return newTicket;
+        }))
+    }
+    const [openTickets, resolvedTickets, commentedOn, repliedOn] = result;
+
+    return {openTickets, resolvedTickets, commentedOn, repliedOn};
 }
 
 async function findById(id) {
@@ -392,8 +505,6 @@ async function findCommentById(id){
             comment_videos: await findCommentVideos(id),
             comment_replies: await findCommentReplies(id)};
 }
-
-
 
 //replies
 async function addReply(author_id, comment_id, description){
