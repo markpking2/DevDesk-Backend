@@ -94,7 +94,7 @@ router.post('/', async (req, res) => {
 
         var data = {form: {
             token: process.env.SLACK_AUTH_TOKEN,
-            channel: "#generall",
+            channel: "#general",
             text: message,
             blocks: JSON.stringify([
                 {
@@ -146,14 +146,20 @@ router.post('/', async (req, res) => {
                             },
                             "action_id": "resolve_ticket",
                             "style": "primary",
-                            "value": "click_me_123"
+                            "value": `${ticket.id}`
                         },
                     ]
                 }
             ])
           }};
   
-        request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+        request.post('https://slack.com/api/chat.postMessage', data, async function (error, response, body) {
+            try{
+                await db('ticket_timestamps').insert({ticket_id: ticket.id, timestamp: JSON.parse(body).ts});
+            }catch(err){
+                throw err
+            }
+        });
         
 
         res.status(201).json(ticket);
@@ -236,8 +242,28 @@ router.delete('/:id', async (req, res) => {
 router.post('/:id/resolve', async (req, res) => {
     const {id} = req.params;
     const {solution, comment_id, reply_id} = req.body;
+    const {timestamp} = await db('ticket_timestamps')
+        .where({ticket_id: id})
+        .first();
+
+        var data = {form: {
+            token: process.env.SLACK_AUTH_TOKEN,
+            channel: "CQQ7CQC14",
+            ts: timestamp,
+          }};
+
+    
     try{
         const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution, comment_id, reply_id);
+        if(timestamp){
+            request.post('https://slack.com/api/chat.delete', data, async function (error, response, body) {
+                try{
+                    // await db('ticket_timestamps').where({ticket_id: id}).del();
+                }catch(err){
+                    throw err
+                }
+            });
+        }
         res.status(201).json(ticket);
     }catch(err){
         if(err === 1){

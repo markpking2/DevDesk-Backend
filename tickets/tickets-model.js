@@ -308,21 +308,23 @@ async function resolve(ticket_id, user_id, solution, comment_id, reply_id){
                 return await db.transaction(async trx => {
                     try{
                         if(reply_id){
-                            const {description} = await trx('comments_replies')
+                            const response = await trx('comments_replies')
                                 .where({id: reply_id})
                                 .first();
-                            if(description){
-                                values.solution = description;
+                            
+                            if(response){
+                                values.solution = response.description;
                                 values['solution_reply_id'] = reply_id;
                             }else{
                                 throw "Reply description not found";
                             }
                         }else if(comment_id){
-                            const {description} = await trx('comments')
+                            const response = await trx('comments')
                                 .where({id: comment_id})
                                 .first();
-                            if(description){
-                                values.solution = description;
+                            
+                            if(response){
+                                values.solution = response.description;
                                 values['solution_comment_id'] = comment_id;
                             }else{
                                 throw "Comment description not found";
