@@ -12,13 +12,12 @@ async function generateToken(user){
         .where({username: user.username})
         .join('admins as a', 'u.id', 'a.user_id')
         .first();
-    console.log(admin);
     if(admin){
         payload['admin'] = true;
     }
 
     const options = {
-        expiresIn: '24h'
+        expiresIn: 60
     };
 
     return jwt.sign(payload, secret, options);

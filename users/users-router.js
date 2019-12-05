@@ -170,7 +170,7 @@ router.put('/user/picture', (req, res) => {
             }
         }catch(err){
             console.log(err);
-            res.status(500).json({message: 'Error adding image'});
+            res.status(500).json({message: 'Error updating profile picture'});
         }
     });
 });

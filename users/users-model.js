@@ -38,7 +38,7 @@ function update(id, user){
 async function remove(id){
     await db.transaction(async trx => {
         try{
-            await trx('users')
+             await trx('users')
             .where({id});
 
             const userDeleted = await trx('users')

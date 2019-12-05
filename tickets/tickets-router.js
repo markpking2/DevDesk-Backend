@@ -40,6 +40,16 @@ router.get('/authors/author/open', async (req, res) => {
     }
 });
 
+router.get('/mine', async (req, res) => {
+    try{
+        const tickets = await ticketsDb.findMine(req.user.id);
+        res.status(200).json(tickets);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: `Error retrieving tickets associated with user id ${req.user.id}`})
+    }
+});
+
 router.get('/:id', async (req, res) => {
     const {id} = req.params;
     try{
@@ -84,7 +94,7 @@ router.post('/', async (req, res) => {
 
         var data = {form: {
             token: process.env.SLACK_AUTH_TOKEN,
-            channel: "#generall",
+            channel: "#general",
             text: message,
             blocks: JSON.stringify([
                 {
@@ -132,18 +142,24 @@ router.post('/', async (req, res) => {
                             "text": {
                                 "type": "plain_text",
                                 "emoji": true,
-                                "text": "Help Student"
+                                "text": "Resolve"
                             },
-                            "action_id": "assign_ticket",
+                            "action_id": "resolve_ticket",
                             "style": "primary",
-                            "value": "click_me_123"
+                            "value": `${ticket.id}`
                         },
                     ]
                 }
             ])
           }};
   
-        request.post('https://slack.com/api/chat.postMessage', data, function (error, response, body) {});
+        request.post('https://slack.com/api/chat.postMessage', data, async function (error, response, body) {
+            try{
+                await db('ticket_timestamps').insert({ticket_id: ticket.id, timestamp: JSON.parse(body).ts});
+            }catch(err){
+                throw err
+            }
+        });
         
 
         res.status(201).json(ticket);
@@ -225,13 +241,35 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/:id/resolve', async (req, res) => {
     const {id} = req.params;
-    const {solution} = req.body;
+    const {solution, comment_id, reply_id} = req.body;
+    const {timestamp} = await db('ticket_timestamps')
+        .where({ticket_id: id})
+        .first();
+
+        var data = {form: {
+            token: process.env.SLACK_AUTH_TOKEN,
+            channel: "CQQ7CQC14",
+            ts: timestamp,
+          }};
+
+    
     try{
-    const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution);
-    res.status(201).json(ticket);
+        const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution, comment_id, reply_id);
+        if(timestamp){
+            request.post('https://slack.com/api/chat.delete', data, async function (error, response, body) {
+                try{
+                    // await db('ticket_timestamps').where({ticket_id: id}).del();
+                }catch(err){
+                    throw err
+                }
+            });
+        }
+        res.status(201).json(ticket);
     }catch(err){
         if(err === 1){
             res.status(403).json({message: `Error resolving ticket with id ${id}. You did not create this ticket.`});
+        }if(err === 2){
+            res.status(404).json({message: `No open ticket with id ${id}.`});
         }else{
             console.log(err);
             res.status(500).json({message: `Error resolving ticket with id ${id}`});
@@ -239,11 +277,22 @@ router.post('/:id/resolve', async (req, res) => {
     }
 });
 
+router.post('/:id/reopen', async (req, res) => {
+    const {id} = req.params;
+    const reopened = await ticketsDb.reopenTicket(id);
+    if(reopened){
+        res.status(200).json({message: `Ticket with id ${id} successfully reopened`});
+    }else{
+        res.status(500).json({message: 'Error reopening ticket'});
+    }
+
+});
+
 router.put('/resolved/:id', async (req, res) => {
     const {id} = req.params;
-    const {solution} = req.body;
+    const {solution, comment_id, reply_id} = req.body;
     try{
-        const ticket = await ticketsDb.updateSolution(id, req.user.id, solution);
+        const ticket = await ticketsDb.updateSolution(id, req.user.id, solution, comment_id, reply_id);
         res.status(200).json({ticket});
     }catch(err){
         if(err === 1){
@@ -263,10 +312,29 @@ router.post('/:id/comments', async (req, res) => {
     const {description} = req.body;
     try{
         const comment_id = await ticketsDb.addComment(req.user.id, id, description);
-        res.status(201).json(comment_id);
+        const comment = await ticketsDb.findCommentById(comment_id);
+        res.status(201).json({...comment, collapsed: true});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding comment'});
+    }
+});
+
+router.put('/comments/:id', async (req, res) => {
+    const {id} = req.params;
+    const {description, collapsed} = req.body;
+    try{
+        const updated = await ticketsDb.updateComment(id, description);
+        if(updated){
+            const comment = await ticketsDb.findCommentById(id);
+            res.status(200).json({...comment, collapsed: typeof collapsed !== 'undefined' ? collapsed : true});
+        }else{
+            throw 'Comment was not updated.'
+        }
+        
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error updating comment.'});
     }
 });
 
@@ -292,10 +360,24 @@ router.post('/comments/:id/replies', async (req, res) => {
     const {description} = req.body;
     try{
         const reply_id = await ticketsDb.addReply(req.user.id, id, description);
-        res.status(201).json(reply_id);
+        const reply = await ticketsDb.findReplyById(reply_id);
+        res.status(201).json(reply);
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding reply.'});
+    }
+});
+
+router.put('/comments/replies/:id', async (req, res) => {
+    const {id} = req.params;
+    const {description} = req.body;
+    try{
+        const reply_id = await ticketsDb.updateReply(id, description);
+        const reply = await ticketsDb.findReplyById(reply_id);
+        res.status(200).json(reply);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error updating reply.'});
     }
 });
 
