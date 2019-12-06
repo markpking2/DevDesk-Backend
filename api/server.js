@@ -26,12 +26,6 @@ const courseRouter = require('../courses/course-router');
 
 const server = express();
 
-const corsConfig = {
-    origin: 'http://localhost:5000',
-    credentials: true,
-}
-
-
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
