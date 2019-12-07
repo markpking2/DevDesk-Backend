@@ -242,12 +242,11 @@ router.delete('/:id', async (req, res) => {
 router.post('/:id/resolve', async (req, res) => {
     const {id} = req.params;
     const {solution, comment_id, reply_id} = req.body;
-    const {timestamp} = await db('ticket_timestamps')
-        .where({ticket_id: id})
-        .first();
 
-    
     try{
+        const {timestamp} = await db('ticket_timestamps')
+            .where({ticket_id: id})
+            .first();
         const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution, comment_id, reply_id);
         if(timestamp){
             var data = {form: {
