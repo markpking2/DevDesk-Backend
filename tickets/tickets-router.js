@@ -244,15 +244,15 @@ router.post('/:id/resolve', async (req, res) => {
     const {solution, comment_id, reply_id} = req.body;
 
     try{
-        const {timestamp} = await db('ticket_timestamps')
+        const result = await db('ticket_timestamps')
             .where({ticket_id: id})
             .first();
         const ticket = await ticketsDb.resolve(parseInt(id), req.user.id, solution, comment_id, reply_id);
-        if(timestamp){
+        if(result && result.timestamp){
             var data = {form: {
                 token: process.env.SLACK_AUTH_TOKEN,
                 channel: "CQQ7CQC14",
-                ts: timestamp,
+                ts: result.timestamp,
             }};
 
             request.post('https://slack.com/api/chat.delete', data, async function (error, response, body) {
