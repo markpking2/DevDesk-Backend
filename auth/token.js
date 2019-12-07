@@ -17,7 +17,7 @@ async function generateToken(user){
     }
 
     const options = {
-        expiresIn: 60
+        expiresIn: "24h"
     };
 
     return jwt.sign(payload, secret, options);
