@@ -3,12 +3,17 @@ const authenticate = require('../auth/authenticate-middleware');
 
 const userDb = require('../users/users-model');
 
-//check if username is available
+//check if username is taken
 router.get('/username', async (req, res) => {
     const {username} = req.body;
-    const available = await userDb.findBy({username});
+    try{
+        const found = await userDb.findBy({username});
+    }catch(err){
+        console.log(err);
+    }
     
-    if(available){
+    
+    if(found){
         res.status(200).json(true);
     }else{
         res.status(422).json(false);
