@@ -10,9 +10,9 @@ router.post('/username', async (req, res) => {
         const found = await userDb.findBy({username});
 
         if(found){
-            res.status(200).json(true);
+            res.status(200).json(false); //not available
         }else{
-            res.status(200).json(false);
+            res.status(200).json(true); //available
         }
     }catch(err){
         res.status(500).json({message: 'Error checking username'})
