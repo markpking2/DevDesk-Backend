@@ -15,8 +15,9 @@ router.post('/username', async (req, res) => {
             res.status(200).json(true); //available
         }
     }catch(err){
-        res.status(500).json({message: 'Error checking username'})
         console.log(err);
+        res.status(500).json({message: 'Error checking username'})
+        
     }
 });
 
