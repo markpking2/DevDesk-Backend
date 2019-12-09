@@ -5,7 +5,6 @@ const userDb = require('../users/users-model');
 
 //check if username is taken
 router.post('/username', async (req, res) => {
-    console.log(req.body);
     const {username} = req.body;
     try{
         const found = await userDb.findBy({username});
@@ -13,14 +12,12 @@ router.post('/username', async (req, res) => {
         if(found){
             res.status(200).json(true);
         }else{
-            res.status(422).json(false);
+            res.status(200).json(false);
         }
     }catch(err){
+        res.status(500).json({message: 'Error checking username'})
         console.log(err);
     }
-    
-    
-    
 });
 
 //check if token is valid
