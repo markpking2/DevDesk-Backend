@@ -8,16 +8,18 @@ router.get('/username', async (req, res) => {
     const {username} = req.body;
     try{
         const found = await userDb.findBy({username});
+
+        if(found){
+            res.status(200).json(true);
+        }else{
+            res.status(422).json(false);
+        }
     }catch(err){
         console.log(err);
     }
     
     
-    if(found){
-        res.status(200).json(true);
-    }else{
-        res.status(422).json(false);
-    }
+    
 });
 
 //check if token is valid
