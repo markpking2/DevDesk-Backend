@@ -4,7 +4,7 @@ const authenticate = require('../auth/authenticate-middleware');
 const userDb = require('../users/users-model');
 
 //check if username is taken
-router.get('/username', async (req, res) => {
+router.post('/username', async (req, res) => {
     console.log(req.body);
     const {username} = req.body;
     try{
