@@ -36,7 +36,7 @@ server.use('/api/tickets', authenticate, ticketsRouter);
 server.use('/api/users', authenticate, usersRouter);
 server.use('/api/util', utilRouter);
 server.use('/api/courses', authenticate, courseRouter)
-server.use('/admin', adminMiddleware, adminRouter);
+server.use('/api/admin', adminMiddleware, adminRouter);
 
 server.get('/', (req, res) => {
     res.send('<h1>Hello From  The Dev-Desk Queue Buildweek API');
