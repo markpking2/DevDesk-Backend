@@ -17,13 +17,8 @@
 
 #### This API connects to the Dev Desk Queue front end as well as a Dev Desk Queue Slack Bot.
 
-<<<<<<< HEAD
 - Web App: <https://github.com/best-team-lambda/Frontend>
 - Slack Bot: <https://github.com/best-team-lambda/Slackbot>
-=======
-- Web App: <https://front-end-q1yrowlhd.now.sh/>
-- Slack Bot: <https://github.com/markpkng/Slackbot-1>
->>>>>>> a65ec159094c19a7aa772813b8eaf46d39622be1
 
 ### Tech Stack
 ##### React

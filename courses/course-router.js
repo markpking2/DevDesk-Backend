@@ -386,28 +386,28 @@ const newCourse = new Course({
                             name: 'DOM 1',
                             description: 'Now that we can build a basic static web page with HTML and CSS, we need to add functionality to the page. The first step in building vibrant dynamic web pages and applications is learning about the DOM. What it is, how it affects our page, and how to access and manipulate it. DOM manipulation is at the core of every framework and before we start using frameworks we need to understand the DOM.',
                             url: 'https://learn.lambdaschool.com/web2/module/rectn5PUU5ubcQkPu',
-                            lectureurl: '',
+                            lectureurl: 'https://youtu.be/PK3yLJ0koHs',
                             projectUrl: 'https://github.com/LambdaSchool/DOM-I',
                             prepVideos: [
                                 {
                                     number: 1,
-                                    name: '',
-                                    url: '',
+                                    name: 'Introduction to DOM',
+                                    url: 'https://youtu.be/k6nS8-lq_YY',
                                 },
                                 {
                                     number: 2,
-                                    name: '',
-                                    url: '',
+                                    name: 'DOM Selectors',
+                                    url: 'https://youtu.be/WVq-2Yp7wgU',
                                 },
                                 {
                                     number: 3,
-                                    name: '',
-                                    url: '',
+                                    name: 'DOM Properties and Methods',
+                                    url: 'https://youtu.be/cuXOWWsrcNk',
                                 },
                                 {
                                     number: 4,
-                                    name: '',
-                                    url: '',
+                                    name: 'DOM createElement',
+                                    url: 'https://youtu.be/ikmnlhPDiyo',
                                 },
                             ],
                         },
@@ -416,8 +416,8 @@ const newCourse = new Course({
                             name: 'DOM 2',
                             description: 'Events are the way we users interact with the page. Any time there is some interaction by way of a mouse, keyboard, etc., the DOM creates and propagates an event object. This event object carries information about the event so that it may be handled at any point up the tree from the point of origin.',
                             url: 'https://learn.lambdaschool.com/web2/module/recJWv3RIfa4NFXbn',
-                            lectureurl: '',
-                            projectUrl: '',
+                            lectureurl: 'https://youtu.be/CieRzBB7Q7w',
+                            projectUrl: 'https://github.com/LambdaSchool/DOM-II',
                             prepVideos: [
                                 // none
                             ],
@@ -427,10 +427,24 @@ const newCourse = new Course({
                             name: 'Components 1',
                             description: 'As we build larger and more feature rich web pages, we may notice a trend in our code; elements that are essentially using the same functionality and styling with minor differences in the data they present. In an effort to keep our code readable, reusable, and most of all DRY, we can build on these repeating patterns and create components. Components are reusable pieces of code that can be used to build elements sharing functionality and styling. Components are the heart of any dynamic web application and JavaScript framework.',
                             url: 'https://learn.lambdaschool.com/web2/module/rec847sNXZX9CVDNl',
-                            lectureurl: '',
-                            projectUrl: '',
+                            lectureurl: 'https://youtu.be/2Rn6qi73ppw',
+                            projectUrl: 'https://github.com/LambdaSchool/Newsfeed-Components',
                             prepVideos: [
-                                
+                                {
+                                    number: 1,
+                                    name: 'Components I - Anatomy of a Component',
+                                    url: 'https://youtu.be/1Z775bFt6xs',
+                                },
+                                {
+                                    number: 2,
+                                    name: 'Components I - Component creator functions',
+                                    url: 'https://youtu.be/EKjI2jX0R2E',
+                                },
+                                {
+                                    number: 3,
+                                    name: 'Components I - Creating Components from Array Data',
+                                    url: 'https://youtu.be/vu_bl_vHJcg',
+                                },
                             ],
                         },
                         {
@@ -438,10 +452,14 @@ const newCourse = new Course({
                             name: 'Components 2',
                             description: 'Now that we have some understanding of what a component is, we can learn to utilize asynchronous JavaScript and Promises to make HTTP requests and get data from a server.',
                             url: 'https://learn.lambdaschool.com/web2/module/recd6kDKS6eMapSRq',
-                            lectureurl: '',
-                            projectUrl: '',
+                            lectureurl: 'https://youtu.be/V4rlLTL10iU',
+                            projectUrl: 'https://github.com/LambdaSchool/github-usercard',
                             prepVideos: [
-                                
+                                {
+                                    number: 1,
+                                    name: 'JavaScript Promises',
+                                    url: 'https://youtu.be/7I3TeN2Sj1k',
+                                },
                             ],
                         },
                         {
@@ -460,55 +478,124 @@ const newCourse = new Course({
                     days: [
                         {
                             number: 1,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
+                            name: 'React Components and Component State',
+                            description: 'Components are the building blocks of React applications. We use components to display some data (often called “state”) to the screen for our users. In this module, we will learn how to build components that can hold state to create a great experience for our end users.',
+                            url: 'https://learn.lambdaschool.com/web2/module/recZau7hH8vzww14N',
+                            lectureurl: 'https://youtu.be/aIYXdTtek8k',
+                            projectUrl: 'https://github.com/LambdaSchool/react-american-football-scoreboard',
                             prepVideos: [
-                                
+                                {
+                                    number: 1,
+                                    name: 'ReactJS',
+                                    url: 'https://youtu.be/moTpUR8I6-I',
+                                },
+                                {
+                                    number: 2,
+                                    name: 'React Components',
+                                    url: 'https://youtu.be/njU-xhnlze8',
+                                },
+                                {
+                                    number: 3,
+                                    name: 'Component State',
+                                    url: 'https://youtu.be/vF4vKyhRff8',
+                                },
+                                {
+                                    number: 4,
+                                    name: 'Changing State',
+                                    url: 'https://youtu.be/J3mKJbudYDQ',
+                                },
                             ],
                         },
                         {
                             number: 2,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
+                            name: 'Composing React Components and Passing Data Via Props',
+                            description: 'As you build bigger applications, you’ll want to start splitting up your app into smaller pieces so that it is easier to work on and maintain. These small pieces you will build are called components. Components will need to share state, so we will learn how to do this with a helper object called props.',
+                            url: 'https://learn.lambdaschool.com/web2/module/recgzSGQtp2HYwgSR',
+                            lectureurl: 'https://youtu.be/VnSpY7tmEDA',
+                            projectUrl: 'https://github.com/LambdaSchool/lambda-calculator',
                             prepVideos: [
-                                
+                                {
+                                    number: 1,
+                                    name: 'JavaScript Modules',
+                                    url: 'https://youtu.be/EOuwkNt-MCU',
+                                },
+                                {
+                                    number: 2,
+                                    name: 'Props and Data Flow',
+                                    url: 'https://youtu.be/ZBzHw78nzQM',
+                                },
+                                {
+                                    number: 3,
+                                    name: 'React Nested Functional Components',
+                                    url: 'https://youtu.be/5lzKaiC8ask',
+                                },
+                                {
+                                    number: 4,
+                                    name: 'Passing State Through Props',
+                                    url: 'https://youtu.be/PDLixDiT-BA',
+                                },
                             ],
                         },
                         {
                             number: 3,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
+                            name: 'Component Side Effects',
+                            description: 'Side effects in web apps are very common. It’s important to understand what side effects are so we can handle them properly in our components.',
+                            url: 'https://learn.lambdaschool.com/web2/module/recKe8PW6ZMwjL1Qg',
+                            lectureurl: 'https://youtu.be/Omi5poWxLEs',
+                            projectUrl: 'https://github.com/LambdaSchool/nasa-photo-of-the-day',
                             prepVideos: [
-                                
+                                {
+                                    number: 1,
+                                    name: 'Side Effects in React',
+                                    url: 'https://youtu.be/M5yZxpyub48',
+                                },
+                                {
+                                    number: 2,
+                                    name: 'Syncing Effects to Changes in State and Props',
+                                    url: 'https://youtu.be/7oCm8Ih-ZCA',
+                                },
+                                {
+                                    number: 3,
+                                    name: 'Fetch Data from an API Using the Effect Hook',
+                                    url: 'https://youtu.be/jMa1nnILdNM',
+                                },
+                                {
+                                    number: 4,
+                                    name: 'Cleaning Up After Effects',
+                                    url: 'https://youtu.be/rCtq5zvWI0Y',
+                                },
                             ],
                         },
                         {
                             number: 4,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
+                            name: 'Advanced Styling Techniques',
+                            description: 'CSS by itself can be hard to scale in large applications. In this module we will see multiple libraries that have been built to help us style our apps in a lot more scalable way.',
+                            url: 'https://learn.lambdaschool.com/web2/module/recNDoSqyUw3eq1y3',
+                            lectureurl: 'https://youtu.be/t_ab2hQPd88',
+                            projectUrl: 'https://github.com/LambdaSchool/nasa-photo-of-the-day',
                             prepVideos: [
-                                
+                                {
+                                    number: 1,
+                                    name: 'Create React App',
+                                    url: 'https://youtu.be/kKEb6ZIq8L0',
+                                },
+                                {
+                                    number: 2,
+                                    name: 'Using Reactstrap with Create React App',
+                                    url: 'https://youtu.be/aAVCh5Xf_4E',
+                                },
+                                {
+                                    number: 3,
+                                    name: 'React & Styled Components',
+                                    url: 'https://youtu.be/BFKQWaWwaQ0',
+                                },
                             ],
                         },
                         {
                             number: 5,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
+                            name: 'https://github.com/LambdaSchool/Sprint-Challenge---React',
+                            description: 'This project will have you consuming a list of data from a server that we’re pulling in. The idea is to build out the proper components in order to get this list of data rendered to the screen using ReactJS and styling your app to be presentable.',
+                            projectUrl: 'https://github.com/LambdaSchool/Sprint-Challenge---React',
                         },
                     ],
                 },
