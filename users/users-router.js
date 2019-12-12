@@ -100,7 +100,7 @@ router.get('/user', async (req, res) => {
         
     }catch(err){
         console.log(err);
-        res.status(500).json({nessage: 'Error getting user information.'});
+        res.status(500).json({message: 'Error getting user information.'});
     }
 });
 
