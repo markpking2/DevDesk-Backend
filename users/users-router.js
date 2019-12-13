@@ -18,8 +18,11 @@ router.put('/user', async (req, res) => {
 
     let {password} = req.body;
     const {newPassword} = req.body;
-
+    
     try{
+        if (!password){
+            throw 4
+        }
         if(username){
             if(!(/^[a-z][a-z0-9_]*$/i.test(username))){
                 throw 1
@@ -48,6 +51,7 @@ router.put('/user', async (req, res) => {
             .first();
 
         if(user && bcrypt.compareSync(password, user.password)){
+            console.log(password)
             if(newPassword){
                 password = bcrypt.hashSync(newPassword, 8);
             }
@@ -94,7 +98,7 @@ router.get('/user', async (req, res) => {
         if(user){
             res.status(200).json(user)
         }else{
-            console.log('hmmm', user);
+            console.log('get user 404 error', user);
             res.status(404).json({message: `User with id ${req.user.id} not found.`});
         }
         
