@@ -2,6 +2,7 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const userDb = require('../users/users-model');
 const db = require('../data/db-config');
+const cloudinary = require('cloudinary').v2;
 
 router.put('/users/:id', async (req, res) => {
     const {id} = req.params;
