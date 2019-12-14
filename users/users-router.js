@@ -151,7 +151,7 @@ router.post('/user/picture', (req, res) => {
         try{
             const image = await userDb.addProfilePic({url: result.url, user_id: req.user.id});
             if(image){
-                res.status(201).json({url: result.url});
+                res.status(201).json({profile_picture: result.url});
             }else{
                 throw 'Image could not added'
             }
@@ -168,7 +168,7 @@ router.put('/user/picture', (req, res) => {
         try{
             const image = await userDb.updateProfilePic({url: result.url, user_id: req.user.id});
             if(image){
-                res.status(201).json({url: result.url});
+                res.status(201).json({profile_picture: result.url});
             }else{
                 throw 'Image could not be updated'
             }

@@ -87,7 +87,7 @@ router.delete('/users/:id', async (req, res) => {
     }
 });
 
-//update/deltete user profile pictures
+//update/delete user profile pictures
 router.put('/user/:id/picture', (req, res) => {
     const {id} = req.params;
 
@@ -97,7 +97,7 @@ router.put('/user/:id/picture', (req, res) => {
         try{
             const image = await userDb.updateProfilePic({url: result.url, user_id: id});
             if(image){
-                res.status(201).json({url: result.url});
+                res.status(201).json({profile_picture: result.url});
             }else{
                 throw 'Image could not be updated'
             }
