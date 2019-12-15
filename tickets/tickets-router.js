@@ -407,7 +407,9 @@ async function addPictures(tableName, images, insert){
         }
         const results = await axios.all(uploads)
 
-        const urls = results.map(result => result.secure_url);
+        const urls = results.map(result => { 
+            console.log(result);
+            return result.secure_url});
         const inserts = [];
         
         for(url of urls){
