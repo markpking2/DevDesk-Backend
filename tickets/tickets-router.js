@@ -407,19 +407,26 @@ async function addPictures(tableName, images, insert){
         }
         const results = await axios.all(uploads)
 
-        const urls = results.map(result => { 
-            console.log(result);
-            return result.secure_url});
+        const imgs = results.map(result => { 
+            console.log('Adding Picture to :', tableName, result);
+            return ({
+                url: result.secure_url,
+                width: result.width,
+                height: result.height,
+                filename: result.original_filename,
+            }
+            )});
+
         const inserts = [];
         
-        for(url of urls){
+        for(img of imgs){
             inserts.push(    
                 db(tableName)
-                .insert({...insert, url})
+                .insert({...insert, ...img})
             )
         }
         await Promise.all(inserts);
-        return urls;
+        return imgs;
     }catch(err){
         throw err;
     }
