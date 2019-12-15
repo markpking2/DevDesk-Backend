@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-    knex.schema.table('tickets_pictures', function(table) {
+    return knex.schema.table('tickets_pictures', function(table) {
         table.integer('width')
         table.integer('height')
         table.varchar('filename', 255)
@@ -11,8 +11,8 @@ exports.up = function(knex) {
         table.varchar('filename', 255)
     })
     .table('comments_pictures', function(table) {
-        table.integer('width').notNull()
-        table.integer('height').notNull()
+        table.integer('width')
+        table.integer('height')
         table.varchar('filename', 255)
     })
     .table('comments_replies_pictures', function(table) {
@@ -28,7 +28,7 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    knex.schema.table('profile_pictures', function(table) {
+    return knex.schema.table('profile_pictures', function(table) {
         table.dropColumn('filename')
         table.dropColumn('height')
         table.dropColumn('width')
