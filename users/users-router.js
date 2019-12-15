@@ -149,14 +149,21 @@ router.post('/user/picture', (req, res) => {
     
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         try{
-            const image = await userDb.addProfilePic({url: result.url, user_id: req.user.id});
+            const image = await userDb.addProfilePic({
+                user_id: req.user.id, 
+                url: result.url, 
+                width: result.width,
+                height: result.height,
+                filename: result.original_filename,
+            });
             if(image){
                 res.status(201).json({profile_picture: result.url});
             }else{
-                throw 'Image could not added'
+                throw 'Image could not be added'
             }
         }catch(err){
-            res.status(500).json({message: 'Error adding image'});
+            console.log(err);
+            res.status(500).json({message: 'Error adding profile picture'});
         }
     });
 });
@@ -166,7 +173,13 @@ router.put('/user/picture', (req, res) => {
     
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         try{
-            const image = await userDb.updateProfilePic({url: result.url, user_id: req.user.id});
+            const image = await userDb.updateProfilePic({
+                user_id: req.user.id, 
+                url: result.url, 
+                width: result.width,
+                height: result.height,
+                filename: result.original_filename,
+            });
             if(image){
                 res.status(201).json({profile_picture: result.url});
             }else{

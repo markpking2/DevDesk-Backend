@@ -88,7 +88,32 @@ router.delete('/users/:id', async (req, res) => {
     }
 });
 
-//update/delete user profile pictures
+//add/update/delete user profile pictures
+router.post('/user/:id/picture', (req, res) => {
+    const {id} = req.params;
+
+    const file = req.files.image;
+    
+    cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+        try{
+            const image = await userDb.addProfilePic({
+                user_id: id, 
+                url: result.url, 
+                width: result.width,
+                height: result.height,
+                filename: result.original_filename,
+            });
+            if(image){
+                res.status(201).json({profile_picture: result.url});
+            }else{
+                throw 'Image could not be added'
+            }
+        }catch(err){
+            console.log(err);
+            res.status(500).json({message: 'Error adding profile picture'});
+        }
+    });
+});
 router.put('/user/:id/picture', (req, res) => {
     const {id} = req.params;
 
@@ -96,7 +121,13 @@ router.put('/user/:id/picture', (req, res) => {
     
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         try{
-            const image = await userDb.updateProfilePic({url: result.url, user_id: id});
+            const image = await userDb.updateProfilePic({
+                user_id: id, 
+                url: result.url, 
+                width: result.width,
+                height: result.height,
+                filename: result.original_filename,
+            });
             if(image){
                 res.status(201).json({profile_picture: result.url});
             }else{
