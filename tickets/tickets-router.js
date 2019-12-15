@@ -57,8 +57,8 @@ router.get('/:id', async (req, res) => {
         const ticket_comments = await ticketsDb.findTicketComments(id);
         
         if(ticket){
-            const open_pictures = await db('tickets_pictures').where({ticket_id: id}).select('url');
-            const resolved_pictures = await db('tickets_solutions_pictures').where({ticket_id: id}).select('url');
+            const open_pictures = await db('tickets_pictures').where({ticket_id: id}).select('url', 'width', 'height', 'filename');
+            const resolved_pictures = await db('tickets_solutions_pictures').where({ticket_id: id}).select('url', 'width', 'height', 'filename');
             res.status(200).json({ticket_details: ticket, ticket_comments, open_pictures, resolved_pictures});
         }else{
             res.status(404).json({message: `No tickets found with id ${id}`})
