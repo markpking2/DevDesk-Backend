@@ -148,7 +148,7 @@ router.delete('/user/:id/picture', async (req, res) => {
         .where({user_id: id})
         .del();
 
-        if(!deleted){
+        if(deleted){
             res.status(200).json({message: `Profile picture for user id ${id} successfully deleted`});
         }
     }catch(err){
