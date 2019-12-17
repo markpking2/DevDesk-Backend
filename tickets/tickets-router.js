@@ -565,7 +565,7 @@ router.post('/:id/video/open', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('tickets_videos', video, {ticket_id: id});
-        res.status(200).json({id: result.id, url: response.secure_url});
+        res.status(200).json({id: response.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
@@ -576,7 +576,7 @@ router.post('/:id/video/resolved', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('tickets_solutions_videos', video, {ticket_id: id});
-        res.status(200).json({id: result.id, url: response.secure_url});
+        res.status(200).json({id: response.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
@@ -587,7 +587,7 @@ router.post('/comments/:id/video', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('comments_videos', video, {comment_id: id});
-        res.status(200).json({id: result.id, url: response.secure_url});
+        res.status(200).json({id: response.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
@@ -598,7 +598,7 @@ router.post('/comments/replies/:id/video', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('comments_replies_videos', video, {reply_id: id});
-        res.status(200).json({id: result.id, url: response.secure_url});
+        res.status(200).json({id: response.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
