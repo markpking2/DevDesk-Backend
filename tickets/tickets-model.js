@@ -131,6 +131,8 @@ async function findMine(id){
             .select('t.*', 'tv.url as open_video', 'sv.url as resolved_video', 'p.url as author_image', 'u.name as author_name', 'u.id as author_id', db.raw('? as status',
             ['resolved']), 'r.resolved_at', 'r.solution_comment_id', 'r.solution_reply_id', 'r.solution'),
         
+                // bug here??? rt.author_id is not null?
+                // bug here?? remove else null? it is getting nulled on resolved tickets that have a comment
         db('comments as c')
             .where({'c.author_id': id})
             .join('tickets_comments as tc', 'c.id', 'tc.comment_id')
@@ -146,9 +148,7 @@ async function findMine(id){
             .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
             db.raw(`CASE 
                 WHEN st.author_id IS NOT NULL THEN sp.url
-                // bug here??? rt.author_id is not null?
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
-                // bug here?? remove else null? it is getting nulled on resolved tickets that have a comment
                 ELSE NULL 
                 END AS author_image`),              
             db.raw(`CASE 

@@ -367,7 +367,6 @@ router.get('/comments/:id', async (req, res) => {
         res.status(500).json({message: 'Error getting comment'});
     }
 });
-
 router.post('/:id/comments', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
@@ -380,7 +379,6 @@ router.post('/:id/comments', async (req, res) => {
         res.status(500).json({message: 'Error adding comment'});
     }
 });
-
 router.put('/comments/:id', async (req, res) => {
     const {id} = req.params;
     const {description, collapsed} = req.body;
@@ -398,7 +396,6 @@ router.put('/comments/:id', async (req, res) => {
         res.status(500).json({message: 'Error updating comment.'});
     }
 });
-
 router.delete('/comments/:id', async (req, res) => {
     const {id} = req.params;
     try{
@@ -445,7 +442,6 @@ router.post('/comments/:id/replies', async (req, res) => {
         res.status(500).json({message: 'Error adding reply.'});
     }
 });
-
 router.put('/comments/replies/:id', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
@@ -458,7 +454,6 @@ router.put('/comments/replies/:id', async (req, res) => {
         res.status(500).json({message: 'Error updating reply.'});
     }
 });
-
 router.delete('/comments/replies/:id', async (req, res) => {
     const {id} = req.params;
     try{
@@ -475,7 +470,6 @@ router.delete('/comments/replies/:id', async (req, res) => {
 });
 
 //add pictures
-
 async function addPictures(tableName, images, insert){
     const uploads = [];
     try{
@@ -509,7 +503,6 @@ async function addPictures(tableName, images, insert){
         throw err;
     }
 }
-
 router.post('/:id/pictures/open', async (req, res) => {
     const {id} = req.params;
     const images = req.files;
@@ -521,7 +514,6 @@ router.post('/:id/pictures/open', async (req, res) => {
         res.status(500).json({message: 'Error adding images'});
     }
 });
-
 router.post('/:id/pictures/resolved', async (req, res) => {
     const {id} = req.params;
     const images = req.files;
@@ -533,7 +525,6 @@ router.post('/:id/pictures/resolved', async (req, res) => {
         res.status(500).json({message: 'Error adding images'});
     }
 });
-
 router.post('/comments/:id/pictures', async (req, res) => {
     const {id} = req.params;
     const images = req.files;
@@ -545,7 +536,6 @@ router.post('/comments/:id/pictures', async (req, res) => {
         res.status(500).json({message: 'Error adding images'});
     }
 });
-
 router.post('/comments/replies/:id/pictures', async (req, res) => {
     const {id} = req.params;
     const images = req.files;
@@ -559,7 +549,6 @@ router.post('/comments/replies/:id/pictures', async (req, res) => {
 });
 
 //add videos
-
 async function addVideo(tableName, video, insert){
     try{
         return await cloudinary.uploader.upload(video.tempFilePath, { resource_type: "video" }, async (err, result) => {
@@ -570,7 +559,6 @@ async function addVideo(tableName, video, insert){
         throw err;
     }
 }
-
 router.post('/:id/video/open', async (req, res) => {
     const {id} = req.params;
     const {video} = req.files;
@@ -582,7 +570,6 @@ router.post('/:id/video/open', async (req, res) => {
         res.status(500).json({message: 'Error adding video.'});
     }
 });
-
 router.post('/:id/video/resolved', async (req, res) => {
     const {id} = req.params;
     const {video} = req.files;
@@ -594,7 +581,6 @@ router.post('/:id/video/resolved', async (req, res) => {
         res.status(500).json({message: 'Error adding video.'});
     }
 });
-
 router.post('/comments/:id/video', async (req, res) => {
     const {id} = req.params;
     const {video} = req.files;
@@ -606,7 +592,6 @@ router.post('/comments/:id/video', async (req, res) => {
         res.status(500).json({message: 'Error adding video.'});
     }
 });
-
 router.post('/comments/replies/:id/video', async (req, res) => {
     const {id} = req.params;
     const {video} = req.files;
