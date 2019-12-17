@@ -57,8 +57,8 @@ router.get('/:id', async (req, res) => {
         const ticket_comments = await ticketsDb.findTicketComments(id);
         
         if(ticket){
-            const open_pictures = await db('tickets_pictures').where({ticket_id: id}).select('url', 'width', 'height', 'filename');
-            const resolved_pictures = await db('tickets_solutions_pictures').where({ticket_id: id}).select('url', 'width', 'height', 'filename');
+            const open_pictures = await db('tickets_pictures').where({ticket_id: id}).select('id','url', 'width', 'height', 'filename');
+            const resolved_pictures = await db('tickets_solutions_pictures').where({ticket_id: id}).select('id','url', 'width', 'height', 'filename');
             res.status(200).json({ticket_details: ticket, ticket_comments, open_pictures, resolved_pictures});
         }else{
             res.status(404).json({message: `No tickets found with id ${id}`})
@@ -482,6 +482,7 @@ async function addPictures(tableName, images, insert){
         const imgs = results.map(result => { 
             console.log('Adding Picture to :', tableName, result);
             return ({
+                id: result.id,
                 url: result.secure_url,
                 width: result.width,
                 height: result.height,
@@ -564,7 +565,7 @@ router.post('/:id/video/open', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('tickets_videos', video, {ticket_id: id});
-        res.status(200).json(response.secure_url);
+        res.status(200).json({id: result.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
@@ -575,7 +576,7 @@ router.post('/:id/video/resolved', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('tickets_solutions_videos', video, {ticket_id: id});
-        res.status(200).json(response.secure_url);
+        res.status(200).json({id: result.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
@@ -586,7 +587,7 @@ router.post('/comments/:id/video', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('comments_videos', video, {comment_id: id});
-        res.status(200).json(response.secure_url);
+        res.status(200).json({id: result.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
@@ -597,7 +598,7 @@ router.post('/comments/replies/:id/video', async (req, res) => {
     const {video} = req.files;
     try{
         const response = await addVideo('comments_replies_videos', video, {reply_id: id});
-        res.status(200).json(response.secure_url);
+        res.status(200).json({id: result.id, url: response.secure_url});
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error adding video.'});
