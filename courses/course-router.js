@@ -365,433 +365,434 @@ const newCourse = new Course({
                 {
                     number: 4,
                     name: 'Unit 1 Build Week',
-                    description: '',
-                    url: '',
+                    description: 'build week',
+                    url: 'im not null',
                 },
             ]
         },
-        {
-            number: 2,
-            name: 'Web Applications I',
-            description: '',
-            weeks: [
-                {
-                    number: 1,
-                    name: 'Applied JavaScript',
-                    description: 'This week is all about exposing you to applying your Javascript knowledge to the Document Object Model and creating rich Javascript user interfaces.',
-                    url: 'https://learn.lambdaschool.com/web2/sprint/recPSZMPrmESUYo2C',
-                    days: [
-                        {
-                            number: 1,
-                            name: 'DOM 1',
-                            description: 'Now that we can build a basic static web page with HTML and CSS, we need to add functionality to the page. The first step in building vibrant dynamic web pages and applications is learning about the DOM. What it is, how it affects our page, and how to access and manipulate it. DOM manipulation is at the core of every framework and before we start using frameworks we need to understand the DOM.',
-                            url: 'https://learn.lambdaschool.com/web2/module/rectn5PUU5ubcQkPu',
-                            lectureurl: '',
-                            projectUrl: 'https://github.com/LambdaSchool/DOM-I',
-                            prepVideos: [
-                                {
-                                    number: 1,
-                                    name: '',
-                                    url: '',
-                                },
-                                {
-                                    number: 2,
-                                    name: '',
-                                    url: '',
-                                },
-                                {
-                                    number: 3,
-                                    name: '',
-                                    url: '',
-                                },
-                                {
-                                    number: 4,
-                                    name: '',
-                                    url: '',
-                                },
-                            ],
-                        },
-                        {
-                            number: 2,
-                            name: 'DOM 2',
-                            description: 'Events are the way we users interact with the page. Any time there is some interaction by way of a mouse, keyboard, etc., the DOM creates and propagates an event object. This event object carries information about the event so that it may be handled at any point up the tree from the point of origin.',
-                            url: 'https://learn.lambdaschool.com/web2/module/recJWv3RIfa4NFXbn',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
-                                // none
-                            ],
-                        },
-                        {
-                            number: 3,
-                            name: 'Components 1',
-                            description: 'As we build larger and more feature rich web pages, we may notice a trend in our code; elements that are essentially using the same functionality and styling with minor differences in the data they present. In an effort to keep our code readable, reusable, and most of all DRY, we can build on these repeating patterns and create components. Components are reusable pieces of code that can be used to build elements sharing functionality and styling. Components are the heart of any dynamic web application and JavaScript framework.',
-                            url: 'https://learn.lambdaschool.com/web2/module/rec847sNXZX9CVDNl',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //     {
+    //         number: 2,
+    //         name: 'Web Applications I',
+    //         description: 'd',
+    //         weeks: [
+    //             {
+    //                 number: 1,
+    //                 name: 'Applied JavaScript',
+    //                 description: 'This week is all about exposing you to applying your Javascript knowledge to the Document Object Model and creating rich Javascript user interfaces.',
+    //                 url: 'https://learn.lambdaschool.com/web2/sprint/recPSZMPrmESUYo2C',
+    //                 days: [
+    //                     {
+    //                         number: 1,
+    //                         name: 'DOM 1',
+    //                         description: 'Now that we can build a basic static web page with HTML and CSS, we need to add functionality to the page. The first step in building vibrant dynamic web pages and applications is learning about the DOM. What it is, how it affects our page, and how to access and manipulate it. DOM manipulation is at the core of every framework and before we start using frameworks we need to understand the DOM.',
+    //                         url: 'https://learn.lambdaschool.com/web2/module/rectn5PUU5ubcQkPu',
+    //                         lectureurl: '',
+    //                         projectUrl: 'https://github.com/LambdaSchool/DOM-I',
+    //                         prepVideos: [
+    //                             {
+    //                                 number: 1,
+    //                                 name: '',
+    //                                 url: '',
+    //                             },
+    //                             {
+    //                                 number: 2,
+    //                                 name: '',
+    //                                 url: '',
+    //                             },
+    //                             {
+    //                                 number: 3,
+    //                                 name: '',
+    //                                 url: '',
+    //                             },
+    //                             {
+    //                                 number: 4,
+    //                                 name: '',
+    //                                 url: '',
+    //                             },
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 2,
+    //                         name: 'DOM 2',
+    //                         description: 'Events are the way we users interact with the page. Any time there is some interaction by way of a mouse, keyboard, etc., the DOM creates and propagates an event object. This event object carries information about the event so that it may be handled at any point up the tree from the point of origin.',
+    //                         url: 'https://learn.lambdaschool.com/web2/module/recJWv3RIfa4NFXbn',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
+    //                             // none
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 3,
+    //                         name: 'Components 1',
+    //                         description: 'As we build larger and more feature rich web pages, we may notice a trend in our code; elements that are essentially using the same functionality and styling with minor differences in the data they present. In an effort to keep our code readable, reusable, and most of all DRY, we can build on these repeating patterns and create components. Components are reusable pieces of code that can be used to build elements sharing functionality and styling. Components are the heart of any dynamic web application and JavaScript framework.',
+    //                         url: 'https://learn.lambdaschool.com/web2/module/rec847sNXZX9CVDNl',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 4,
-                            name: 'Components 2',
-                            description: 'Now that we have some understanding of what a component is, we can learn to utilize asynchronous JavaScript and Promises to make HTTP requests and get data from a server.',
-                            url: 'https://learn.lambdaschool.com/web2/module/recd6kDKS6eMapSRq',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 4,
+    //                         name: 'Components 2',
+    //                         description: 'Now that we have some understanding of what a component is, we can learn to utilize asynchronous JavaScript and Promises to make HTTP requests and get data from a server.',
+    //                         url: 'https://learn.lambdaschool.com/web2/module/recd6kDKS6eMapSRq',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 5,
-                            name: 'Sprint Challenge - Applied JavaScript Challenge',
-                            description: 'This challenge covers DOM I, DOM II, Components I, Components II.',
-                            projectUrl: 'https://github.com/LambdaSchool/Sprint-Challenge-Applied-Javascript',
-                        },
-                    ],
-                },
-                {
-                    number: 2,
-                    name: 'Intro to React',
-                    description: 'React is a UI library that is used in various forms to create complex, rich user interfaces.',
-                    url: 'https://learn.lambdaschool.com/web2/sprint/recYL2HDPPpkDmGEm',
-                    days: [
-                        {
-                            number: 1,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 5,
+    //                         name: 'Sprint Challenge - Applied JavaScript Challenge',
+    //                         description: 'This challenge covers DOM I, DOM II, Components I, Components II.',
+    //                         projectUrl: 'https://github.com/LambdaSchool/Sprint-Challenge-Applied-Javascript',
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 number: 2,
+    //                 name: 'Intro to React',
+    //                 description: 'React is a UI library that is used in various forms to create complex, rich user interfaces.',
+    //                 url: 'https://learn.lambdaschool.com/web2/sprint/recYL2HDPPpkDmGEm',
+    //                 days: [
+    //                     {
+    //                         number: 1,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 2,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 2,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 3,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 3,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 4,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 4,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 5,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                        },
-                    ],
-                },
-                {
-                    number: 3,
-                    name: 'Single Page Applications',
-                    description: 'This week we’ll be learning about using two very useful packages with React: React Router and Formik. With the UI Library (React), the Client Side Routing Library (React Router), and the Form library Formik, you’ll be able to craft rich, robust and highly scale-able Single Page Applications.',
-                    url: 'https://learn.lambdaschool.com/web2/sprint/recRT8JKvbTiGaosk',
-                    days: [
-                        {
-                            number: 1,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 5,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 number: 3,
+    //                 name: 'Single Page Applications',
+    //                 description: 'This week we’ll be learning about using two very useful packages with React: React Router and Formik. With the UI Library (React), the Client Side Routing Library (React Router), and the Form library Formik, you’ll be able to craft rich, robust and highly scale-able Single Page Applications.',
+    //                 url: 'https://learn.lambdaschool.com/web2/sprint/recRT8JKvbTiGaosk',
+    //                 days: [
+    //                     {
+    //                         number: 1,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 2,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 2,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 3,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 3,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 4,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 4,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 5,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                        },
-                    ],
-                },
-                {
-                    number: 4,
-                    name: 'Unit 2 Build Week',
-                    description: '',
-                    url: '',
-                },
-            ],
-        },
-        {
-            number: 3,
-            name: 'Web Applications II',
-            description: '',
-            weeks: [
-                {
-                    number: 1,
-                    name: 'Advanced React',
-                    description: '',
-                    url: 'https://learn.lambdaschool.com/web3/sprint/recq59MvEIZfUAohy',
-                    days: [
-                        {
-                            number: 1,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 5,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 number: 4,
+    //                 name: 'Unit 2 Build Week',
+    //                 description: '',
+    //                 url: '',
+    //             },
+    //         ],
+    //     },
+    //     {
+    //         number: 3,
+    //         name: 'Web Applications II',
+    //         description: 'd',
+    //         weeks: [
+    //             {
+    //                 number: 1,
+    //                 name: 'Advanced React',
+    //                 description: '',
+    //                 url: 'https://learn.lambdaschool.com/web3/sprint/recq59MvEIZfUAohy',
+    //                 days: [
+    //                     {
+    //                         number: 1,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 2,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 2,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 3,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 3,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 4,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 4,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 5,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                        },
-                    ],
-                },
-                {
-                    number: 2,
-                    name: 'Advanced State Management',
-                    description: '',
-                    url: 'https://learn.lambdaschool.com/web3/sprint/recukritK1B1pFrcM',
-                    days: [
-                        {
-                            number: 1,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 5,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 number: 2,
+    //                 name: 'Advanced State Management',
+    //                 description: '',
+    //                 url: 'https://learn.lambdaschool.com/web3/sprint/recukritK1B1pFrcM',
+    //                 days: [
+    //                     {
+    //                         number: 1,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 2,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 2,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 3,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 3,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 4,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 4,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 5,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                        },
-                    ],
-                },
-                {
-                    number: 3,
-                    name: 'Advanced Web Applications',
-                    description: '',
-                    url: 'https://learn.lambdaschool.com/web3/sprint/recnhsJGy28gNi1K5',
-                    days: [
-                        {
-                            number: 1,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 5,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 number: 3,
+    //                 name: 'Advanced Web Applications',
+    //                 description: '',
+    //                 url: 'https://learn.lambdaschool.com/web3/sprint/recnhsJGy28gNi1K5',
+    //                 days: [
+    //                     {
+    //                         number: 1,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 2,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 2,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 3,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 3,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 4,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                            prepVideos: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 4,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                         prepVideos: [
                                 
-                            ],
-                        },
-                        {
-                            number: 5,
-                            name: '',
-                            description: '',
-                            url: '',
-                            lectureurl: '',
-                            projectUrl: '',
-                        },
-                    ],
-                },
-                {
-                    number: 4,
-                    name: 'Unit 3 Build Week',
-                    description: '',
-                    url: '',
-                },
-            ],
-        },
-        {
-            number: 4,
-            name: 'Web API: Node',
-            description: '',
-            weeks: [
+    //                         ],
+    //                     },
+    //                     {
+    //                         number: 5,
+    //                         name: '',
+    //                         description: '',
+    //                         url: '',
+    //                         lectureurl: '',
+    //                         projectUrl: '',
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 number: 4,
+    //                 name: 'Unit 3 Build Week',
+    //                 description: '',
+    //                 url: '',
+    //             },
+    //         ],
+    //     },
+    //     {
+    //         number: 4,
+    //         name: 'Web API: Node',
+    //         description: '',
+    //         weeks: [
                 
-            ],
-        },
-        {
-            number: 5,
-            name: 'Web API: Java',
-            description: '',
-            weeks: [
+    //         ],
+    //     },
+    //     {
+    //         number: 5,
+    //         name: 'Web API: Java',
+    //         description: '',
+    //         weeks: [
                 
-            ],
-        },
+    //         ],
+    //     },
     ]
 });
 
+//uncomment this to send above seed data to mongo cloud db
 // newCourse
 //   .save()
 //   .then(item => console.log(item))

@@ -85,6 +85,49 @@ router.get('/authors/author/resolved', async (req, res) => {
     }
 });
 
+router.get('/query', async (req, res) => {
+    const {course, unit, week, day} = req.query;
+    
+    try{
+        if(!course && (unit || week || day)){
+            throw 'No course query string provided'
+        }else if((unit && isNaN(unit)) || (week && isNaN(week)) || (day && isNaN(day))){
+            throw 'Invalid unit, week, or day';
+        }
+        if(course && unit && week && day){
+            const [result] = await courseDb.findDay(course, unit, week, day);
+            if(!result) throw 'Not found';
+            res.status(200).json(result);
+        }else if(course && unit && week){
+            const [result] = await courseDb.findWeek(course, unit, week);
+                if(!result) throw 'Not found';                
+            res.status(200).json(result);            
+        }else if(course && unit){
+            const [result] = await courseDb.findUnit(course, unit);
+            if(!result) throw 'Not found';
+            res.status(200).json(result);             
+        }else if(course){
+            const [result] = await courseDb.findCourse(course);
+            if(!result) throw 'Not found';
+            res.status(200).json(result);
+        }else{
+            const [result] = await courseDb.findCourses();
+            res.status(200).json(result);
+        }
+    }catch(err){
+        if(err === 'Not found'){
+            res.status(404).json({message: `No result found using specified query parameters` });
+        }else if(err === 'No course query string provided'){
+            res.status(400).json({message: err});
+        }else if(err === 'Invalid unit, week, or day'){
+            res.status(400).json({message: 'Invalid query string. Unit, week, and day must be a number'});
+        }else{
+            console.log(err);
+            res.status(500).json({message: 'Error retrieving course information'});
+        }
+    }
+});
+
 router.post('/', async (req, res) => {
     try {
         const {category, title, description} = req.body;
@@ -306,6 +349,18 @@ router.put('/resolved/:id', async (req, res) => {
 });
 
 //comments
+router.get('/comments/:id', async (req, res) => {
+    const {id} = req.params;
+
+    try{
+        const comment = await ticketsDb.findCommentById(id);
+        res.status(200).json({...comment, collapsed: true});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error getting comment'});
+    }
+});
+
 router.post('/:id/comments', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
@@ -337,7 +392,6 @@ router.put('/comments/:id', async (req, res) => {
     }
 });
 
-
 router.delete('/comments/:id', async (req, res) => {
     const {id} = req.params;
     try{
@@ -354,6 +408,17 @@ router.delete('/comments/:id', async (req, res) => {
 });
 
 //replies
+router.get('/replies/:id', async (req, res) => {
+    const {id} = req.params;
+
+    try{
+        const reply = await ticketsDb.findReplyById(id);
+        res.status(200).json({...reply});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error getting reply'});
+    }
+});
 router.post('/comments/:id/replies', async (req, res) => {
     const {id} = req.params;
     const {description} = req.body;
@@ -379,7 +444,6 @@ router.put('/comments/replies/:id', async (req, res) => {
         res.status(500).json({message: 'Error updating reply.'});
     }
 });
-
 
 router.delete('/comments/replies/:id', async (req, res) => {
     const {id} = req.params;

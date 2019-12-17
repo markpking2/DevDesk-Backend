@@ -5,6 +5,7 @@ module.exports = {
     findResolved,
     findStudentOpenTickets,
     findStudentResolvedTickets,
+    findTicketByQuery,
     openTicket,
     update,
     remove,
@@ -39,7 +40,6 @@ function findResolved() {
     .leftJoin('profile_pictures as sp', 's.id', 'sp.user_id')
     .select('t.*', 's.name as author_name', 'sp.url as author_image', 'r.author_id', 'r.resolved_at', db.raw('? as status', ['resolved'], 'r.solution_comment_id', 'r.solution_reply_id'));
 }
-
 
 function findStudentOpenTickets(id){
     return db('authors_tickets as s')
@@ -146,7 +146,9 @@ async function findMine(id){
             .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
             db.raw(`CASE 
                 WHEN st.author_id IS NOT NULL THEN sp.url
+                // bug here??? rt.author_id is not null?
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
+                // bug here?? remove else null? it is getting nulled on resolved tickets that have a comment
                 ELSE NULL 
                 END AS author_image`),              
             db.raw(`CASE 
@@ -226,6 +228,57 @@ async function findMine(id){
 async function findById(id) {
     return await db('tickets as t')
             .where({'t.id': id})
+            .leftJoin('authors_tickets as st', 't.id', 'st.ticket_id')
+            .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
+            .leftJoin('users as su', 'st.author_id', 'su.id')
+            .leftJoin('users as rsu', 'rt.author_id', 'rsu.id')
+            .leftJoin('profile_pictures as sp', 'st.author_id', 'sp.user_id')
+            .leftJoin('profile_pictures as rsp', 'rt.author_id', 'sp.user_id')
+            .leftJoin('tickets_videos as dv', 't.id', 'dv.ticket_id')
+            .leftJoin('tickets_solutions_videos as sv', 't.id', 'sv.ticket_id')
+            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
+            db.raw(`CASE 
+                WHEN st.author_id IS NOT NULL THEN sp.url
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
+                ELSE NULL 
+                END AS author_image`),              
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.name
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
+                ELSE NULL 
+                END AS author_name`),
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN su.id
+                WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.id
+                ELSE NULL 
+                END AS author_id`),                
+            db.raw(`CASE 
+                WHEN su.name IS NOT NULL THEN 'open' 
+                ELSE 'resolved'
+                END AS status`),
+            db.raw(`CASE
+                WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
+                END as resolved_at`));
+}
+
+async function findTicketByQuery(query){
+    const {course, unit, week, day} = query;
+    const filteredQuery = {};
+    if (course){
+        filteredQuery = {...filteredQuery, 't.course': course}
+    }
+    if (unit){
+        filteredQuery = {...filteredQuery, 't.unit': unit}
+    }
+    if (week){
+        filteredQuery = {...filteredQuery, 't.week': week}
+    }
+    if (day){
+        filteredQuery = {...filteredQuery, 't.day': day}
+    }
+    console.log('filteredQuery', filteredQuery, 'og query', query)
+    return await db('tickets as t')
+            .where(filteredQuery)
             .leftJoin('authors_tickets as st', 't.id', 'st.ticket_id')
             .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
             .leftJoin('users as su', 'st.author_id', 'su.id')
@@ -494,7 +547,7 @@ function deleteComment(id){
 }
 
 async function findCommentById(id){
-    console.log(id);
+    // console.log(id);
     const comment = await db('comments as c')
         .where({'c.id': id})
         .join('users as u', 'c.author_id', 'u.id')
@@ -534,7 +587,7 @@ async function findReplyById(id){
         .leftJoin('profile_pictures as p', 'u.id', 'p.user_id')
         .select('cr.*', 'p.url as author_image', 'u.name as author_name')
         .first();
-        console.log('reply:', reply);
+        // console.log('reply:', reply);
     
     return {...reply, 
             reply_pictures: await findReplyPictures(id),
