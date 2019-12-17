@@ -354,7 +354,14 @@ router.get('/comments/:id', async (req, res) => {
 
     try{
         const comment = await ticketsDb.findCommentById(id);
-        res.status(200).json({...comment, collapsed: true});
+        if (comment){
+            if (comment.id){
+                res.status(200).json({...comment, collapsed: true});
+            }
+            else{
+                res.status(404).json({message: `Could not find comment with id: ${id}`});
+            }
+        }
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error getting comment'});
@@ -413,7 +420,14 @@ router.get('/replies/:id', async (req, res) => {
 
     try{
         const reply = await ticketsDb.findReplyById(id);
-        res.status(200).json({...reply});
+        if (reply){
+            if (reply.id){
+                res.status(200).json({...reply});
+            }
+            else{
+                res.status(404).json({message: `Could not find reply with id: ${id}`});
+            }
+        }
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Error getting reply'});
