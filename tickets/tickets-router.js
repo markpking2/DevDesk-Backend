@@ -605,9 +605,23 @@ router.post('/comments/replies/:id/video', async (req, res) => {
 });
 
 //delete pictures
-router.delete('/picture/:id', async (req, res) => {
+router.delete('/picture/open/:id', async (req, res) => {
     try{
         const deleted = await db('tickets_pictures')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Ticket picture id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting ticket picture.'})
+    }
+});
+router.delete('/picture/resolved/:id', async (req, res) => {
+    try{
+        const deleted = await db('tickets_solutions_pictures')
         .where({id: req.params.id})
         .del();
 
@@ -649,9 +663,23 @@ router.delete('/comments/replies/picture/:id', async (req, res) => {
 });
 
 //delete videos
-router.delete('/video/:id', async (req, res) => {
+router.delete('/video/open/:id', async (req, res) => {
     try{
         const deleted = await db('tickets_videos')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Ticket video id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting ticket video.'})
+    }
+});
+router.delete('/video/resolved/:id', async (req, res) => {
+    try{
+        const deleted = await db('tickets_solutions_videos')
         .where({id: req.params.id})
         .del();
 
