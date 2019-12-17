@@ -604,4 +604,94 @@ router.post('/comments/replies/:id/video', async (req, res) => {
     }
 });
 
+//delete pictures
+router.delete('/picture/:id', async (req, res) => {
+    try{
+        const deleted = await db('tickets_pictures')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Ticket picture id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting ticket picture.'})
+    }
+});
+router.delete('/comments/picture/:id', async (req, res) => {
+    try{
+        const deleted = await db('comments_pictures')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Comment picture id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting comment picture.'})
+    }
+});
+router.delete('/comments/replies/picture/:id', async (req, res) => {
+    try{
+        const deleted = await db('comments_replies_pictures')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Reply picture id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting reply picture.'})
+    }
+});
+
+//delete videos
+router.delete('/video/:id', async (req, res) => {
+    try{
+        const deleted = await db('tickets_videos')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Ticket video id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting ticket video.'})
+    }
+});
+router.delete('/comments/video/:id', async (req, res) => {
+    try{
+        const deleted = await db('comments_videos')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Comment video id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting comment video.'})
+    }
+});
+router.delete('/comments/replies/video/:id', async (req, res) => {
+    try{
+        const deleted = await db('comments_replies_videos')
+        .where({id: req.params.id})
+        .del();
+
+        if(deleted){
+            res.status(200).json({message: `Reply video id: ${req.params.id} successfully deleted`});
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error deleting reply video.'})
+    }
+});
+
+
+
 module.exports = router;
