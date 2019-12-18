@@ -85,48 +85,48 @@ router.get('/authors/author/resolved', async (req, res) => {
     }
 });
 
-router.get('/ticketByQ', async (req, res) => {
+router.get('/query', async (req, res) => {
     const {course, unit, week, day} = req.query;
     console.log('Req.Query', req.query);
-    console.log('Req.Query Destructured: '. course, unit, week, day);
-    try{
-        if(!course && (unit || week || day)){
-            throw 'No course query string provided'
-        }else if((unit && isNaN(unit)) || (week && isNaN(week)) || (day && isNaN(day))){
-            throw 'Invalid unit, week, or day';
-        }
-        if(course && unit && week && day){
-            const [result] = await ticketsDb.findTicketByQuery(req.query);
-            if(!result) throw 'Not found';
-            res.status(200).json(result);
-        }else if(course && unit && week){
-            const [result] = await ticketsDb.findTicketByQuery(req.query);
-                if(!result) throw 'Not found';                
-            res.status(200).json(result);            
-        }else if(course && unit){
-            const [result] = await ticketsDb.findTicketByQuery(req.query);
-            if(!result) throw 'Not found';
-            res.status(200).json(result);             
-        }else if(course){
-            const [result] = await ticketsDb.findTicketByQuery(req.query);
-            if(!result) throw 'Not found';
-            res.status(200).json(result);
-        }else{
-            const [result] = await ticketsDb.findTicketByQuery(req.query);
-            res.status(200).json(result);
-        }
-    }catch(err){
-        if(err === 'Not found'){
-            res.status(404).json({message: `No result found using specified query parameters` });
-        }else if(err === 'No course query string provided'){
-            res.status(400).json({message: err});
-        }else if(err === 'Invalid unit, week, or day'){
-            res.status(400).json({message: 'Invalid query string. Unit, week, and day must be a number'});
-        }else{
-            console.log(err);
-            res.status(500).json({message: 'Error retrieving course information'});
-        }
-    }
+    console.log('Req.Query Destructured: ', course, unit, week, day);
+    // try{
+    //     if(!course && (unit || week || day)){
+    //         throw 'No course query string provided'
+    //     }else if((unit && isNaN(unit)) || (week && isNaN(week)) || (day && isNaN(day))){
+    //         throw 'Invalid unit, week, or day';
+    //     }
+    //     if(course && unit && week && day){
+    //         const [result] = await ticketsDb.findTicketByQuery(req.query);
+    //         if(!result) throw 'Not found';
+    //         res.status(200).json(result);
+    //     }else if(course && unit && week){
+    //         const [result] = await ticketsDb.findTicketByQuery(req.query);
+    //             if(!result) throw 'Not found';                
+    //         res.status(200).json(result);            
+    //     }else if(course && unit){
+    //         const [result] = await ticketsDb.findTicketByQuery(req.query);
+    //         if(!result) throw 'Not found';
+    //         res.status(200).json(result);             
+    //     }else if(course){
+    //         const [result] = await ticketsDb.findTicketByQuery(req.query);
+    //         if(!result) throw 'Not found';
+    //         res.status(200).json(result);
+    //     }else{
+    //         const [result] = await ticketsDb.findTicketByQuery(req.query);
+    //         res.status(200).json(result);
+    //     }
+    // }catch(err){
+    //     if(err === 'Not found'){
+    //         res.status(404).json({message: `No result found using specified query parameters` });
+    //     }else if(err === 'No course query string provided'){
+    //         res.status(400).json({message: err});
+    //     }else if(err === 'Invalid unit, week, or day'){
+    //         res.status(400).json({message: 'Invalid query string. Unit, week, and day must be a number'});
+    //     }else{
+    //         console.log(err);
+    //         res.status(500).json({message: 'Error retrieving course information'});
+    //     }
+    // }
 });
 
 router.post('/', async (req, res) => {
