@@ -130,8 +130,8 @@ router.get('/query', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const {category, title, description} = req.body;
-        const ticket = await ticketsDb.openTicket({category, title, description}, req.user.id);
+        const {category, title, description, course, unit, week, day} = req.body;
+        const ticket = await ticketsDb.openTicket({category, title, description, course, unit, week, day}, req.user.id);
         
         const message = `Hey! \nA user just opened a ticket in category ${ticket.category}\nTicket title: ${ticket.title}\nDescription: ${ticket.description} \n :hotdog:\n`
 
