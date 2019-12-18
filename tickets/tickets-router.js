@@ -95,23 +95,23 @@ router.get('/query', async (req, res) => {
             throw 'Invalid unit, week, or day';
         }
         if(course && unit && week && day){
-            const [result] = await courseDb.findDay(course, unit, week, day);
+            const [result] = await ticketsDb.findTicketByQuery(req.query);
             if(!result) throw 'Not found';
             res.status(200).json(result);
         }else if(course && unit && week){
-            const [result] = await courseDb.findWeek(course, unit, week);
+            const [result] = await ticketsDb.findTicketByQuery(req.query);
                 if(!result) throw 'Not found';                
             res.status(200).json(result);            
         }else if(course && unit){
-            const [result] = await courseDb.findUnit(course, unit);
+            const [result] = await ticketsDb.findTicketByQuery(req.query);
             if(!result) throw 'Not found';
             res.status(200).json(result);             
         }else if(course){
-            const [result] = await courseDb.findCourse(course);
+            const [result] = await ticketsDb.findTicketByQuery(req.query);
             if(!result) throw 'Not found';
             res.status(200).json(result);
         }else{
-            const [result] = await courseDb.findCourses();
+            const [result] = await ticketsDb.findTicketByQuery(req.query);
             res.status(200).json(result);
         }
     }catch(err){
