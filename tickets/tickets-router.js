@@ -85,7 +85,7 @@ router.get('/authors/author/resolved', async (req, res) => {
     }
 });
 
-router.get('/query', async (req, res) => {
+router.get('/query/', async (req, res) => {
     const {course, unit, week, day} = req.query;
     console.log('Req.Query', req.query);
     console.log('Req.Query Destructured: ', course, unit, week, day);
