@@ -110,7 +110,9 @@ router.get('/user', async (req, res) => {
 
 router.delete('/user', async (req, res) => {
     const {password} = req.body;
-
+    console.log('password', password);
+    console.log(req.body);
+    console.log(req.body.password);
     try{
         if(password){
             const user = await db('users')
