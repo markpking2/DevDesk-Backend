@@ -50,42 +50,7 @@ router.get('/mine', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
-    const {id} = req.params;
-    try{
-        const [ticket] = await ticketsDb.findById(id);
-        const ticket_comments = await ticketsDb.findTicketComments(id);
-        
-        if(ticket){
-            const open_pictures = await db('tickets_pictures').where({ticket_id: id}).select('id','url', 'width', 'height', 'filename');
-            const resolved_pictures = await db('tickets_solutions_pictures').where({ticket_id: id}).select('id','url', 'width', 'height', 'filename');
-            res.status(200).json({ticket_details: ticket, ticket_comments, open_pictures, resolved_pictures});
-        }else{
-            res.status(404).json({message: `No tickets found with id ${id}`})
-        }
-    }catch(err){
-        console.log(err);
-        res.status(500).json({message: 'Error retrieving ticket information.'});
-    }
-})
-
-router.get('/authors/author/resolved', async (req, res) => {
-    const {id} = req.user;
-    try{
-        const tickets = await ticketsDb.findStudentResolvedTickets(id);
-        if(tickets.length){
-            res.status(200).json(tickets);
-        }else{
-            res.send({message: `No resolved tickets found for author with id ${id}`})
-        }
-        
-    }catch(err){
-        console.log(err);
-        res.status(500).json({message: `Error retrieving resolved tickets for student with id ${id}`});
-    }
-});
-
-router.get('/query/', async (req, res) => {
+router.get('/all/query', async (req, res) => {
     const {course, unit, week, day} = req.query;
     console.log('Req.Query', req.query);
     console.log('Req.Query Destructured: ', course, unit, week, day);
@@ -127,6 +92,41 @@ router.get('/query/', async (req, res) => {
     //         res.status(500).json({message: 'Error retrieving course information'});
     //     }
     // }
+});
+
+router.get('/:id', async (req, res) => {
+    const {id} = req.params;
+    try{
+        const [ticket] = await ticketsDb.findById(id);
+        const ticket_comments = await ticketsDb.findTicketComments(id);
+        
+        if(ticket){
+            const open_pictures = await db('tickets_pictures').where({ticket_id: id}).select('id','url', 'width', 'height', 'filename');
+            const resolved_pictures = await db('tickets_solutions_pictures').where({ticket_id: id}).select('id','url', 'width', 'height', 'filename');
+            res.status(200).json({ticket_details: ticket, ticket_comments, open_pictures, resolved_pictures});
+        }else{
+            res.status(404).json({message: `No tickets found with id ${id}`})
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Error retrieving ticket information.'});
+    }
+})
+
+router.get('/authors/author/resolved', async (req, res) => {
+    const {id} = req.user;
+    try{
+        const tickets = await ticketsDb.findStudentResolvedTickets(id);
+        if(tickets.length){
+            res.status(200).json(tickets);
+        }else{
+            res.send({message: `No resolved tickets found for author with id ${id}`})
+        }
+        
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: `Error retrieving resolved tickets for student with id ${id}`});
+    }
 });
 
 router.post('/', async (req, res) => {
