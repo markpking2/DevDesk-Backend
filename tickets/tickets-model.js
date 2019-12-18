@@ -263,7 +263,7 @@ async function findById(id) {
 
 async function findTicketByQuery(query){
     const {course, unit, week, day} = query;
-    const filteredQuery = {};
+    let filteredQuery = {};
     if (course){
         filteredQuery = {...filteredQuery, 't.course': course}
     }
