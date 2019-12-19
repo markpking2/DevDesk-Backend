@@ -565,18 +565,209 @@ router.put("/comments/replies/:id", async (req, res) => {
     }
 });
 
-// router.put("/comments/:id/sendall", async (req, res) => {
-//     const { id } = req.params;
-//     const { files } = req;
-//     const images = [];
-//     const { video } = files;
-//     Object.keys(files).map(key => {
-//         if (key.includes("image")) images.push(files[key]);
-//     });
 
-//     res.status(200).send("hi jordan");
-// });
 
+
+router.put("/:id/sendall", async (req, res) => {
+    console.log(req.body);
+    try {
+        const { id } = req.params;
+        const { files } = req;
+        const promises = [];
+        let images = [];
+        const video = req.files && req.files.video;
+        const { title } = req.body;
+        const { category } = req.body;
+        const { description } = req.body;
+
+        let ticketObj = '';
+        if (title)
+        {
+            ticketObj = {...ticketObj, title};
+        }
+        if (category)
+        {
+            ticketObj = {...ticketObj, category};
+        }
+        if (description)
+        {
+            ticketObj = {...ticketObj, description};
+        }
+        console.log('ticket obj: ', ticketObj);
+
+        Object.keys(files).length && Object.keys(files).map(key => {
+            if(key.includes('image')){
+                images.push(files[key]);
+            }
+        });
+
+        db("tickets_videos")
+        .where({ ticket_id: id })
+        .first()
+        .then(hasVideo => {
+            if(req.files && req.files.images && req.files.images.length){
+                images = {...req.files.images};
+            }
+            
+            if (Object.keys(images).length) {
+                promises.push(addPictures("tickets_pictures", images, {
+                    ticket_id: id
+                }));
+            } else {
+                promises.push(Promise.resolve('No images were provided.'));
+            }
+            
+            if (ticketObj) {
+                promises.push(ticketsDb.update(id, ticketObj).catch(e => e));
+            } else {
+                promises.push(Promise.resolve('No description was provided.'));
+            }
+            
+            if (video) {
+                if (hasVideo) {
+                    promises.push(
+                    db("tickets_videos")
+                        .where({ ticket_id: id })
+                        .del()
+                        .then(deleted => {
+                            if(deleted){
+                                return addVideo("tickets_videos", video, {
+                                    ticket_id: id
+                                }).then(result => {
+                                    return result;
+                                })
+                                .catch(err => {
+                                    throw err;
+                                })
+                            }else{
+                                return Promise.resolve('Video was not deleted.');
+                            }
+                        })
+                    )
+                } else {
+                    promises.push(
+                        addVideo("tickets_videos", video, {
+                            ticket_id: id
+                        }).catch(e => e)
+                    );
+                }
+            } else {
+                promises.push(Promise.resolve('No video was provided.'));
+            }
+
+            Promise.all(promises).then(result => {
+                ticketsDb.findBy(id).then(result => {
+                    res.status(200).json({
+                        ticket: result
+                    })
+                })
+                .catch(err => {
+                    throw err;
+                })
+            })
+            .catch(err => {
+                throw err;
+            });
+        })
+        .catch(err => {
+            throw err;
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Oh no!" });
+    }
+});
+router.put("/comments/:id/sendall", async (req, res) => {
+    console.log(req.body);
+    try {
+        const { id } = req.params;
+        const { files } = req;
+        const promises = [];
+        let images = [];
+        const video = req.files && req.files.video;
+        const { description } = req.body;
+        Object.keys(files).length && Object.keys(files).map(key => {
+            if(key.includes('image')){
+                images.push(files[key]);
+            }
+        });
+
+        db("comments_videos")
+        .where({ comment_id: id })
+        .first()
+        .then(hasVideo => {
+            if(req.files && req.files.images && req.files.images.length){
+                images = {...req.files.images};
+            }
+            
+            if (Object.keys(images).length) {
+                promises.push(addPictures("comments_pictures", images, {
+                    comment_id: id
+                }));
+            } else {
+                promises.push(Promise.resolve('No images were provided.'));
+            }
+            
+            if (description) {
+                promises.push(ticketsDb.updateComment(id, description).catch(e => e));
+            } else {
+                promises.push(Promise.resolve('No description was provided.'));
+            }
+            
+            if (video) {
+                if (hasVideo) {
+                    promises.push(
+                    db("comments_videos")
+                        .where({ comment_id: id })
+                        .del()
+                        .then(deleted => {
+                            if(deleted){
+                                return addVideo("comments_videos", video, {
+                                    comment_id: id
+                                }).then(result => {
+                                    return result;
+                                })
+                                .catch(err => {
+                                    throw err;
+                                })
+                            }else{
+                                return Promise.resolve('Video was not deleted.');
+                            }
+                        })
+                    )
+                } else {
+                    promises.push(
+                        addVideo("comments_videos", video, {
+                            comment_id: id
+                        }).catch(e => e)
+                    );
+                }
+            } else {
+                promises.push(Promise.resolve('No video was provided.'));
+            }
+
+            Promise.all(promises).then(result => {
+                ticketsDb.findCommentById(id).then(result => {
+                    res.status(200).json({
+                        comment: result
+                    })
+                })
+                .catch(err => {
+                    throw err;
+                })
+            })
+            .catch(err => {
+                throw err;
+            });
+        })
+        .catch(err => {
+            throw err;
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Oh no!" });
+    }
+});
 router.put("/comments/replies/:id/sendall", async (req, res) => {
     console.log(req.body);
     try {
@@ -668,6 +859,9 @@ router.put("/comments/replies/:id/sendall", async (req, res) => {
         res.status(500).json({ message: "Oh no!" });
     }
 });
+
+
+
 
 router.delete("/comments/replies/:id", async (req, res) => {
     const { id } = req.params;
