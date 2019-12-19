@@ -656,14 +656,40 @@ router.put("/:id/sendall", async (req, res) => {
             }
 
             Promise.all(promises).then(result => {
-                ticketsDb.findById(id).then(result => {
-                    res.status(200).json({
-                        ticket: result
-                    })
-                })
-                .catch(err => {
-                    throw err;
-                })
+                try {
+                    const [ticket] = await ticketsDb.findById(id);
+                    const ticket_comments = await ticketsDb.findTicketComments(id);
+            
+                    if (ticket) {
+                        const open_pictures = await db("tickets_pictures")
+                            .where({ ticket_id: id })
+                            .select("id", "url", "width", "height", "filename");
+                        const resolved_pictures = await db("tickets_solutions_pictures")
+                            .where({ ticket_id: id })
+                            .select("id", "url", "width", "height", "filename");
+                        res.status(200).json({
+                            ticket_details: ticket,
+                            ticket_comments,
+                            open_pictures,
+                            resolved_pictures
+                        });
+                    } else {
+                        res.status(404).json({ message: `No tickets found with id ${id}` });
+                    }
+                } catch (err) {
+                    console.log(err);
+                    res.status(500).json({
+                        message: "Error retrieving ticket information."
+                    });
+                }
+                // ticketsDb.findById(id).then(result => {
+                //     res.status(200).json({
+                //         ticket: result
+                //     })
+                // })
+                // .catch(err => {
+                //     throw err;
+                // })
             })
             .catch(err => {
                 throw err;
