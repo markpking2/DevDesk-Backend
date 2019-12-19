@@ -597,8 +597,7 @@ router.put("/:id/sendall", async (req, res) => {
         console.log('files: ', files);
         console.log('files length thing ', Object.keys(files).length);
 
-        
-        Object.keys(files).length && Object.keys(files).map(key => {
+        files !== null && Object.keys(files).length && Object.keys(files).map(key => {
             if(key.includes('image')){
                 images.push(files[key]);
             }
@@ -612,7 +611,7 @@ router.put("/:id/sendall", async (req, res) => {
                 images = {...req.files.images};
             }
             
-            if (Object.keys(images).length) {
+            if (files !== null && Object.keys(images).length) {
                 promises.push(addPictures("tickets_pictures", images, {
                     ticket_id: id
                 }));
@@ -620,13 +619,7 @@ router.put("/:id/sendall", async (req, res) => {
                 promises.push(Promise.resolve('No images were provided.'));
             }
             
-            if (ticketObj) {
-                promises.push(ticketsDb.update(id, ticketObj).catch(e => e));
-            } else {
-                promises.push(Promise.resolve('No description was provided.'));
-            }
-            
-            if (video) {
+            if (files !== null && video) {
                 if (hasVideo) {
                     promises.push(
                     db("tickets_videos")
@@ -656,6 +649,12 @@ router.put("/:id/sendall", async (req, res) => {
                 }
             } else {
                 promises.push(Promise.resolve('No video was provided.'));
+            }
+
+            if (ticketObj) {
+                promises.push(ticketsDb.update(id, ticketObj).catch(e => e));
+            } else {
+                promises.push(Promise.resolve('No description was provided.'));
             }
 
             Promise.all(promises).then(result => {
