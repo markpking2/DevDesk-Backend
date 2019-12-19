@@ -578,13 +578,19 @@ router.put("/comments/replies/:id", async (req, res) => {
 // });
 
 router.put("/comments/replies/:id/sendall", async (req, res) => {
+    console.log(req.body);
     try {
         const { id } = req.params;
         const { files } = req;
         const promises = [];
-        let images = {};
-        const { video } = files;
+        let images = [];
+        const video = req.files && req.files.video;
         const { description } = req.body;
+        Object.keys(files).length && Object.keys(files).map(key => {
+            if(key.includes('image')){
+                images.push(files[key]);
+            }
+        });
 
         db("comments_replies_videos")
         .where({ reply_id: id })
@@ -682,7 +688,6 @@ router.delete("/comments/replies/:id", async (req, res) => {
 
 //add pictures
 async function addPictures(tableName, images, insert) {
-    console.log('dangit', images);
     const uploads = [];
     try {
         for (let key in images) {
