@@ -6,6 +6,7 @@ const {generateToken} = require('./token.js');
 
 router.post('/register', async (req, res) => {
     const user = {username, password, email, cohort} = req.body;
+    console.log(user);
     for(let val in user){
         if(typeof user[val] === 'string'){
             user[val] = user[val].toLowerCase();
