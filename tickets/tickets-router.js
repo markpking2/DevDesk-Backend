@@ -656,7 +656,7 @@ router.put("/:id/sendall", async (req, res) => {
             }
 
             Promise.all(promises).then(result => {
-                ticketsDb.findBy(id).then(result => {
+                ticketsDb.findById(id).then(result => {
                     res.status(200).json({
                         ticket: result
                     })
