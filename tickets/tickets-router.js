@@ -782,7 +782,7 @@ router.put("/comments/:id/sendall", async (req, res) => {
                 ticketsDb.findCommentById(id).then(result => {
                     res.status(200).json({
                         comment: {...result,
-                        collapsed: typeof collapsed !== "undefined" ? collapsed : true}
+                        collapsed: collapsed}
                     })
                 })
                 .catch(err => {
