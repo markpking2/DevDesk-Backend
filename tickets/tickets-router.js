@@ -594,7 +594,10 @@ router.put("/:id/sendall", async (req, res) => {
             ticketObj = {...ticketObj, description};
         }
         console.log('ticket obj: ', ticketObj);
+        console.log('files: ', files);
+        console.log('files length thing ', Object.keys(files).length);
 
+        
         Object.keys(files).length && Object.keys(files).map(key => {
             if(key.includes('image')){
                 images.push(files[key]);
