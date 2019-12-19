@@ -816,6 +816,8 @@ router.put("/comments/replies/:id/sendall", async (req, res) => {
                 images.push(files[key]);
             }
         });
+        console.log('files', files);
+        console.log('images', images);
 
         db("comments_replies_videos")
         .where({ reply_id: id })
