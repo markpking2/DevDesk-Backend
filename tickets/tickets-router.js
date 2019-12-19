@@ -805,7 +805,7 @@ router.put("/comments/replies/:id/sendall", async (req, res) => {
     console.log(req.body);
     try {
         const { id } = req.params;
-        const files = req;
+        const files = req.files;
         const promises = [];
         let images = [];
         const video = req.files && req.files.video;
@@ -816,8 +816,8 @@ router.put("/comments/replies/:id/sendall", async (req, res) => {
                 images.push(files[key]);
             }
         });
-        console.log('files', files);
-        console.log('images', images);
+        // console.log('files', files);
+        // console.log('images', images);
 
         db("comments_replies_videos")
         .where({ reply_id: id })
