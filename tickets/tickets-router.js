@@ -685,7 +685,7 @@ router.put("/comments/:id/sendall", async (req, res) => {
         const promises = [];
         let images = [];
         const video = req.files && req.files.video;
-        const { description } = req.body;
+        const { description, collapsed } = req.body;
         Object.keys(files).length && Object.keys(files).map(key => {
             if(key.includes('image')){
                 images.push(files[key]);
@@ -749,7 +749,8 @@ router.put("/comments/:id/sendall", async (req, res) => {
             Promise.all(promises).then(result => {
                 ticketsDb.findCommentById(id).then(result => {
                     res.status(200).json({
-                        comment: result
+                        comment: {...result,
+                        collapsed: typeof collapsed !== "undefined" ? collapsed : true}
                     })
                 })
                 .catch(err => {
