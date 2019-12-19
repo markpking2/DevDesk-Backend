@@ -572,7 +572,7 @@ router.put("/:id/sendall", async (req, res) => {
     console.log(req.body);
     try {
         const { id } = req.params;
-        const { files } = req.files ? req : null;
+        const { files } = req;
         const promises = [];
         let images = [];
         const video = req.files && req.files.video;
