@@ -712,12 +712,13 @@ router.put("/comments/:id/sendall", async (req, res) => {
     console.log(req.body);
     try {
         const { id } = req.params;
-        const { files } = req;
+        const files = req.files;
         const promises = [];
         let images = [];
         const video = req.files && req.files.video;
         const { description, collapsed } = req.body;
-        Object.keys(files).length && Object.keys(files).map(key => {
+        
+        files !== null && Object.keys(files).map(key => {
             if(key.includes('image')){
                 images.push(files[key]);
             }
@@ -731,7 +732,7 @@ router.put("/comments/:id/sendall", async (req, res) => {
                 images = {...req.files.images};
             }
             
-            if (Object.keys(images).length) {
+            if (files !== null && Object.keys(images).length) {
                 promises.push(addPictures("comments_pictures", images, {
                     comment_id: id
                 }));
@@ -745,7 +746,7 @@ router.put("/comments/:id/sendall", async (req, res) => {
                 promises.push(Promise.resolve('No description was provided.'));
             }
             
-            if (video) {
+            if (files !== null && video) {
                 if (hasVideo) {
                     promises.push(
                     db("comments_videos")
@@ -804,12 +805,13 @@ router.put("/comments/replies/:id/sendall", async (req, res) => {
     console.log(req.body);
     try {
         const { id } = req.params;
-        const { files } = req;
+        const files = req;
         const promises = [];
         let images = [];
         const video = req.files && req.files.video;
         const { description } = req.body;
-        Object.keys(files).length && Object.keys(files).map(key => {
+
+        files !== null && Object.keys(files).map(key => {
             if(key.includes('image')){
                 images.push(files[key]);
             }
@@ -823,7 +825,7 @@ router.put("/comments/replies/:id/sendall", async (req, res) => {
                 images = {...req.files.images};
             }
             
-            if (Object.keys(images).length) {
+            if (files !== null && Object.keys(images).length) {
                 promises.push(addPictures("comments_replies_pictures", images, {
                     reply_id: id
                 }));
@@ -837,7 +839,7 @@ router.put("/comments/replies/:id/sendall", async (req, res) => {
                 promises.push(Promise.resolve('No description was provided.'));
             }
             
-            if (video) {
+            if (files !== null && video) {
                 if (hasVideo) {
                     promises.push(
                     db("comments_replies_videos")
