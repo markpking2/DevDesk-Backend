@@ -145,7 +145,7 @@ async function findMine(id){
             .leftJoin('profile_pictures as rsp', 'rt.author_id', 'sp.user_id')
             .leftJoin('tickets_videos as dv', 't.id', 'dv.ticket_id')
             .leftJoin('tickets_solutions_videos as sv', 't.id', 'sv.ticket_id')
-            .select('c.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
+            .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
             db.raw(`CASE 
                 WHEN st.author_id IS NOT NULL THEN sp.url
                 WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
