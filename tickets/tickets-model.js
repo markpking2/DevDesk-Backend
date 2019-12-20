@@ -328,7 +328,7 @@ async function findMine(id) {
         return await findUserLatestTicketReply(ticket_id, id);
     }));
 
-    return { openTickets, resolvedTickets, commentedOn, repliedOn };
+    return { openTickets, resolvedTickets, commentedOn: commentedOn[0] ? commentedOn : [], repliedOn: repliedOn[0] ? repliedOn : []};
 }
 
 async function findById(id) {
@@ -624,7 +624,7 @@ async function updateSolution(
 
 //comments
 async function findUserLatestTicketComment(ticket_id, user_id) {
-    return db("tickets_comments as tc")
+    const [result] = await db("tickets_comments as tc")
         .where({ "tc.ticket_id": ticket_id, "c.author_id": user_id })
         .leftJoin('authors_tickets as at', 'tc.ticket_id', 'at.ticket_id')
         .leftJoin('resolved_tickets as rt', 'rt.ticket_id', 'tc.ticket_id')
@@ -649,6 +649,7 @@ async function findUserLatestTicketComment(ticket_id, user_id) {
         )
         .limit(1)
         .orderBy("c.created_at", "desc");
+    return result;
 }
 
 async function findTicketComments(ticket_id) {
@@ -679,7 +680,7 @@ async function findTicketComments(ticket_id) {
 }
 
 async function findUserLatestTicketReply(ticket_id, user_id) {
-    return db("comments_replies as cr")
+    const [result] = await db("comments_replies as cr")
         .where({ "tc.ticket_id": ticket_id, "cr.author_id": user_id })
         .join('tickets_comments as tc', 'tc.comment_id', 'cr.comment_id')
         .join('tickets as t', 't.id', 'tc.ticket_id')
@@ -704,6 +705,8 @@ async function findUserLatestTicketReply(ticket_id, user_id) {
         )
         .limit(1)
         .orderBy("cr.created_at", "desc");
+            console.log(result);
+        return result;
 }
 
 async function findCommentReplies(comment_id) {
