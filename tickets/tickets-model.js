@@ -149,7 +149,7 @@ function update(id, ticket) {
 }
 
 async function findMine(id) {
-    console.log('od is: ', id);
+    // console.log('findMine id is: ', id);
     const result = await Promise.all([
         db("authors_tickets as a")
             .where({ author_id: id })
@@ -187,46 +187,6 @@ async function findMine(id) {
                 "r.solution"
             ),
 
-        //#region
-        // bug here??? rt.author_id is not null?
-        // bug here?? remove else null? it is getting nulled on resolved tickets that have a comment
-        // db('comments as c')
-        //     .distinct('t.id')
-        //     .where({'c.author_id': id})
-        //     .join('tickets_comments as tc', 'c.id', 'tc.comment_id')
-        //     .join('tickets as t', 'tc.ticket_id', 't.id')
-        //     .leftJoin('authors_tickets as st', 't.id', 'st.ticket_id')
-        //     .leftJoin('resolved_tickets as rt', 't.id', 'rt.ticket_id')
-        //     .leftJoin('users as su', 'st.author_id', 'su.id')
-        //     .leftJoin('users as rsu', 'rt.author_id', 'rsu.id')
-        //     .leftJoin('profile_pictures as sp', 'st.author_id', 'sp.user_id')
-        //     .leftJoin('profile_pictures as rsp', 'rt.author_id', 'sp.user_id')
-        //     .leftJoin('tickets_videos as dv', 't.id', 'dv.ticket_id')
-        //     .leftJoin('tickets_solutions_videos as sv', 't.id', 'sv.ticket_id')
-        //     .select('t.*', 'dv.url as open_video', 'sv.url as resolved_video', 'rt.solution as solution', 'rt.solution_comment_id', 'rt.solution_reply_id',
-        //     db.raw(`CASE
-        //         WHEN st.author_id IS NOT NULL THEN sp.url
-        //         WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
-        //         ELSE NULL
-        //         END AS author_image`),
-        //     db.raw(`CASE
-        //         WHEN su.name IS NOT NULL THEN su.name
-        //         WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
-        //         ELSE NULL
-        //         END AS author_name`),
-        //     db.raw(`CASE
-        //         WHEN su.name IS NOT NULL THEN su.id
-        //         WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.id
-        //         ELSE NULL
-        //         END AS author_id`),
-        //     db.raw(`CASE
-        //         WHEN su.name IS NOT NULL THEN 'open'
-        //         ELSE 'resolved'
-        //         END AS status`),
-        //     db.raw(`CASE
-        //         WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
-        //         END as resolved_at`)),
-        //#endregion
         db("comments as c")
             .where({ "c.author_id": id })
             .whereNot({'at.author_id': id})
@@ -249,54 +209,9 @@ async function findMine(id) {
             .leftJoin('resolved_tickets as rt', 'rt.ticket_id', 'tc.ticket_id')
             .select("tc.ticket_id")
             .distinct('tc.ticket_id'),
-        // #region
-        // db("comments_replies as cr")
-        //     .distinct("t.id")
-        //     .where({ "cr.author_id": id })
-        //     .join("tickets_comments as tc", "cr.comment_id", "tc.comment_id")
-        //     .join("tickets as t", "tc.ticket_id", "t.id")
-        //     .leftJoin("authors_tickets as st", "t.id", "st.ticket_id")
-        //     .leftJoin("resolved_tickets as rt", "t.id", "rt.ticket_id")
-        //     .leftJoin("users as su", "st.author_id", "su.id")
-        //     .leftJoin("users as rsu", "rt.author_id", "rsu.id")
-        //     .leftJoin("profile_pictures as sp", "st.author_id", "sp.user_id")
-        //     .leftJoin("profile_pictures as rsp", "rt.author_id", "sp.user_id")
-        //     .leftJoin("tickets_videos as dv", "t.id", "dv.ticket_id")
-        //     .leftJoin("tickets_solutions_videos as sv", "t.id", "sv.ticket_id")
-        //     .select(
-        //         "t.*",
-        //         "dv.url as open_video",
-        //         "sv.url as resolved_video",
-        //         "rt.solution as solution",
-        //         "rt.solution_comment_id",
-        //         "rt.solution_reply_id",
-        //         db.raw(`CASE 
-        //         WHEN st.author_id IS NOT NULL THEN sp.url
-        //         WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsp.url
-        //         ELSE NULL 
-        //         END AS author_image`),
-        //         db.raw(`CASE 
-        //         WHEN su.name IS NOT NULL THEN su.name
-        //         WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.name
-        //         ELSE NULL 
-        //         END AS author_name`),
-        //         db.raw(`CASE 
-        //         WHEN su.name IS NOT NULL THEN su.id
-        //         WHEN su.name IS NULL AND rsu.name IS NOT NULL THEN rsu.id
-        //         ELSE NULL 
-        //         END AS author_id`),
-        //         db.raw(`CASE 
-        //         WHEN su.name IS NOT NULL THEN 'open' 
-        //         ELSE 'resolved'
-        //         END AS status`),
-        //         db.raw(`CASE
-        //         WHEN rt.id IS NOT NULL THEN rt.resolved_at ELSE NULL
-        //         END as resolved_at`)
-        // )
-        //#endregion
+
     ]);
 
-    //cute
     for (let i = 0; i < result.length; i++) {
         result[i] = await Promise.all(i > 1 ? result[i] :
             (result[i].map(async ticket => {
@@ -632,13 +547,17 @@ async function findUserLatestTicketComment(ticket_id, user_id) {
         .leftJoin("users as ru", "ru.id", "rt.author_id")
         .join("comments as c", "c.id", "tc.comment_id")
         .join('tickets as t', 't.id', 'tc.ticket_id')
-        .leftJoin("profile_pictures as p", "p.user_id", "c.author_id")
+        .leftJoin("profile_pictures as open", "open.user_id", "at.author_id")
+        .leftJoin("profile_pictures as closed", "close.user_id", "rt.author_id")
         .select(
             "c.*",
-            "p.url as author_image",
             "tc.ticket_id",
             't.title as ticket_title',
-             db.raw(`CASE 
+            db.raw(`CASE 
+                WHEN at.author_id IS NOT NULL THEN open.url
+                WHEN at.author_id IS NULL AND rt.author_id IS NOT NULL THEN closed.url
+                END AS author_image`),
+            db.raw(`CASE 
                 WHEN at.author_id IS NOT NULL THEN ou.name
                 WHEN at.author_id IS NULL AND rt.author_id IS NOT NULL THEN ru.name
                 END AS author_name`),
@@ -688,12 +607,16 @@ async function findUserLatestTicketReply(ticket_id, user_id) {
         .leftJoin('resolved_tickets as rt', 'rt.ticket_id', 'tc.ticket_id')
         .leftJoin("users as ou", "ou.id", "at.author_id")
         .leftJoin("users as ru", "ru.id", "rt.author_id")
-        .leftJoin("profile_pictures as p", "p.user_id", "cr.author_id")
+        .leftJoin("profile_pictures as open", "open.user_id", "at.author_id")
+        .leftJoin("profile_pictures as closed", "close.user_id", "rt.author_id")
         .select(
             "cr.*",
-            "p.url as author_image",
             "tc.ticket_id",
             't.title as ticket_title',
+            db.raw(`CASE 
+                WHEN at.author_id IS NOT NULL THEN open.url
+                WHEN at.author_id IS NULL AND rt.author_id IS NOT NULL THEN closed.url
+                END AS author_image`),
             db.raw(`CASE 
                 WHEN at.author_id IS NOT NULL THEN ou.name
                 WHEN at.author_id IS NULL AND rt.author_id IS NOT NULL THEN ru.name
