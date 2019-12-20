@@ -548,7 +548,7 @@ async function findUserLatestTicketComment(ticket_id, user_id) {
         .join("comments as c", "c.id", "tc.comment_id")
         .join('tickets as t', 't.id', 'tc.ticket_id')
         .leftJoin("profile_pictures as open", "open.user_id", "at.author_id")
-        .leftJoin("profile_pictures as closed", "close.user_id", "rt.author_id")
+        .leftJoin("profile_pictures as closed", "closed.user_id", "rt.author_id")
         .select(
             "c.*",
             "tc.ticket_id",
@@ -608,7 +608,7 @@ async function findUserLatestTicketReply(ticket_id, user_id) {
         .leftJoin("users as ou", "ou.id", "at.author_id")
         .leftJoin("users as ru", "ru.id", "rt.author_id")
         .leftJoin("profile_pictures as open", "open.user_id", "at.author_id")
-        .leftJoin("profile_pictures as closed", "close.user_id", "rt.author_id")
+        .leftJoin("profile_pictures as closed", "closed.user_id", "rt.author_id")
         .select(
             "cr.*",
             "tc.ticket_id",
