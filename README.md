@@ -17,7 +17,7 @@
 
 #### This API connects to the Dev Desk Queue front end as well as a Dev Desk Queue Slack Bot.
 
-- Web App: <https://front-end-q1yrowlhd.now.sh/>
+- Web App: <https://devdesk2.now.sh/>
 - Slack Bot: <https://github.com/markpkng/Slackbot-1>
 
 ### Tech Stack
