@@ -205,6 +205,190 @@ exports.seed = function(knex) {
           unit: 1,
           week: 4,
           day: 5
+        },
+        {        
+          ////
+          category: 'SQL',
+          title: 'Need help setting up an API',
+          description: 'When I try running migrations, I get a SQL error - is anyone able to help?',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 1,
+          day: 1
+        },
+        {        
+          category: 'Testing',
+          title: 'React Testing',
+          description: 'Im attempting to create a test on all of my react functions - however, when I try to run them, i get an error saying that my test is unable to run. Any help is appreciated',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 1,
+          day: 2
+        },
+        {        
+          category: 'Heroku',
+          title: 'Heroku Deployment',
+          description: 'Im following the video posted in the WEB23 channel about using postgres on heroku. when I run npx heroku run knex migrate:latest, my migration is unable to run. Ive tried both rolling the migration, and erasing the db3 file.',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 1,
+          day: 3
+        },
+        {       
+          category: 'Databases',
+          title: 'Tables not truncating',
+          description: 'Not sure whats going on - anytime i try to truncate, my data is still remaining. Any eyes would be helpful.',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 1,
+          day: 4
+        },
+        {         
+          category: 'Server',
+          title: 'Server does not run',
+          description: 'Why wont my server start? The server im running is not running anywhere else locally, and ive got everything set up like the guided project.',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 1,
+          day: 5
+        },
+        {       
+          category: 'Seeds',
+          title: 'Seeds',
+          description: 'Does anyone know of a command that will let me rollback seeds? kind of like knex migration:rollback. I cant find anything online',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 2,
+          day: 1
+        },
+        {        
+          category: 'Seeds',
+          title: 'Seed error',
+          description: 'Not sure whats going on, im very frustrated.',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 2,
+          day: 2
+        },
+        {       
+          category: 'Testing',
+          title: 'Testing error',
+          description: 'Im trying to test my api, and nothing seems to be running properly. Im sorry i cant give a more in-depth description, but I really just need a second set of eyes',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 2,
+          day: 3
+        },
+        {         
+          category: 'Rollbacks',
+          title: 'Rollback migrations',
+          description: 'Trying to rollback my migrations on my testing/development databases, but it keeps telling me I\'m already at base migration. When I look at my DBs in pgAdmin I can see the tables are still there though (so it\'s wrong)',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 2,
+          day: 4
+        },
+        {        
+          category: 'Databases',
+          title: 'Descriptions',
+          description: '???? help ',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 2,
+          day: 5
+        },
+        {
+          category: 'CSS',
+          title: 'trouble using flexbox',
+          description: `Hey guys - i can't seem to get my columns to flex correctly. Im trying to get the two columns side by side, but i have not been able to and have spent about an hour on it.`,
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 3,
+          day: 1
+        },
+        {
+          category: 'CSS',
+          title: 'CSS',
+          description: `The display of my great ideas site is turned upside down - not to sure what i did, but ill post my code is attached here if anyone can help me on it.`,
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 3,
+          day: 2
+          
+        
+        },
+        {
+          category: 'HTML',
+          title: 'How do you center things with an in-line block?',
+          description: `No matter what I do, i have not been able to center the navigation bar properly - its always a little bit too much to the left, or too much to the right. I've spent most of the day on this, so any help here is appreciate. Picture of code in thread. `,
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 3,
+          day: 3
+        },
+        {
+          category: 'token',
+          title: 'JSON web token',
+          description: 'I have realized i have been using the wrong dependency.  json-web-token is not jsonwebtoken.  So i do a npm i jsonwebtoken and i get this error. I have tried to update the dependencies, but have not yet been able to run it properly. Any tips on getting it uninstalled globally? ',
+          unit: 1,
+          week: 3,
+          day: 4
+        },
+        {
+          category: 'React',
+          title: 'What is the difference between state and props in React?',
+          description: `What does my darkmode useEffect hook rely on to know how to update the DOM? Out of curiosity - not sure how this is working. Cool custom hook so far though. `,
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 3,
+          day: 5
+
+        },
+        {
+          category: 'Javascript',
+          title: 'stuck on incorporating forEach',
+          description: `Why is forEach giving me this error? Picture below.`,
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 4,
+          day: 1
+        },
+      
+        {
+          category: 'React',
+          title: 'React ES6',
+          description: 'Im trying to apply ES6 syntax when creating functions (arrow functions). Right now, Im doing this - cosnt CreateInput = () =>. Anyone see any errors?',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 4,
+          day: 2
+        },
+        {
+          category: 'Heroku',
+          title: 'Deployment Issue',
+          description: 'I think i have an error in my .env file, because nothing is showing up when i preview my deployment on heroku. I basically used the code from the guided lecture for the .env, but it does not seem to working',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 4,
+          day: 3
+        },
+        {
+          category: 'Web Token',
+          title: 'Private access',
+          description: 'How do you make it so you do not have to input your web token into your header on insomnia? ',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 4,
+          day: 4
+        },
+        {
+          category: 'Testing',
+          title: 'Issue with Jest',
+          description: 'When I try to download Jest as a dep, my terminal says its out of date. I have tried to run the update they suggested to get the new version, but I receive back a lot of errors. Can anyone help me by taking a look?',
+          course: 'Full Stack Web',
+          unit: 1,
+          week: 4,
+          day: 5
         }
 
       ], 'id');
